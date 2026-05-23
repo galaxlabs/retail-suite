@@ -74,7 +74,7 @@ const request = (options) => frappeRequest({
 export async function checkSession() {
   try {
     const data = await request({
-      url: '/api/method/frappe.auth.get_logged_user',
+      url: '/api/method/retail.retail.api.auth.get_logged_user',
     })
     console.log('👤 Logged in user:', data)
     const user = data
