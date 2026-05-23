@@ -230,15 +230,17 @@ import AlertIcon from '@/components/icons/AlertIcon.svg'
     const payments_methods = ref([])
     const pos_profiles = ref([])
 
-    watch(company, (val) => {
+    const syncProfilesForCompany = (selectedCompany) => {
         pos_profiles.value = pos_profiles_data.value
-            .filter(el => el.company === val)
+            .filter(el => el.company === selectedCompany)
             .map(el => el.name)
 
         pos_profile.value = pos_profiles.value.length
             ? pos_profiles.value[0]
             : ''
-        })
+    }
+
+    watch(company, syncProfilesForCompany)
     watch(pos_profile, (val) => {
         payments_methods.value = payments_method_data.value
             .filter(el => el.parent === val)
@@ -305,11 +307,17 @@ import AlertIcon from '@/components/icons/AlertIcon.svg'
         const data  = await get_opening_dialog_data()
         console.log("Open Dialog Data", data)
 
-        companies.value = data.companies.map(el => el.name)
+        companies.value = (data.companies || []).map(el => el.name)
         console.log("companies", companies)
 
-        pos_profiles_data.value = data.pos_profiles_data
-        payments_method_data.value = data.payments_method
+        pos_profiles_data.value = data.pos_profiles_data || []
+        payments_method_data.value = data.payments_method || []
+
+        const defaultCompany = pos_profiles_data.value[0]?.company || companies.value[0] || ''
+        if (defaultCompany) {
+            company.value = defaultCompany
+            syncProfilesForCompany(defaultCompany)
+        }
 
 
     })

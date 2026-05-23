@@ -2,6 +2,8 @@ test.js
 # env
 .env
 *.env
+.env.*
+!.env.example
 
 # node
 node_modules/

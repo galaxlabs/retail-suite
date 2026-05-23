@@ -42,13 +42,20 @@ def pos_cache(fn, pos_profile: dict):
 @frappe.whitelist()
 def get_opening_dialog_data():
     data = {}
-    data["companies"] = frappe.get_list("Company", limit_page_length=0, order_by="name")
+    data["companies"] = frappe.get_list(
+        "Company",
+        fields=["name"],
+        limit_page_length=0,
+        order_by="name",
+        ignore_permissions=True,
+    )
     data["pos_profiles_data"] = frappe.get_list(
         "POS Profile",
         filters={"disabled": 0},
         fields=["name", "company", "currency"],
         limit_page_length=0,
         order_by="name",
+        ignore_permissions=True,
     )
 
     pos_profiles_list = []
