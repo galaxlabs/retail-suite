@@ -512,8 +512,23 @@
               </h2>
 
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <label class="block text-sm font-medium mb-2" style="color: var(--text-sub)">
+                    Terminal Name
+                  </label>
+                  <input
+                    v-model="settings.printer.terminalName"
+                    type="text"
+                    placeholder="Front Counter 1"
+                    class="w-full px-4 py-2 rounded-lg transition"
+                    style="
+                      background: var(--input-bg);
+                      border: 1px solid var(--input-border);
+                      color: var(--text-main);
+                    "
+                  />
+                </div>
 
-                <!-- Printer Type -->
                 <div>
                   <label class="block text-sm font-medium mb-2" style="color: var(--text-sub)">
                     Printer Type
@@ -533,7 +548,24 @@
                   </select>
                 </div>
 
-                <!-- Printer Name -->
+                <div>
+                  <label class="block text-sm font-medium mb-2" style="color: var(--text-sub)">
+                    Connection Type
+                  </label>
+                  <select
+                    v-model="settings.printer.connectionType"
+                    class="w-full px-4 py-2 rounded-lg transition"
+                    style="
+                      background: var(--select-bg);
+                      border: 1px solid var(--select-border);
+                      color: var(--text-main);
+                    "
+                  >
+                    <option value="usb">USB / Local Bridge</option>
+                    <option value="ethernet">Ethernet / LAN</option>
+                  </select>
+                </div>
+
                 <div>
                   <label class="block text-sm font-medium mb-2" style="color: var(--text-sub)">
                     Printer Name
@@ -541,7 +573,7 @@
                   <input
                     v-model="settings.printer.name"
                     type="text"
-                    placeholder="Printer Name"
+                    placeholder="EPSON TM-T20"
                     class="w-full px-4 py-2 rounded-lg transition"
                     style="
                       background: var(--input-bg);
@@ -551,13 +583,46 @@
                   />
                 </div>
 
-                <!-- Width -->
+                <div>
+                  <label class="block text-sm font-medium mb-2" style="color: var(--text-sub)">
+                    Printer Host / IP
+                  </label>
+                  <input
+                    v-model="settings.printer.host"
+                    type="text"
+                    placeholder="192.168.1.120"
+                    class="w-full px-4 py-2 rounded-lg transition"
+                    style="
+                      background: var(--input-bg);
+                      border: 1px solid var(--input-border);
+                      color: var(--text-main);
+                    "
+                  />
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium mb-2" style="color: var(--text-sub)">
+                    Port
+                  </label>
+                  <input
+                    v-model.number="settings.printer.port"
+                    type="number"
+                    placeholder="9100"
+                    class="w-full px-4 py-2 rounded-lg transition"
+                    style="
+                      background: var(--input-bg);
+                      border: 1px solid var(--input-border);
+                      color: var(--text-main);
+                    "
+                  />
+                </div>
+
                 <div>
                   <label class="block text-sm font-medium mb-2" style="color: var(--text-sub)">
                     Paper Width (mm)
                   </label>
                   <input
-                    v-model.number="settings.printer.width"
+                    v-model.number="settings.printer.paperWidth"
                     type="number"
                     placeholder="80"
                     class="w-full px-4 py-2 rounded-lg transition"
@@ -569,15 +634,16 @@
                   />
                 </div>
 
-                <!-- Height -->
                 <div>
                   <label class="block text-sm font-medium mb-2" style="color: var(--text-sub)">
-                    Paper Height (mm)
+                    Copy Count
                   </label>
                   <input
-                    v-model.number="settings.printer.height"
+                    v-model.number="settings.printer.copyCount"
                     type="number"
-                    placeholder="100"
+                    min="1"
+                    step="1"
+                    placeholder="1"
                     class="w-full px-4 py-2 rounded-lg transition"
                     style="
                       background: var(--input-bg);
@@ -586,13 +652,9 @@
                     "
                   />
                 </div>
-
               </div>
 
-              <!-- Bottom Section -->
               <div class="space-y-4 pt-6" style="border-top: 1px solid var(--divider);">
-
-                <!-- Auto Print -->
                 <div
                   class="flex items-center justify-between p-4 rounded-lg"
                   style="background: var(--info-bg); border: 1px solid var(--info-border);"
@@ -602,20 +664,21 @@
                       Auto Print
                     </label>
                     <p class="text-xs mt-1" style="color: var(--text-muted)">
-                      Automatically print the receipt after completing a sale
+                      Automatically print the receipt after saving an invoice
                     </p>
                   </div>
-                  <ToggleSwitch v-model="settings.printer.autoprint" />
+                  <ToggleSwitch v-model="settings.printer.autoPrint" />
                 </div>
 
-                <!-- Button -->
                 <button
-                  class="w-full px-4 py-2 text-white rounded-lg font-medium transition"
+                  type="button"
+                  @click="handleTestPrint"
+                  class="w-full px-4 py-2 text-white rounded-lg font-medium transition flex items-center justify-center gap-2"
                   style="background: var(--btn-info)"
                 >
-                  🖨️ Test Print
+                  <Printer class="w-5 h-5" />
+                  Test Print
                 </button>
-
               </div>
             </div>
 
@@ -829,6 +892,7 @@ import MainLayout             from "@/layout/MainLayout.vue";
 import { useShiftStore }      from "../stores/shift";
 import { useProductsStore }   from "../stores/products";
 import { useSettingsStore }   from "../stores/settings";
+import { buildSampleReceipt, printReceipt } from '@/services/printer'
 import SaveIcon               from "@/components/icons/SaveIcon.svg";
 import SunIcon                from "@/components/icons/SunIcon.svg";
 import MoonIcon               from "@/components/icons/MoonIcon.svg";
@@ -836,7 +900,7 @@ import SettingsIcon           from "@/components/icons/SettingsIcon.svg";
 import ToggleSwitch           from "@/components/toggles/ToggleSwitch.vue";
 import { useDark, useToggle } from "@vueuse/core";
 import { ref, reactive, onMounted, computed, watch } from "vue";
-import { Sparkles, Download, Trash2, RotateCcw } from 'lucide-vue-next'
+import { Sparkles, Download, Trash2, RotateCcw, Printer } from 'lucide-vue-next'
 import { toast } from "frappe-ui";
 import { useConfirm } from '@/composables/useConfirm'
 const { confirm } = useConfirm()
@@ -903,6 +967,16 @@ const keyboardShortcuts = ref([
   { id: 5, action: 'حفظ', key: 'Ctrl + S' },
   { id: 6, action: 'طباعة', key: 'Ctrl + P' }
 ])
+
+const handleTestPrint = async () => {
+  try {
+    await printReceipt(buildSampleReceipt(), { force: true })
+    toast.success('Test receipt sent to printer')
+  } catch (error) {
+    console.error('Test print failed:', error)
+    toast.error(error.message || 'Test print failed')
+  }
+}
 
 watch(
   () => settings.value,

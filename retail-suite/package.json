@@ -4,7 +4,9 @@
   "type": "module",
   "scripts": {
     "dev": "BROWSER=firefox vite",
-    "build": "vite build --base=/assets/retail/retail_suite/",
+    "dev:frappe": "BROWSER=firefox VITE_USE_FRAPPE_PROXY=true vite",
+    "build": "vite build",
+    "build:frappe": "VITE_BUILD_FOR_FRAPPE=true vite build",
     "preview": "vite preview"
   },
   "dependencies": {

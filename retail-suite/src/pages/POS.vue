@@ -171,6 +171,7 @@ import OpenShiftModal from '@/components/modals/OpenShiftModal.vue'
 import { useInvoicesStore } from '@/stores/invoices'
 import ReturnInvoiceBox from '@/components/modals/ReturnInvoiceBox.vue'
 import { formatPrice } from '../utils/formatters'
+import { printReceipt } from '@/services/printer'
 import WarningIcon from '@/components/icons/WarningIcon.svg'
 
 const hover = ref(false)
@@ -294,8 +295,7 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
             invoiceNo: invoiceResponse.invoiceNo,
             invoiceId: invoiceResponse.invoiceNo,
             isFastMode: true,
-            isSaved: invoiceResponse.status? 1 : 0,
-
+            isSaved: Boolean(invoiceResponse.status),
           }
         } else {
           // Normal Mode: save draft فقط
@@ -303,13 +303,30 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
 
           receiptData.value = {
             ...transactionData,
-            invoiceNo: invoiceResponse.name,
-            invoiceId: invoiceResponse.name,
+            invoiceNo: invoiceResponse.name || transactionData.invoiceNo,
+            invoiceId: invoiceResponse.name || transactionData.invoiceNo,
             isFastMode: false,
+            isSaved: true,
           }
         }
 
         showReceiptModal.value = true
+
+        const printerSettings = settingsStore.settings?.printer || {}
+        const shouldAutoPrint = printerSettings.autoPrint ?? printerSettings.autoprint ?? true
+        if (shouldAutoPrint) {
+          try {
+            await printReceipt(receiptData.value)
+            if (window.$toast) {
+              window.$toast.success(`Receipt sent to ${printerSettings.name || printerSettings.host || 'printer'}`)
+            }
+          } catch (printError) {
+            console.error('❌ Auto print failed:', printError)
+            if (window.$toast) {
+              window.$toast.warning(printError.message || 'Invoice saved, but auto print failed')
+            }
+          }
+        }
 
       } catch (error) {
         console.error('❌ Error in handleSaleTransaction:', error)
@@ -354,16 +371,11 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
     }
 
     // Save Copy
-    const handleReceiptSaved = async (receiptDataParam) => {
-      try {
-        const result = await invoicesStore.saveInvoice(receiptDataParam)
-        if (window.$toast) window.$toast.success(`Invoice ${result.name} saved!`)
-        return result
-      } catch (error) {
-        if (window.$toast) window.$toast.error(error.message || 'Failed to save invoice')
-        throw error
+    const handleReceiptSaved = async () => {
+      if (window.$toast) {
+        window.$toast.success('Receipt copy downloaded')
       }
-      }
+    }
     // Proceed = Submit
     const handleReceiptPrinted = async (receiptDataParam) => {
           console.log('🔍 invoiceId:', receiptDataParam.invoiceId)

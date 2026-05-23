@@ -4,7 +4,7 @@ import { reactive, watch } from "vue";
 import { toRaw } from "vue";
 
 export const useSettingsStore = defineStore("settings", () => {
-  const settings = reactive({
+  const createDefaultSettings = () => ({
     store: {
       name: "Tailwind POS",
       address: "Cabang Konoha Selatan",
@@ -32,12 +32,16 @@ export const useSettingsStore = defineStore("settings", () => {
       primaryColor: "#06b6d4",
       fontSize: "sm"
     },
-    printer:{
-      name:"",
-      type:"",
-      width:"",
-      height:"",
-      autoprint:"",
+    printer: {
+      terminalName: "",
+      name: "",
+      type: "thermal",
+      connectionType: "usb",
+      host: "",
+      port: 9100,
+      paperWidth: 80,
+      copyCount: 1,
+      autoPrint: true,
     },
     system: {
       autoBackup: true,
@@ -46,6 +50,48 @@ export const useSettingsStore = defineStore("settings", () => {
       simpleData: true,
     },
   });
+
+  const normalizeSettings = (incoming = {}) => {
+    const defaults = createDefaultSettings();
+    const normalized = { ...defaults };
+
+    Object.entries(incoming || {}).forEach(([key, value]) => {
+      if (
+        value &&
+        typeof value === "object" &&
+        !Array.isArray(value) &&
+        normalized[key] &&
+        typeof normalized[key] === "object" &&
+        !Array.isArray(normalized[key])
+      ) {
+        normalized[key] = { ...normalized[key], ...value };
+      } else {
+        normalized[key] = value;
+      }
+    });
+
+    normalized.printer = {
+      ...defaults.printer,
+      ...(incoming?.printer || {}),
+    };
+
+    normalized.printer.terminalName =
+      normalized.printer.terminalName || normalized.printer.name || "";
+    normalized.printer.name = normalized.printer.name || normalized.printer.printerName || "";
+    normalized.printer.connectionType =
+      normalized.printer.connectionType || (normalized.printer.host ? "ethernet" : "usb");
+    normalized.printer.paperWidth =
+      Number(normalized.printer.paperWidth ?? normalized.printer.width ?? 80) || 80;
+    normalized.printer.copyCount =
+      Number(normalized.printer.copyCount ?? normalized.printer.copies ?? 1) || 1;
+    normalized.printer.autoPrint =
+      normalized.printer.autoPrint ?? normalized.printer.autoprint ?? true;
+    normalized.printer.port = Number(normalized.printer.port ?? 9100) || 9100;
+
+    return normalized;
+  };
+
+  const settings = reactive(createDefaultSettings());
 
   // ✅ تحويل Hex إلى HSL
   const hexToHsl = (hex) => {
@@ -128,7 +174,7 @@ export const useSettingsStore = defineStore("settings", () => {
       const savedSettings = localStorage.getItem("tailwind-pos-settings");
       if (savedSettings) {
         const parsed = JSON.parse(savedSettings);
-        Object.assign(settings, parsed);
+        Object.assign(settings, normalizeSettings(parsed));
         // تطبيق الألوان عند التحميل
         generateAndApplyColorShades(settings.appearance.primaryColor);
         console.log("✅ Settings loaded from localStorage");
@@ -144,7 +190,7 @@ export const useSettingsStore = defineStore("settings", () => {
   // Save settings to localStorage
   const saveSettings = () => {
     try {
-      const settingsToSave = toRaw(settings);
+      const settingsToSave = normalizeSettings(toRaw(settings));
       const color = settings.appearance.primaryColor;
 
       // تطبيق الألوان قبل الحفظ
@@ -178,49 +224,7 @@ export const useSettingsStore = defineStore("settings", () => {
   // إعادة تعيين الإعدادات إلى القيم الافتراضية
   const resetSettings = () => {
     try {
-      const defaultSettings = {
-        store: {
-          name: "Tailwind POS",
-          address: "Cabang Konoha Selatan",
-          phone: "+62 812 3456 7890",
-          email: "store@tailwindpos.com",
-          taxId: "112233123",
-          currencyCode: 'SAR',
-          locale:'en-SA',
-        },
-        receipt: {
-          showLogo: true,
-          showThankYou: true,
-          footerMessage: "Thank you for your visit!",
-          size: "80mm",
-        },
-        pricing: {
-          enableTax: false,
-          taxRate: 10,
-          taxName: "VAT",
-          currency: "SAR",
-          price_list: "Standard Selling"
-        },
-        appearance: {
-          theme: "light",
-          primaryColor: "#06b6d4",
-          fontSize: "sm"
-        },
-        printer:{
-          name:"",
-          type:"",
-          width:"",
-          height:"",
-          autoprint:"",
-        },
-        system: {
-          autoBackup: true,
-          soundEffects: true,
-          showScannerStatus: true,
-          simpleData: true,
-        },
-      };
-      Object.assign(settings, defaultSettings);
+      Object.assign(settings, createDefaultSettings());
       saveSettings();
       console.log("✅ Settings reset to defaults");
       return true;

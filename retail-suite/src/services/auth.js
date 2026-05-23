@@ -1,20 +1,14 @@
-// auth.js
 import { reactive, computed } from 'vue'
-import { createResource, frappeRequest,call } from 'frappe-ui'
+import { createResource, frappeRequest, call } from 'frappe-ui'
 import router from '../router'
+import { resolveBackendUrl } from '@/config/runtime'
 
-// ==========================================
-// Session User from Cookie
-// ==========================================
 function sessionUser() {
-  const cookies = new URLSearchParams(document.cookie.split("; ").join("&"))
-  const user = cookies.get("user_id")
-  return user === "Guest" ? null : user
+  const cookies = new URLSearchParams(document.cookie.split('; ').join('&'))
+  const user = cookies.get('user_id')
+  return user === 'Guest' ? null : user
 }
 
-// ==========================================
-// Session State
-// ==========================================
 export const session = reactive({
   user: null,
   isAuthenticated: computed(() => !!session.user),
@@ -34,8 +28,8 @@ export const session = reactive({
       router.push({ name: 'POS' })
     },
     onError(err) {
-      console.error("❌ Login error:", err)
-    }
+      console.error('❌ Login error:', err)
+    },
   }),
 
   logout: createResource({
@@ -49,19 +43,21 @@ export const session = reactive({
     onError() {
       session.user = null
       router.push({ name: 'Login' })
-    }
+    },
   }),
 })
 
-// ==========================================
-// Check Existing Session (API-based)
-// ==========================================
+const request = (options) => frappeRequest({
+  ...options,
+  url: resolveBackendUrl(options.url),
+})
+
 export async function checkSession() {
   try {
-    const data = await frappeRequest({
+    const data = await request({
       url: '/api/method/frappe.auth.get_logged_user',
     })
-    console.log("👤 Logged in user:", data)
+    console.log('👤 Logged in user:', data)
     const user = data
     if (!user || user === 'Guest') {
       session.user = null
@@ -70,21 +66,16 @@ export async function checkSession() {
 
     session.user = user
     return true
-
   } catch (err) {
-    // 403 or network error = not logged in
     session.user = null
     return false
   }
 }
 
-// ==========================================
-// API Methods
-// ==========================================
 export const api = {
-  get: (url, { params } = {}) => frappeRequest({ url, params }),
-  post: (url, data) => frappeRequest({ url, method: 'POST', body: data }),
-  put: (url, data) => frappeRequest({ url, method: 'PUT', body: data }),
-  delete: (url) => frappeRequest({ url, method: 'DELETE' }),
-  patch: (url, data) => frappeRequest({ url, method: 'PATCH', body: data }),
+  get: (url, { params } = {}) => request({ url, params }),
+  post: (url, data) => request({ url, method: 'POST', body: data }),
+  put: (url, data) => request({ url, method: 'PUT', body: data }),
+  delete: (url) => request({ url, method: 'DELETE' }),
+  patch: (url, data) => request({ url, method: 'PATCH', body: data }),
 }

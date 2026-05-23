@@ -207,6 +207,7 @@
 
 <script setup>
 import { ref, computed, nextTick, onMounted } from 'vue'
+import { printReceipt } from '@/services/printer'
 import { formatPrice } from '../../utils/formatters';
 import ReceiptLogoIcon from '@/components/icons/ReceiptLogoIcon.svg'
 import PrintIcon from '@/components/icons/PrintIcon.svg'
@@ -334,18 +335,21 @@ const invoiceTemplateRef = ref(null)
       const handlePrint = async () => {
         if (isProcessing.value) return
 
-        if (!props.receiptData.isSaved) {
+        if (!props.receiptData?.isSaved) {
           alert('Please save the invoice first before printing.')
           return
         }
 
         try {
           isProcessing.value = true
-
           await nextTick()
 
-          await invoiceTemplateRef.value?.print()
-
+          try {
+            await printReceipt(props.receiptData, { force: true })
+          } catch (qzError) {
+            console.warn('QZ print failed, falling back to browser print:', qzError)
+            await invoiceTemplateRef.value?.print()
+          }
         } catch (error) {
           console.error('Print failed:', error)
           alert('Print failed. Please try again.')

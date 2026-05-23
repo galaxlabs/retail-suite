@@ -45,7 +45,15 @@ class POSClosingShift(Document):
             frappe.db.get_value("POS Opening Shift", self.pos_opening_shift, "status")
             == "Open"
         ):
-            if not frappe.get_value("POS Profile", self.pos_profile, "custom_allow_close_shift_with_draft_invoice"):
+            allow_close_with_draft_invoice = 0
+            if frappe.db.has_column("POS Profile", "custom_allow_close_shift_with_draft_invoice"):
+                allow_close_with_draft_invoice = frappe.get_value(
+                    "POS Profile",
+                    self.pos_profile,
+                    "custom_allow_close_shift_with_draft_invoice",
+                )
+
+            if not allow_close_with_draft_invoice:
                 if get_draft_invoices(self.pos_opening_shift):
                     frappe.throw(
                     _("You should Close your Draft invoice."),

@@ -41,3 +41,6 @@ mkcert-v1.4.4-linux-amd64
 # npm lock (using yarn instead)
 package-lock.json
 
+
+# generated frontend build for bench site
+retail/public/retail_suite/
