@@ -1,5 +1,5 @@
 import { reactive, computed } from 'vue'
-import { createResource, frappeRequest, call } from 'frappe-ui'
+import { frappeRequest } from 'frappe-ui'
 import router from '../router'
 import { resolveBackendUrl } from '@/config/runtime'
 
@@ -15,36 +15,55 @@ export const session = reactive({
   full_name: null,
   email: null,
 
-  login: createResource({
-    url: 'login',
-    makeParams({ username, password }) {
-      return { usr: username, pwd: password }
-    },
-    async onSuccess(data) {
-      session.user = sessionUser()
-      session.full_name = data?.full_name || null
-      session.email = data?.email || null
-      session.login.reset()
-      router.push({ name: 'POS' })
-    },
-    onError(err) {
-      console.error('❌ Login error:', err)
-    },
-  }),
+  login: {
+    loading: false,
+    async submit({ username, password }) {
+      session.login.loading = true
+      try {
+        const response = await fetch(resolveBackendUrl('/api/method/login'), {
+          method: 'POST',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams({ usr: username, pwd: password }),
+        })
 
-  logout: createResource({
-    url: 'logout',
-    onSuccess() {
-      session.user = null
-      session.full_name = null
-      session.email = null
-      router.push({ name: 'Login' })
+        const data = await response.json().catch(() => ({}))
+        if (!response.ok || data.exc || data.exception) {
+          throw new Error(data.message || data.exception || 'Login failed')
+        }
+
+        session.user = sessionUser() || username
+        session.full_name = data.full_name || null
+        session.email = username
+        router.push({ name: 'POS' })
+        return data
+      } catch (err) {
+        console.error('Login error:', err)
+        throw err
+      } finally {
+        session.login.loading = false
+      }
     },
-    onError() {
-      session.user = null
-      router.push({ name: 'Login' })
+  },
+
+  logout: {
+    loading: false,
+    async submit() {
+      session.logout.loading = true
+      try {
+        await fetch(resolveBackendUrl('/api/method/logout'), {
+          method: 'POST',
+          credentials: 'include',
+        })
+      } finally {
+        session.logout.loading = false
+        session.user = null
+        session.full_name = null
+        session.email = null
+        router.push({ name: 'Login' })
+      }
     },
-  }),
+  },
 })
 
 const request = (options) => frappeRequest({
