@@ -371,6 +371,10 @@ fixtures = [
     {
         "doctype": "Property Setter",
         "filters": [["name", "in", ("Sales Invoice-posa_pos_opening_shift-no_copy")]],
-    }
+    },
+    {
+        "dt": "Workspace",
+        "filters": {"name": "Retail"},
+    },
 ]
 # fixtures = ["Loyalty Program", "Loyalty Tier", "Loyalty Reward", "Loyalty Point Entry"]
