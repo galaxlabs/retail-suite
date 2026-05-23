@@ -1,0 +1,418 @@
+{
+ "charts": [],
+ "content": "[{\"id\": \"retail_hdr_1\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Quick Access</b></span>\", \"col\": 12}}, {\"id\": \"retail_sc_1\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Sales Invoice\", \"col\": 3}}, {\"id\": \"retail_sc_2\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"POS Opening Shift\", \"col\": 3}}, {\"id\": \"retail_sc_3\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"POS Closing Shift\", \"col\": 3}}, {\"id\": \"retail_sc_4\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Customer\", \"col\": 3}}, {\"id\": \"retail_sc_5\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Item\", \"col\": 3}}, {\"id\": \"retail_sc_6\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"POS Profile\", \"col\": 3}}, {\"id\": \"retail_hdr_2\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Operations</b></span>\", \"col\": 12}}, {\"id\": \"retail_sc_7\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Sales Invoice Reference\", \"col\": 3}}, {\"id\": \"retail_sc_8\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Price List\", \"col\": 3}}, {\"id\": \"retail_sc_9\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Item Price\", \"col\": 3}}, {\"id\": \"retail_sc_10\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Warehouse\", \"col\": 3}}, {\"id\": \"retail_sc_11\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Supplier\", \"col\": 3}}, {\"id\": \"retail_sc_12\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Purchase Receipt\", \"col\": 3}}, {\"id\": \"retail_sc_13\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Delivery Note\", \"col\": 3}}, {\"id\": \"retail_hdr_3\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Loyalty</b></span>\", \"col\": 12}}, {\"id\": \"retail_sc_14\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"POS Coupon\", \"col\": 3}}, {\"id\": \"retail_sc_15\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"POS Offer\", \"col\": 3}}, {\"id\": \"retail_sc_16\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Loyalty Program\", \"col\": 3}}, {\"id\": \"retail_sc_17\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Loyalty Tier\", \"col\": 3}}, {\"id\": \"retail_sc_18\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Loyalty Reward\", \"col\": 3}}, {\"id\": \"retail_sc_19\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Loyalty Point Entry\", \"col\": 3}}, {\"id\": \"retail_hdr_4\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Store Content</b></span>\", \"col\": 12}}, {\"id\": \"retail_sc_20\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Delivery Charges\", \"col\": 3}}, {\"id\": \"retail_sc_21\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Delivery Charges POS Profile\", \"col\": 3}}, {\"id\": \"retail_sc_22\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Online Store Settings\", \"col\": 3}}, {\"id\": \"retail_sc_23\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"POS Supplier Group\", \"col\": 3}}, {\"id\": \"retail_sc_24\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Referral Code\", \"col\": 3}}, {\"id\": \"retail_sc_25\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Notes\", \"col\": 3}}, {\"id\": \"retail_sc_26\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"All Notes\", \"col\": 3}}]",
+ "creation": "2026-05-23 00:00:00",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "shopping-cart",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Retail",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "POS & Sales",
+   "link_count": 0,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "Item, Customer",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales Invoice",
+   "link_count": 0,
+   "link_to": "Sales Invoice",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Customer",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "POS Opening Shift",
+   "link_count": 0,
+   "link_to": "POS Opening Shift",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "dependencies": "POS Opening Shift",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "POS Closing Shift",
+   "link_count": 0,
+   "link_to": "POS Closing Shift",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Warehouse, Customer",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "POS Profile",
+   "link_count": 0,
+   "link_to": "POS Profile",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Sales Invoice",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales Invoice Reference",
+   "link_count": 0,
+   "link_to": "Sales Invoice Reference",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Operations",
+   "link_count": 0,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Item",
+   "link_count": 0,
+   "link_to": "Item",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Item, Price List",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Item Price",
+   "link_count": 0,
+   "link_to": "Item Price",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Price List",
+   "link_count": 0,
+   "link_to": "Price List",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Warehouse",
+   "link_count": 0,
+   "link_to": "Warehouse",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Supplier",
+   "link_count": 0,
+   "link_to": "Supplier",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Item, Supplier",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Purchase Receipt",
+   "link_count": 0,
+   "link_to": "Purchase Receipt",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Item, Customer",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Delivery Note",
+   "link_count": 0,
+   "link_to": "Delivery Note",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Loyalty",
+   "link_count": 0,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "Item",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "POS Coupon",
+   "link_count": 0,
+   "link_to": "POS Coupon",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Item",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "POS Offer",
+   "link_count": 0,
+   "link_to": "POS Offer",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Customer",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Loyalty Program",
+   "link_count": 0,
+   "link_to": "Loyalty Program",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Loyalty Program",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Loyalty Tier",
+   "link_count": 0,
+   "link_to": "Loyalty Tier",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Loyalty Program",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Loyalty Reward",
+   "link_count": 0,
+   "link_to": "Loyalty Reward",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Customer",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Loyalty Point Entry",
+   "link_count": 0,
+   "link_to": "Loyalty Point Entry",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Store Content",
+   "link_count": 0,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "dependencies": "Item",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Delivery Charges",
+   "link_count": 0,
+   "link_to": "Delivery Charges",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Delivery Charges, POS Profile",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Delivery Charges POS Profile",
+   "link_count": 0,
+   "link_to": "Delivery Charges POS Profile",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Item",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Online Store Settings",
+   "link_count": 0,
+   "link_to": "Online Store Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Supplier",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "POS Supplier Group",
+   "link_count": 0,
+   "link_to": "POS Supplier Group",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "Customer",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Referral Code",
+   "link_count": 0,
+   "link_to": "Referral Code",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Notes",
+   "link_count": 0,
+   "link_to": "Notes",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "All Notes",
+   "link_count": 0,
+   "link_to": "All Notes",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2026-05-23 13:48:09.100289",
+ "modified_by": "Administrator",
+ "module": "Retail",
+ "name": "Retail",
+ "number_cards": [],
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Accounts Manager"
+  },
+  {
+   "role": "Accounts User"
+  },
+  {
+   "role": "Sales Manager"
+  },
+  {
+   "role": "System Manager"
+  }
+ ],
+ "sequence_id": 31.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "New",
+   "label": "Sales Invoice",
+   "link_to": "Sales Invoice",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "New",
+   "label": "POS Opening Shift",
+   "link_to": "POS Opening Shift",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "New",
+   "label": "POS Closing Shift",
+   "link_to": "POS Closing Shift",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Customer",
+   "link_to": "Customer",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Item",
+   "link_to": "Item",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "POS Profile",
+   "link_to": "POS Profile",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Warehouse",
+   "link_to": "Warehouse",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Supplier",
+   "link_to": "Supplier",
+   "stats_filter": "[]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Retail"
+}

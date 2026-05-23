@@ -6,3 +6,4 @@
 # Patches added in this section will be executed after doctypes are migrated
 retail.retail.patches.v1_0.seed_demo_pos_data
 retail.retail.patches.v1_0.seed_gromax_demo_shift
+retail.retail.patches.v1_0.sync_retail_workspace
