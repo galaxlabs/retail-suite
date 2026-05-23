@@ -209,6 +209,7 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { useShiftStore } from '@/stores/shift'
+import { useSettingsStore } from '@/stores/settings'
 import { get_opening_dialog_data, open_shift } from '@/composables/shift'
 import ClockIcon from '@/components/icons/ClockIcon.svg'
 import PlayIcon from '@/components/icons/PlayIcon.svg'
@@ -222,6 +223,8 @@ import AlertIcon from '@/components/icons/AlertIcon.svg'
   const emit = defineEmits(['close', 'success', 'error'])
 
     const shiftStore = useShiftStore()
+    const settingsStore = useSettingsStore()
+    const companies_data = ref([])
     const companies = ref([])
     const company = ref('')
     const pos_profiles_data = ref([])
@@ -229,6 +232,11 @@ import AlertIcon from '@/components/icons/AlertIcon.svg'
     const pos_profile = ref('')
     const payments_methods = ref([])
     const pos_profiles = ref([])
+
+    const selectedCurrency = () =>
+        pos_profiles_data.value.find(el => el.name === pos_profile.value)?.currency ||
+        companies_data.value.find(el => el.name === company.value)?.default_currency ||
+        settingsStore.settings.pricing.currency
 
     const syncProfilesForCompany = (selectedCompany) => {
         pos_profiles.value = pos_profiles_data.value
@@ -249,7 +257,12 @@ import AlertIcon from '@/components/icons/AlertIcon.svg'
                 amount: 0,
                 currency: el.currency
             }))
-        })
+
+        if (val) {
+            settingsStore.applyCurrencySettings(selectedCurrency())
+        }
+    })
+
         // Form state
         const form = ref({
             userId: '',
@@ -307,7 +320,8 @@ import AlertIcon from '@/components/icons/AlertIcon.svg'
         const data  = await get_opening_dialog_data()
         console.log("Open Dialog Data", data)
 
-        companies.value = (data.companies || []).map(el => el.name)
+        companies_data.value = data.companies || []
+        companies.value = companies_data.value.map(el => el.name)
         console.log("companies", companies)
 
         pos_profiles_data.value = data.pos_profiles_data || []
@@ -349,6 +363,7 @@ import AlertIcon from '@/components/icons/AlertIcon.svg'
 
             const newShift = await open_shift(shiftData)
             if (newShift) {
+            settingsStore.applyCurrencySettings(newShift.pos_profile?.currency || selectedCurrency())
             shiftStore.isShiftOpen = true
             console.log('After set in modal:', shiftStore.isShiftOpen)
             console.log("r.message:", newShift)

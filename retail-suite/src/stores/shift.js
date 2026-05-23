@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { toRaw } from 'vue'
+import { useSettingsStore } from './settings'
 import {
   getCurrentUserInfoApi,
   processAutoAttendanceApi,
@@ -136,9 +137,9 @@ export const useShiftStore = defineStore('shift', {
           console.log('✅ Opening shift found:', result);
           // ✅ فيه shift مفتوح
           this.pos_profile = result.pos_profile || null
-          this.pos_profile_name = result.pos_profile.name || null
+          this.pos_profile_name = result.pos_profile?.name || null
           this.pos_opening_shift = result.pos_opening_shift || null
-
+          useSettingsStore().applyCurrencySettings(this.pos_profile?.currency)
           const shift = this.pos_opening_shift || {};
           const balanceDetails = shift.balance_details || [];
           const openingBalance = balanceDetails.reduce(

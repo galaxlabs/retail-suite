@@ -3,6 +3,19 @@ import { defineStore } from "pinia";
 import { reactive, watch } from "vue";
 import { toRaw } from "vue";
 
+const ALLOWED_CURRENCIES = [
+  { code: "SAR", label: "Saudi Riyal", symbol: "﷼", locale: "en-SA" },
+  { code: "USD", label: "US Dollar", symbol: "$", locale: "en-US" },
+  { code: "EGP", label: "Egyptian Pound", symbol: "E£", locale: "en-EG" },
+  { code: "AED", label: "UAE Dirham", symbol: "د.إ", locale: "en-AE" },
+  { code: "GBP", label: "British Pound", symbol: "£", locale: "en-GB" },
+];
+
+const getCurrencyConfig = (currency) =>
+  ALLOWED_CURRENCIES.find((item) => item.code === currency) || ALLOWED_CURRENCIES[0];
+
+const normalizeCurrencyCode = (currency) => getCurrencyConfig(currency).code;
+
 export const useSettingsStore = defineStore("settings", () => {
   const createDefaultSettings = () => ({
     store: {
@@ -70,6 +83,22 @@ export const useSettingsStore = defineStore("settings", () => {
       }
     });
 
+    const pricingCurrency = normalizeCurrencyCode(normalized.pricing?.currency || normalized.store?.currencyCode);
+    const storeCurrency = pricingCurrency;
+    const storeCurrencyConfig = getCurrencyConfig(storeCurrency);
+
+    normalized.store = {
+      ...defaults.store,
+      ...(normalized.store || {}),
+      currencyCode: storeCurrency,
+      locale: storeCurrencyConfig.locale,
+    };
+    normalized.pricing = {
+      ...defaults.pricing,
+      ...(normalized.pricing || {}),
+      currency: pricingCurrency,
+    };
+
     normalized.printer = {
       ...defaults.printer,
       ...(incoming?.printer || {}),
@@ -91,7 +120,17 @@ export const useSettingsStore = defineStore("settings", () => {
     return normalized;
   };
 
+  const currencyOptions = ALLOWED_CURRENCIES;
+
   const settings = reactive(createDefaultSettings());
+
+  const applyCurrencySettings = (currency) => {
+    const config = getCurrencyConfig(currency);
+    settings.store.currencyCode = config.code;
+    settings.store.locale = config.locale;
+    settings.pricing.currency = config.code;
+    return config;
+  };
 
   // ✅ تحويل Hex إلى HSL
   const hexToHsl = (hex) => {
@@ -250,6 +289,8 @@ export const useSettingsStore = defineStore("settings", () => {
     saveSettings,
     updateSettings,
     resetSettings,
+    applyCurrencySettings,
+    currencyOptions,
     generateAndApplyColorShades,
   };
 });

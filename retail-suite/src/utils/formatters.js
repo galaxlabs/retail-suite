@@ -31,12 +31,12 @@ export const formatPrice = (price, currency) => {
 
     const currencyMap = {
       'SAR': { locale: 'en-SA', symbol: 'ر.س' },
-      'IDR': { locale: 'id-ID', symbol: 'Rp' },
       'USD': { locale: 'en-US', symbol: '$' },
-      'EUR': { locale: 'de-DE', symbol: '€' },
-      'SGD': { locale: 'en-SG', symbol: 'S$' },
-      'MYR': { locale: 'ms-MY', symbol: 'RM' }
+      'EGP': { locale: 'en-EG', symbol: 'E£' },
+      'AED': { locale: 'en-AE', symbol: 'د.إ' },
+      'GBP': { locale: 'en-GB', symbol: '£' }
     }
+
 
     const { locale } = currencyMap[currentCurrency] || { locale: 'en-US' }
 
@@ -368,12 +368,9 @@ export const get_currency_symbol = (currency) => {
   const symbols = {
     EGP: '£',
     USD: '$',
-    EUR: '€',
     SAR: '﷼',
     AED: 'د.إ',
-    GBP: '£',
-    KWD: 'د.ك',
-    QAR: 'ر.ق'
+    GBP: '£'
   };
 
   return symbols[currency] || currency; // fallback لو العملة مش موجودة
@@ -442,13 +439,13 @@ export const calculateTax = (subtotal, taxRate) => {
  */
 export const formatCurrency = (amount, currencyCode = 'USD', locale = 'en-US') => {
   const currencyMap = {
-    'IDR': { locale: 'id-ID', symbol: 'Rpp' },
+    'SAR': { locale: 'en-SA', symbol: '﷼' },
     'USD': { locale: 'en-US', symbol: '$' },
-    'EUR': { locale: 'de-DE', symbol: '€' },
-    'SGD': { locale: 'en-SG', symbol: 'S' },
-    'MYR': { locale: 'ms-MY', symbol: 'RM' },
-    'SAR': { locale: 'en-SA', symbol: '﷼' }
+    'EGP': { locale: 'en-EG', symbol: 'E£' },
+    'AED': { locale: 'en-AE', symbol: 'د.إ' },
+    'GBP': { locale: 'en-GB', symbol: '£' }
   }
+
 
   const config = currencyMap[currencyCode] || { locale, symbol: '' }
 

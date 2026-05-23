@@ -351,10 +351,13 @@
                       color: var(--text-main);
                     "
                   >
-                    <option value="EGP">Egyptian Pound (£)</option>
-                    <option value="USD">US Dollar ($)</option>
-                    <option value="EUR">Euro (€)</option>
-                    <option value="SAR">Saudi Riyal (﷼)</option>
+                    <option
+                      v-for="currency in currencyOptions"
+                      :key="currency.code"
+                      :value="currency.code"
+                    >
+                      {{ currency.code }} - {{ currency.label }} ({{ currency.symbol }})
+                    </option>
                   </select>
                 </div>
 
@@ -838,6 +841,31 @@
               </div>
             </div>
             <div
+              v-if="activeCategory === 'guide'"
+              class="rounded-lg shadow-sm p-8"
+              style="background: var(--card-bg); border: 1px solid var(--card-border);"
+            >
+              <h2 class="text-2xl font-bold mb-6" style="color: var(--text-main)">
+                Retail Suite User Guide
+              </h2>
+
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <section
+                  v-for="section in userGuideSections"
+                  :key="section.title"
+                  class="rounded-lg p-5"
+                  style="background: var(--item-bg); border: 1px solid var(--item-border);"
+                >
+                  <h3 class="text-base font-semibold mb-3" style="color: var(--text-main)">
+                    {{ section.title }}
+                  </h3>
+                  <ol class="space-y-2 list-decimal list-inside text-sm" style="color: var(--text-sub)">
+                    <li v-for="item in section.items" :key="item">{{ item }}</li>
+                  </ol>
+                </section>
+              </div>
+            </div>
+            <div
               v-if="activeCategory === 'keyboard Shortcuts'"
               class="rounded-lg shadow-sm p-8"
               style="
@@ -921,6 +949,7 @@ const settingsStore = useSettingsStore();
 
 
 const settings = computed(() => settingsStore.settings);
+const currencyOptions = settingsStore.currencyOptions;
 const primaryColor = computed(() => settings.value?.appearance?.primaryColor || '#06b6d4')
 const settingsCategories = [
   { id: "store", name: "Store Info", icon: "StoreIcon" },
@@ -929,6 +958,7 @@ const settingsCategories = [
   { id: "appearance", name: "Appearance", icon: "PaletteIcon" },
   { id: "system", name: "System", icon: "CogIcon" },
   { id: "printer", name: "Printer", icon: "Printer" },
+  { id: "guide", name: "User Guide", icon: "ReceiptIcon" },
   { id: "keyboard Shortcuts", name: "Keyboard Shortcuts", icon: "KeyboardIcon" }
 ];
 
@@ -959,6 +989,57 @@ const colorOptions = [
   { name: "Dusty Rose", value: "#A1797A", class: "bg-[#A1797A]" },
   { name: "Black", value: "#161a1f", class: "bg-[#161a1f]" }
 ];
+const userGuideSections = ref([
+  {
+    title: 'First Login',
+    items: [
+      'Open /retail_suite/login or the Vercel URL connected to this site.',
+      'Sign in with your Frappe cashier user.',
+      'Use the POS screen after the session is active.'
+    ]
+  },
+  {
+    title: 'Open A Shift',
+    items: [
+      'Choose the company for the cashier terminal.',
+      'Select the POS Profile returned for that company.',
+      'Enter opening cash by payment method and submit.'
+    ]
+  },
+  {
+    title: 'Create A Sale',
+    items: [
+      'Scan a barcode or search items from the product list.',
+      'Adjust quantity, discount, customer, and payment details.',
+      'Save the invoice to send the receipt to the configured printer.'
+    ]
+  },
+  {
+    title: 'Thermal Printing',
+    items: [
+      'For USB printers, run QZ Tray on the cashier machine and set the printer name.',
+      'For ethernet printers, set connection type to Ethernet, then enter printer IP and port 9100.',
+      'Use Test Print before serving customers.'
+    ]
+  },
+  {
+    title: 'Close A Shift',
+    items: [
+      'Open the shift controls and review sales, payments, and differences.',
+      'Enter closing cash by payment method.',
+      'Submit the closing shift after invoices are reviewed.'
+    ]
+  },
+  {
+    title: 'Vercel Frontend',
+    items: [
+      'Set VITE_API_BASE_URL, VITE_SOCKET_URL, and VITE_SITE_NAME in Vercel.',
+      'Do not put API secrets in VITE variables.',
+      'Push source code to GitHub and let Vercel build the dist folder.'
+    ]
+  }
+])
+
 const keyboardShortcuts = ref([
   { id: 1, action: 'إتمام البيع', key: 'Enter' },
   { id: 2, action: 'إلغاء المعاملة', key: 'Esc' },
@@ -977,6 +1058,13 @@ const handleTestPrint = async () => {
     toast.error(error.message || 'Test print failed')
   }
 }
+
+watch(
+  () => settings.value.pricing.currency,
+  (currency) => {
+    settingsStore.applyCurrencySettings(currency)
+  }
+);
 
 watch(
   () => settings.value,

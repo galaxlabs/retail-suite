@@ -44,7 +44,7 @@ def get_opening_dialog_data():
     data = {}
     data["companies"] = frappe.get_list(
         "Company",
-        fields=["name"],
+        fields=["name", "default_currency"],
         limit_page_length=0,
         order_by="name",
         ignore_permissions=True,
