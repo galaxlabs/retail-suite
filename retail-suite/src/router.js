@@ -7,6 +7,7 @@ import POS from '@/pages/POS.vue'
 import Pay from '@/pages/Pay.vue'
 import NewPayment from '@/pages/NewPayment.vue'
 import Setting from '@/pages/Setting.vue'
+import Login from '@/pages/Login.vue'
 import InvoicesList from '@/pages/invoices/InvoicesList.vue'
 import SuppliersInvoicesList from '@/pages/invoices/SuppliersInvoices.vue'
 import Archive from '@/pages/Archive.vue'
@@ -61,7 +62,11 @@ import ShiftType from '@/pages/attendance/ShiftType.vue'
 import NonPage from '@/pages/NonPage.vue'
 import ForbiddenView from '@/pages/ForbiddenView.vue'
 
+const appBase = window.location.pathname.startsWith('/retail_suite/') ? '/retail_suite/' : (import.meta.env.BASE_URL || '/')
+
 const routes = [
+  { path: '/', redirect: '/login' },
+  { path: '/login', name: 'Login', component: Login, meta: { requiresAuth: false, layout: 'none' } },
   { path: '/pos', name: 'POS', component: POS, meta: { requiresAuth: false, layout: 'none' } },
   { path: '/settings', name: 'Settings', component: Setting, meta: { requiresAuth: true } },
   { path: '/archive', name: 'Archive', component: Archive, meta: { requiresAuth: true } },
@@ -113,7 +118,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(appBase),
   routes,
 })
 
@@ -129,17 +134,9 @@ router.beforeEach(async (to, from, next) => {
   console.log('👤 session.user:', session.user)
   console.log('✅ isAuth:', isAuth)
   console.log('✅  to.meta.requiresAuth:', to.meta.requiresAuth)
-  if (to.path === '/') {
-    if (isAuth) {
-      return next('/pos')
-    } else {
-      console.log('🚀 Redirecting to login page')
-      const base = config.FRAPPE_URL
-      window.location.href = base
-        ? `${base}/login?redirect-to=${encodeURIComponent(window.location.href)}`
-        : '/login'
-      return next(false)
-    }
+
+  if (to.path === '/' && !isAuth) {
+    return next('/login')
   }
 
   if (to.path === '/login' && isAuth) {
@@ -147,28 +144,13 @@ router.beforeEach(async (to, from, next) => {
   }
 
   if (to.meta.requiresAuth && !isAuth) {
-    console.log('🚀 Redirecting to login page')
-    const base = config.FRAPPE_URL
-    window.location.href = base ? `${base}/login` : '/login'
-    return next(false)
+    return next('/login')
   }
 
   if (to.meta.roles && to.meta.roles.length > 0) {
     const userRoles = session.roles || []
     const hasAccess = to.meta.roles.some(role => userRoles.includes(role))
     if (!hasAccess) return next({ name: 'Forbidden' })
-  }
-
-  if (session.user === null && !to.meta.requiresAuth && !isAuth) {
-    console.log('🚀 Redirecting to login page')
-    const base = config.FRAPPE_URL
-    const env_type = config.ENV
-
-    if (env_type === 'development' && base) {
-      window.location.href = `${base}/login?redirect-to=${encodeURIComponent(window.location.href)}`
-    } else {
-      window.location.href = base ? `${base}/login` : '/login'
-    }
   }
 
   next()
