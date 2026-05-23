@@ -13,15 +13,14 @@ def get_logged_user():
 @frappe.whitelist(allow_guest=True)
 def authenticate_and_generate_api_key(username, password):
     """
-    Authenticate user and generate API key + create session
+    Authenticate user and generate API key
     متبع نفس pattern لـ frappe.sessions.Session
     """
 
     # ✅ 1. تحقق من بيانات المستخدم
     user = frappe.get_doc('User', username)
 
-    # if not user.check_password(password):
-    #     frappe.throw('Invalid credentials', frappe.AuthenticationError)
+    check_password(username, password)
 
     # ❌ تأكد إن الحساب مش معطل
     if not user.enabled:
@@ -36,49 +35,7 @@ def authenticate_and_generate_api_key(username, password):
     user.api_secret = api_secret
     user.save(ignore_permissions=True)
 
-    # ✅ 3. خلق session - متبع نفس كود frappe.sessions
-    sid = frappe.generate_hash()  # Real session ID hash
-
-    session_data = {
-        "user": username,
-        "last_updated": now(),
-        "session_expiry": "06:00:00",  # desktop default
-        "full_name": user.full_name,
-        "user_type": user.user_type,
-        "device": "desktop",
-    }
-
-    # ✅ 4. احفظ الـ session record في database
-    Sessions = frappe.qb.DocType("Sessions")
-
-    (
-        frappe.qb.into(Sessions)
-        .columns(
-            Sessions.sessiondata,
-            Sessions.user,
-            Sessions.lastupdate,
-            Sessions.sid,
-            Sessions.status,
-            Sessions.device,
-        )
-        .insert((
-            str(session_data),  # sessiondata as string
-            username,
-            now(),
-            sid,
-            "Active",
-            "desktop"
-        ))
-    ).run()
-
-    # احفظ في الـ cache برضو
-    frappe.cache().hset("session", sid, {
-        "data": session_data,
-        "user": username,
-        "sid": sid
-    })
-
-    # ✅ 5. update آخر login للـ user
+    # Token auth is used by the standalone Vercel frontend, so no cookie session row is needed.
     user_doctype = frappe.qb.DocType("User")
     (
         frappe.qb.update(user_doctype)
@@ -101,7 +58,6 @@ def authenticate_and_generate_api_key(username, password):
             'api_key': api_key,
             'api_secret': api_secret,
             'generated_at': now(),
-            'sid': sid,  # ✅ Real hash session ID now!
             'user_id': user.name,
             'user_type': user.user_type,
             'role': [role.role for role in user.roles]

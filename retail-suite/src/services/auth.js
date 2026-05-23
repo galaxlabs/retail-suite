@@ -20,21 +20,26 @@ export const session = reactive({
     async submit({ username, password }) {
       session.login.loading = true
       try {
-        const response = await fetch(resolveBackendUrl('/api/method/login'), {
+        const response = await fetch(resolveBackendUrl('/api/method/retail.retail.api.vercel_auth.token_login'), {
           method: 'POST',
           credentials: 'include',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams({ usr: username, pwd: password }),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
         })
 
         const data = await response.json().catch(() => ({}))
-        if (!response.ok || data.exc || data.exception) {
-          throw new Error(data.message || data.exception || 'Login failed')
+        const message = data.message || {}
+        if (!response.ok || data.exc || data.exception || !message.success) {
+          throw new Error(message.message || data.message || data.exception || 'Login failed')
         }
 
-        session.user = sessionUser() || username
-        session.full_name = data.full_name || null
-        session.email = username
+        const userData = message.data || {}
+        localStorage.setItem('api_key', userData.api_key || message.api_key)
+        localStorage.setItem('api_secret', userData.api_secret || message.api_secret)
+
+        session.user = userData.user || userData.user_id || username
+        session.full_name = userData.full_name || null
+        session.email = userData.email || username
         router.push({ name: 'POS' })
         return data
       } catch (err) {
@@ -55,6 +60,8 @@ export const session = reactive({
           method: 'POST',
           credentials: 'include',
         })
+        localStorage.removeItem('api_key')
+        localStorage.removeItem('api_secret')
       } finally {
         session.logout.loading = false
         session.user = null
