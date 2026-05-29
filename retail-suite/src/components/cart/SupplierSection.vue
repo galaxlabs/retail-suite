@@ -97,12 +97,8 @@ const selectedSupplierName = computed(() => {
 const loadSuppliers = async () => {
   try {
     const res = await getSuppliers()
-    // Handle nested Frappe response: { status, data, message } where data may be nested
-    let supplierList = []
-    if (Array.isArray(res?.data)) supplierList = res.data
-    else if (Array.isArray(res?.message)) supplierList = res.message
-    else if (Array.isArray(res)) supplierList = res
-    else if (res?.data?.message) supplierList = Array.isArray(res.data.message) ? res.data.message : [res.data.message]
+    // getSuppliers now returns { status: 'success', data: [...] } consistently
+    const supplierList = res?.data || []
     suppliers.value = supplierList.map(s => ({
       name: s.name,
       supplier_name: s.supplier_name || s.name,

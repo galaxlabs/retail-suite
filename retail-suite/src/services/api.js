@@ -1942,8 +1942,10 @@ export const cancelPurchaseReceipt = async (name) => {
 export const getSuppliers = async () => {
   try {
     const res = await call('retail.retail.api.purchase_receipt.get_suppliers')
-    const list = res?.message || res?.data?.message || res?.data || []
-    return { status: 'success', data: Array.isArray(list) ? list : [], message: 'Suppliers fetched successfully' }
+    // Frappe wraps response in { message: { status, data: [...] } }
+    const msg = res?.message || res || {}
+    const list = Array.isArray(msg) ? msg : (Array.isArray(msg?.data) ? msg.data : (Array.isArray(msg?.message) ? msg.message : []))
+    return { status: 'success', data: list, message: 'Suppliers fetched successfully' }
   } catch (error) {
     console.error('Error fetching suppliers:', error)
     return { status: 'error', data: [], message: error.message }
