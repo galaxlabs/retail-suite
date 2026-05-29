@@ -685,9 +685,9 @@ const goBack = () => {
 ========================= */
 const settingsStore = useSettingsStore()
 const currencyCode =
-  settingsStore?.settings?.store?.currencyCode || 'USD'
+  settingsStore?.settings?.store?.currencyCode || 'PKR'
 const locale =
-  settingsStore?.settings?.store?.local || 'en-US'
+  settingsStore?.settings?.store?.locale || 'en-PK'
 
 
 

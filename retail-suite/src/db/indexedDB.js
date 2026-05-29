@@ -5,7 +5,7 @@ let dbInstance = null
 export async function initDB() {
   if (dbInstance) return dbInstance
 
-  dbInstance = await openDB('TailwindPOS', 3, {
+  dbInstance = await openDB('RetailSuite', 3, {
     upgrade(db) {
       // جدول السےتجات
       if (!db.objectStoreNames.contains('products')) {

@@ -638,8 +638,8 @@ const statistics = reactive({
   average_sales: 0
 })
 
-const locale = computed(() => settingsStore.settings.locale || 'en-US')
-const currencyCode = computed(() => settingsStore.settings.currency || 'USD')
+const locale = computed(() => settingsStore.settings.locale || 'en-PK')
+const currencyCode = computed(() => settingsStore.settings.currency || 'PKR')
 const uniqueCashiers = computed(() => invoicesStore.cashiers)
 
 const filteredShifts = computed(() => {

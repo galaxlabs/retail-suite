@@ -25,8 +25,8 @@ export const useSettingsStore = defineStore("settings", () => {
       phone: "+62 812 3456 7890",
       email: "store@tailwindpos.com",
       taxId: "112233123",
-      currencyCode: 'SAR',
-      locale:'en-SA',
+      currencyCode: 'PKR',
+      locale:'en-PK',
     },
     receipt: {
       showLogo: true,

@@ -612,8 +612,8 @@ import { formatCurrency } from '@/utils/formatters'
 import { useSettingsStore } from "@/stores/settings"
 
 const settingsStore = useSettingsStore()
-const currencyCode = settingsStore?.settings?.store?.currencyCode || "USD"
-const locale       = settingsStore?.settings?.store?.local || "en-US"
+const currencyCode = settingsStore?.settings?.store?.currencyCode || "PKR"
+const locale       = settingsStore?.settings?.store?.locale || "en-PK"
 
 const route  = useRoute()
 const router = useRouter()
