@@ -41,10 +41,12 @@ if (!API_BASE_URL && isVercelHost) {
 // Browser should use session cookies by default.
 
 const clearSession = () => {
+  // Prevent redirect loop
+  if (window.location.hash.startsWith("#/login")) return
   localStorage.removeItem("api_key")
   localStorage.removeItem("api_secret")
   sessionStorage.setItem("session_expired", "1")
-  window.location.href = window.location.origin + (window.location.pathname.startsWith("/retail_suite/") ? "/retail_suite/" : "/") + "#/login"
+  window.location.hash = "#/login"
 }
 
 const USE_BROWSER_TOKEN_AUTH = (import.meta.env.VITE_USE_API_TOKEN === 'true') || (Boolean(API_BASE_URL) && (new URL(API_BASE_URL)).hostname !== window.location.hostname)
@@ -114,7 +116,8 @@ window.fetch = (input, init = {}) => {
 
       return fetchPromise
         .then(function (resp) {
-          if (resp.status === 401 || resp.status === 403) {
+          // Only clear session for non-public endpoints
+          if (!isPublicAuthEndpoint(requestUrl) && resp.status === 401) {
             clearSession()
             return Promise.reject(new Error("Session expired"))
           }
@@ -156,18 +159,9 @@ axios.interceptors.response.use(
   (response) => response,
   (error) => {
     const status = error?.response?.status
-    if (status === 401 || status === 403) {
-      const msg = error?.response?.data
-      if (msg && (String(msg).includes("session") || String(msg).includes("expired") || String(msg).includes("invalid"))) {
-        clearSession()
-        return Promise.reject(error)
-      }
-      if (error?.response?.data?.exc_type === "PermissionError" &&
-          !error?.config?.url?.includes("ping") &&
-          !error?.config?.url?.includes("login")) {
-        clearSession()
-        return Promise.reject(error)
-      }
+    if (status === 401) {
+      clearSession()
+      return Promise.reject(error)
     }
     return Promise.reject(error)
   }

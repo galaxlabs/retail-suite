@@ -130,17 +130,21 @@ let sessionCheckInterval = null
 const startSessionCheck = () => {
   if (sessionCheckInterval) return
   sessionCheckInterval = setInterval(async () => {
-    if (window.location.hash.startsWith("#/login")) return
-    const ok = await checkSession()
-    if (!ok) {
-      clearInterval(sessionCheckInterval)
-      sessionCheckInterval = null
-      localStorage.removeItem("api_key")
-      localStorage.removeItem("api_secret")
-      sessionStorage.setItem("session_expired", "1")
-      window.location.hash = "#/login"
+    if (window.location.hash.startsWith("#/login") || window.location.hash.startsWith("#/403")) return
+    try {
+      const ok = await checkSession()
+      if (ok === false) {
+        clearInterval(sessionCheckInterval)
+        sessionCheckInterval = null
+        localStorage.removeItem("api_key")
+        localStorage.removeItem("api_secret")
+        sessionStorage.setItem("session_expired", "1")
+        window.location.hash = "#/login"
+      }
+    } catch(e) {
+      // Silently ignore session check failures
     }
-  }, 30000)
+  }, 120000)
 }
 
 const stopSessionCheck = () => {
