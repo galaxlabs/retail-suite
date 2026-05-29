@@ -11,6 +11,7 @@
            :class="backendOnline ? 'border-emerald-400/30 bg-emerald-500/10 text-emerald-200' : 'border-amber-400/30 bg-amber-500/10 text-amber-200'">
         <p class="font-medium">Backend: {{ backendOnline ? 'Connected' : 'Unavailable' }}</p>
         <p class="mt-1 break-all opacity-90">{{ backendBaseUrl }}</p>
+      <p v-if="!backendBaseUrl" class="mt-1 text-red-300 text-xs">WARNING: VITE_API_BASE_URL is not configured. API calls will fail.</p>
       </div>
 
       <form class="space-y-4" @submit.prevent="submitLogin">

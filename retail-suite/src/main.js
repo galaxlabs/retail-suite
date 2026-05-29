@@ -42,11 +42,12 @@ if (!API_BASE_URL && isVercelHost) {
 
 const clearSession = () => {
   // Prevent redirect loop
-  if (window.location.hash.startsWith("#/login")) return
+  if (window.location.pathname.endsWith("/login")) return
   localStorage.removeItem("api_key")
   localStorage.removeItem("api_secret")
   sessionStorage.setItem("session_expired", "1")
-  window.location.hash = "#/login"
+  const base = window.location.pathname.startsWith("/retail_suite/") ? "/retail_suite/" : "/"
+  window.location.href = window.location.origin + base + "login"
 }
 
 const USE_BROWSER_TOKEN_AUTH = (import.meta.env.VITE_USE_API_TOKEN === 'true') || (Boolean(API_BASE_URL) && (new URL(API_BASE_URL)).hostname !== window.location.hostname)
