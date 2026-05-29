@@ -128,23 +128,18 @@ const router = createRouter({
 let sessionCheckInterval = null
 
 const startSessionCheck = () => {
+  // DISABLED: Periodic check was logging users out unexpectedly
+  // HTTP 401 interceptor in main.js handles real session expiry
+  // This only verifies session silently for the UI
   if (sessionCheckInterval) return
   sessionCheckInterval = setInterval(async () => {
-    if (window.location.hash.startsWith("#/login") || window.location.hash.startsWith("#/403")) return
+    if (window.location.pathname.endsWith("/login")) return
     try {
-      const ok = await checkSession()
-      if (ok === false) {
-        clearInterval(sessionCheckInterval)
-        sessionCheckInterval = null
-        localStorage.removeItem("api_key")
-        localStorage.removeItem("api_secret")
-        sessionStorage.setItem("session_expired", "1")
-        window.location.hash = "#/login"
-      }
+      await checkSession()
     } catch(e) {
-      // Silently ignore session check failures
+      // Never force logout from periodic check
     }
-  }, 120000)
+  }, 300000)
 }
 
 const stopSessionCheck = () => {
@@ -157,7 +152,11 @@ const stopSessionCheck = () => {
 let sessionChecked = false
 router.beforeEach(async (to, from, next) => {
   if (!sessionChecked) {
-    await checkSession()
+    try {
+      await checkSession()
+    } catch(e) {
+      // Allow navigation even if session check fails
+    }
     sessionChecked = true
   startSessionCheck()
   }
