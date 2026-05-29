@@ -107,26 +107,28 @@ window.fetch = (input, init = {}) => {
       }
 
       const requestUrl = isBackendPath ? resolveBackendUrl(input) : input
-      return originalFetch(requestUrl, withAuthHeaders({
+      const fetchPromise = originalFetch(requestUrl, withAuthHeaders({
         ...init,
         credentials: init.credentials ?? "include",
       }, requestUrl))
-      .then((resp) => {
-        if (resp.status === 401 || resp.status === 403) {
-          clearSession()
-          return Promise.reject(new Error("Session expired"))
-        }
-        return resp
-      })
-      .catch((error) => {
-        console.error("[fetch] Backend request failed", {
-          input,
-          requestUrl,
-          apiBaseUrl: API_BASE_URL || null,
-          message: error?.message || String(error),
+
+      return fetchPromise
+        .then(function (resp) {
+          if (resp.status === 401 || resp.status === 403) {
+            clearSession()
+            return Promise.reject(new Error("Session expired"))
+          }
+          return resp
         })
-        throw error
-      })
+        .catch(function (error) {
+          console.error("[fetch] Backend request failed", {
+            input: input,
+            requestUrl: requestUrl,
+            apiBaseUrl: API_BASE_URL || null,
+            message: error?.message || String(error),
+          })
+          throw error
+        })
     }
   }
 
