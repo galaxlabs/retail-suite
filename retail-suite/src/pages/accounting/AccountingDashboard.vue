@@ -129,7 +129,7 @@ import { safeCall } from '@/services/apiClient'
 
     // stores
     const settingsStore = useSettingsStore()
-    const currencyCode = settingsStore?.settings?.store?.currencyCode || "USD"
+    const currencyCode = settingsStore?.settings?.store?.currencyCode || "PKR"
     const locale = settingsStore?.settings?.store?.local || "en-US"
 
     const router = useRouter()

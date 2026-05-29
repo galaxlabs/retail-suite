@@ -193,6 +193,7 @@
 <script setup>
 import { useSettingsStore } from '@/stores/settings'
 import { computed, onMounted, onUnmounted, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import PosIcon from '@/components/icons/PosIcon.svg'
 import InventoryIcon from '@/components/icons/InventoryIcon2.svg'
 import CashIcon from '@/components/icons/DollarIcon.svg'
@@ -227,6 +228,7 @@ import {
   })
   const emit = defineEmits( ['menu-change'])
 
+    const router = useRouter()
     const settingsStore = useSettingsStore()
 
     // ✅ الحصول على الإعدادات سے Store مباشرة
