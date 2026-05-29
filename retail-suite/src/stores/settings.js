@@ -43,6 +43,7 @@ export const useSettingsStore = defineStore("settings", () => {
     },
     appearance: {
       theme: "light",
+      language: "en",
       primaryColor: "#06b6d4",
       fontSize: "sm"
     },
