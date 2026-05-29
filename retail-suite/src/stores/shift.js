@@ -117,9 +117,16 @@ export const useShiftStore = defineStore('shift', {
     },
     async getCurrentUserInfo() {
       try {
-
         const CurrentUserInfo = await getCurrentUserInfoApi()
-        if (!CurrentUserInfo || !CurrentUserInfo.user) {
+        // Fallback: if API returns no user, try getting from localStorage
+        if (!CurrentUserInfo || !CurrentUserInfo.user || CurrentUserInfo.user === 'Guest') {
+          // Try reading user from session/auth store
+          const { session } = await import('@/services/auth')
+          const storedUser = session.user
+          if (storedUser && storedUser !== 'Guest') {
+            this.CurrentUserInfo = { user: storedUser, full_name: session.full_name }
+            return this.CurrentUserInfo
+          }
           this.CurrentUserInfo = null
           return null
         }
@@ -135,11 +142,16 @@ export const useShiftStore = defineStore('shift', {
       }
 
     },
-    async checkActiveShift() {
+    async checkActiveShift(retryCount = 0) {
       try {
         const currentUserInfo = await this.getCurrentUserInfo()
         const currentUser = currentUserInfo?.user
         if (!currentUser) {
+          // Retry once after a delay (might be timing issue after login)
+          if (retryCount < 1) {
+            await new Promise(r => setTimeout(r, 1500))
+            return this.checkActiveShift(retryCount + 1)
+          }
           const hasLocalOpen = Boolean(this.pos_opening_shift && this.pos_profile)
           if (hasLocalOpen) {
             this.isShiftOpen = true

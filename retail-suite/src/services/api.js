@@ -1941,17 +1941,12 @@ export const cancelPurchaseReceipt = async (name) => {
 // ✅ Get all suppliers
 export const getSuppliers = async () => {
   try {
-    const res = await call(
-      'retail.retail.api.purchase_receipt.get_suppliers'
-    )
-    return {
-      status: 'success',
-      data: res.data?.message?.data || [],
-      message: 'Suppliers fetched successfully'
-    }
+    const res = await call('retail.retail.api.purchase_receipt.get_suppliers')
+    const list = res?.message || res?.data?.message || res?.data || []
+    return { status: 'success', data: Array.isArray(list) ? list : [], message: 'Suppliers fetched successfully' }
   } catch (error) {
     console.error('Error fetching suppliers:', error)
-    throw error
+    return { status: 'error', data: [], message: error.message }
   }
 }
 
