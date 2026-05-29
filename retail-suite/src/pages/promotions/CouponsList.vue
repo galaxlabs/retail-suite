@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900">القسائم والكوبونات</h1>
+        <h1 class="text-3xl font-bold text-gray-900">Coupons</h1>
         <p class="text-gray-600 mt-1">{{ coupons.length }} قسيمة</p>
       </div>
       <button
@@ -14,7 +14,7 @@
           <line x1="12" y1="5" x2="12" y2="19"></line>
           <line x1="5" y1="12" x2="19" y2="12"></line>
         </svg>
-        قسيمة جديدة
+        New Coupon
       </button>
     </div>
 

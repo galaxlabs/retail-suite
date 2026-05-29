@@ -330,7 +330,7 @@ import { ref, computed } from 'vue'
         id: 3,
         name: 'وجبة شاملة',
         icon: '🍔',
-        description: 'وجبة برجر مع مشروب وحلوى',
+        description: 'Burger meal with drink and dessert',
         pointsRequired: 1500,
         stock: 12,
         totalStock: 50

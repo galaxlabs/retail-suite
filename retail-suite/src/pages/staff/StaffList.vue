@@ -520,10 +520,10 @@ const paginatedStaff = computed(() =>
    Methods
 ========================= */
 const getDepartmentLabel = dept => ({
-  sales: "المبيعات",
-  warehouse: "المستودع",
-  cashier: "الكاشيرز",
-  management: "الإدارة",
+  sales: "Sales",
+  warehouse: "Warehouse",
+  cashier: "Cashier",
+  management: "Management",
 }[dept] || dept)
 
 const getStatusClass = status => ({
@@ -533,9 +533,9 @@ const getStatusClass = status => ({
 }[status] || "bg-gray-100 text-gray-800")
 
 const getStatusLabel = status => ({
-  Active: "نشط",
-  Inactive: "غير نشط",
-  Left: "مغادر",
+  Active: "Active",
+  Inactive: "غير Active",
+  Left: "Left",
 }[status] || status)
 
 const openCreateModal = () => {
