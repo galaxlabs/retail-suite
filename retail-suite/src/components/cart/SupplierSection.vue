@@ -30,6 +30,7 @@
           {{ sup.supplier_name || sup.name }}
         </option>
       </select>
+      <p v-if="loadError" class="text-xs mt-1" style="color: var(--warning-border);">{{ loadError }}</p>
 
       <button
         @click="showAddSupplierModal = true"
@@ -87,6 +88,7 @@ const primaryColor = computed(() => settings.value?.appearance?.primaryColor || 
 const selectedSupplier = ref('')
 const suppliers = ref([])
 const showAddSupplierModal = ref(false)
+const loadError = ref('')
 const shiftStore = useShiftStore()
 
 const selectedSupplierName = computed(() => {
@@ -105,6 +107,7 @@ const loadSuppliers = async () => {
     }))
   } catch (e) {
     console.error('Failed to load suppliers:', e)
+    loadError.value = 'Failed to load suppliers: ' + (e?.message || 'Unknown error')
   }
 }
 
@@ -131,5 +134,8 @@ const handleSupplierAdded = async (newSupplier) => {
 
 onMounted(async () => {
   await loadSuppliers()
+  if (suppliers.value.length === 0 && !loadError.value) {
+    loadError.value = 'No suppliers found. Create suppliers in ERPNext first.'
+  }
 })
 </script>
