@@ -99,8 +99,12 @@ const selectedSupplierName = computed(() => {
 const loadSuppliers = async () => {
   try {
     const res = await getSuppliers()
-    // getSuppliers now returns { status: 'success', data: [...] } consistently
     const supplierList = res?.data || []
+    if (supplierList.length === 0) {
+      console.warn('SupplierSection: No suppliers returned. Raw response:', JSON.stringify(res))
+    } else {
+      console.log('SupplierSection: Loaded', supplierList.length, 'suppliers:', supplierList.map(s=>s.name))
+    }
     suppliers.value = supplierList.map(s => ({
       name: s.name,
       supplier_name: s.supplier_name || s.name,

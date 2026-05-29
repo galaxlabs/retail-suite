@@ -526,7 +526,7 @@ import {
         </head>
         <body>
           <div class="header">
-            <h2>TAILWIND POS - SUPPLIER BILL</h2>
+            <h2>{{ storeName || 'Retail Suite' }} - Supplier Bill</h2>
           </div>
 
           <div class="bill-info">
