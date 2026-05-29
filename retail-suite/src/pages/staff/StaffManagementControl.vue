@@ -466,7 +466,7 @@ const openRoleModal = () => {
 // Save Functions
 const saveDesignation = async() => {
   if (!designationForm.value.name.trim()) {
-    alert('Please enter a designation name')
+    window.$toast?.warning('Please enter a designation name')
     return
   }
 
@@ -504,7 +504,7 @@ const saveDesignation = async() => {
 
 const saveDepartment = async() => {
   if (!departmentForm.value.name.trim()) {
-    alert('Please enter a department name')
+    window.$toast?.warning('Please enter a department name')
     return
   }
   try {
@@ -543,7 +543,7 @@ const saveDepartment = async() => {
 
 const saveRole = async() => {
   if (!roleForm.value.name.trim()) {
-    alert('Please enter a role name')
+    window.$toast?.warning('Please enter a role name')
     return
   }
   try {

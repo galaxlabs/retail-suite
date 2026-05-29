@@ -245,7 +245,7 @@ const isFormValid = computed(() => {
 
 const handleSubmit = () => {
   if (!isFormValid.value) {
-    error.value = 'يرجى ملء جميع الحقول المطلوبة'
+    error.value = 'براہ کرم تمام مطلوبہ فیلڈز پُر کریں'
     return
   }
 

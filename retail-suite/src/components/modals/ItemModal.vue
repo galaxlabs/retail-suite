@@ -348,16 +348,16 @@ const isFormValid = () => {
 const handleImageUpload = (event) => {
   const file = event.target.files?.[0]
   if (!file) return
-  if (file.size > 5 * 1024 * 1024) { alert('File size must be less than 5MB'); return }
-  if (!file.type.startsWith('image/')) { alert('Please select a valid image file'); return }
+  if (file.size > 5 * 1024 * 1024) { window.$toast?.warning('File size must be less than 5MB'); return }
+  if (!file.type.startsWith('image/')) { window.$toast?.warning('Please select a valid image file'); return }
   const reader = new FileReader()
   reader.onload  = (e) => { if (typeof e.target?.result === 'string') form.image = e.target.result }
-  reader.onerror = ()  => { alert('Failed to read file') }
+  reader.onerror = ()  => { window.$toast?.error('Failed to read file') }
   reader.readAsDataURL(file)
 }
 
 const handleSubmit = async () => {
-  if (!isFormValid()) { alert('Please fill in all required fields'); return }
+  if (!isFormValid()) { window.$toast?.warning('Please fill in all required fields'); return }
   isSaving.value = true
   try {
     console.log("🧾 props.item",props.item)
@@ -387,7 +387,7 @@ const handleSubmit = async () => {
     emit('save', payload)
   } catch (error) {
     console.error('Error submitting form:', error)
-    alert('Error saving item. Please try again.')
+    window.$toast?.error('Error saving item. Please try again.')
   } finally {
     isSaving.value = false
   }

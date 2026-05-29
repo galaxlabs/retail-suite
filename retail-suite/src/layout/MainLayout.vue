@@ -395,7 +395,7 @@ import {
 import config from '@/config/frappe'
 import { useSettingsStore } from '@/stores/settings.js'
 import Sidebar from './Sidebar.vue'
-import { session } from '@/services/auth'; // استورد من ملف auth.js بتاعك
+import { session } from '@/services/auth'; // استورد سے ملف auth.js بتاعك
 // Settings Store
 const settingsStore = useSettingsStore()
 

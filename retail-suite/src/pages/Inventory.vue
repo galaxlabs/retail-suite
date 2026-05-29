@@ -368,13 +368,13 @@ const editingProduct = ref(null)
 const newCategory = ref('')
 
 
-const defaultImage = '/src/assets/img/default-product.jpg'
-const defaultImageSrc = `${config.VUE_URL}${defaultImage}`
+const defaultImage = '/img/default-product.jpg'
+const defaultImageSrc = `${config.FRAPPE_URL}${defaultImage}`
 
 
 const currentSrc = ref(
   product?.image
-    ?  `${config.VUE_URL}${product?.image}`
+    ?  `${config.FRAPPE_URL}${product?.image}`
     : defaultImageSrc
 )
 

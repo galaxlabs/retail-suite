@@ -2,63 +2,64 @@ import { createRouter, createWebHistory } from 'vue-router'
 import { session, checkSession } from '@/services/auth'
 import config from '@/config/frappe'
 
-import MobileScan from '@/pages/MobileScan.vue'
+const MobileScan = () => import('@/pages/MobileScan.vue')
 import POS from '@/pages/POS.vue'
-import Pay from '@/pages/Pay.vue'
-import NewPayment from '@/pages/NewPayment.vue'
-import Setting from '@/pages/Setting.vue'
+const Pay = () => import('@/pages/Pay.vue')
+const NewPayment = () => import('@/pages/NewPayment.vue')
+const Setting = () => import('@/pages/Setting.vue')
 import Login from '@/pages/Login.vue'
-import InvoicesList from '@/pages/invoices/InvoicesList.vue'
-import SuppliersInvoicesList from '@/pages/invoices/SuppliersInvoices.vue'
-import Archive from '@/pages/Archive.vue'
-import shiftsList from '@/pages/Shifts/ShiftsList.vue'
-import ShiftShow from '@/pages/Shifts/ShiftShow.vue'
-import InventoryDashboard from '@/pages/inventory/Dashboard.vue'
+const InvoicesList = () => import('@/pages/invoices/InvoicesList.vue')
+const SuppliersInvoicesList = () => import('@/pages/invoices/SuppliersInvoices.vue')
+const Archive = () => import('@/pages/Archive.vue')
+const shiftsList = () => import('@/pages/Shifts/ShiftsList.vue')
+const ShiftShow = () => import('@/pages/Shifts/ShiftShow.vue')
+const InventoryDashboard = () => import('@/pages/inventory/Dashboard.vue')
 
-import ItemPrice from '@/pages/inventory/ItemPrice.vue'
-import PurchaseReceipt from '@/pages/inventory/PurchaseReceipt.vue'
-import Barcodesunified from '@/pages/inventory/Barcodesunified.vue'
+const ItemPrice = () => import('@/pages/inventory/ItemPrice.vue')
+const PurchaseReceipt = () => import('@/pages/inventory/PurchaseReceipt.vue')
+const Barcodesunified = () => import('@/pages/inventory/Barcodesunified.vue')
 
-import InventoryTransfer from '@/pages/inventory/Transfer.vue'
-import InventoryTracking from '@/pages/inventory/InventoryTracking.vue'
-import InventoryBalance from '@/pages/inventory/InventoryBalance.vue'
+const InventoryTransfer = () => import('@/pages/inventory/Transfer.vue')
+const InventoryTracking = () => import('@/pages/inventory/InventoryTracking.vue')
+const InventoryBalance = () => import('@/pages/inventory/InventoryBalance.vue')
 
-import CustomersList from '@/pages/customers/CustomersList.vue'
-import CustomerProfile from '@/pages/customers/CustomerProfile.vue'
+const CustomersList = () => import('@/pages/customers/CustomersList.vue')
+const CustomerProfile = () => import('@/pages/customers/CustomerProfile.vue')
 
-import SuppliersList from '@/pages/suppliers/SuppliersList.vue'
-import SupplierProfile from '@/pages/suppliers/SupplierProfile.vue'
+const SuppliersList = () => import('@/pages/suppliers/SuppliersList.vue')
+const SupplierProfile = () => import('@/pages/suppliers/SupplierProfile.vue')
 
-import StaffDashboard from '@/pages/staff/StaffDashboard.vue'
-import StaffList from '@/pages/staff/StaffList.vue'
-import StaffProfile from '@/pages/staff/StaffProfile.vue'
-import StaffManagementControl from '@/pages/staff/StaffManagementControl.vue'
+const StaffDashboard = () => import('@/pages/staff/StaffDashboard.vue')
+const StaffList = () => import('@/pages/staff/StaffList.vue')
+const StaffProfile = () => import('@/pages/staff/StaffProfile.vue')
+const StaffManagementControl = () => import('@/pages/staff/StaffManagementControl.vue')
 
-import SalesAnalytics from '@/pages/reports/SalesAnalytics.vue'
-import IncomeStatement from '@/pages/reports/IncomeStatement.vue'
-import AccountsPayable from '@/pages/reports/AccountsPayable.vue'
-import AccountsReceivable from '@/pages/reports/AccountsReceivable.vue'
-import BalanceSheet from '@/pages/reports/BalanceSheet.vue'
-import CashFlowStatement from '@/pages/reports/CashFlowStatement.vue'
-import Expenses from '@/pages/reports/Expenses.vue'
+const SalesAnalytics = () => import('@/pages/reports/SalesAnalytics.vue')
+const IncomeStatement = () => import('@/pages/reports/IncomeStatement.vue')
+const AccountsPayable = () => import('@/pages/reports/AccountsPayable.vue')
+const AccountsReceivable = () => import('@/pages/reports/AccountsReceivable.vue')
+const BalanceSheet = () => import('@/pages/reports/BalanceSheet.vue')
+const CashFlowStatement = () => import('@/pages/reports/CashFlowStatement.vue')
+const Expenses = () => import('@/pages/reports/Expenses.vue')
 
-import Accounting from '@/pages/accounting/Accounting.vue'
-import AccountingDashboard from '@/pages/accounting/AccountingDashboard.vue'
+const Accounting = () => import('@/pages/accounting/Accounting.vue')
+const AccountingDashboard = () => import('@/pages/accounting/AccountingDashboard.vue')
 
-import PromotionsList from '@/pages/promotions/PromotionsList.vue'
-import CouponsList from '@/pages/promotions/CouponsList.vue'
-import DiscountRules from '@/pages/promotions/DiscountRules.vue'
-import LoyaltyProgram from '@/pages/promotions/LoyaltyProgram.vue'
+const PromotionsList = () => import('@/pages/promotions/PromotionsList.vue')
+const CouponsList = () => import('@/pages/promotions/CouponsList.vue')
+const DiscountRules = () => import('@/pages/promotions/DiscountRules.vue')
+const LoyaltyProgram = () => import('@/pages/promotions/LoyaltyProgram.vue')
 
-import AttendanceList from '@/pages/attendance/AttendanceList.vue'
-import LeaveManagement from '@/pages/attendance/LeaveManagement.vue'
-import ShiftSchedule from '@/pages/attendance/ShiftSchedule.vue'
-import CheckinList from '@/pages/attendance/CheckinList.vue'
+const AttendanceList = () => import('@/pages/attendance/AttendanceList.vue')
+const LeaveManagement = () => import('@/pages/attendance/LeaveManagement.vue')
+const ShiftSchedule = () => import('@/pages/attendance/ShiftSchedule.vue')
+const CheckinList = () => import('@/pages/attendance/CheckinList.vue')
 
-import UserProfile from '@/pages/users/UserProfile.vue'
-import NotificationCenter from '@/pages/alerts/NotificationCenter.vue'
+const UserProfile = () => import('@/pages/users/UserProfile.vue')
+const NotificationCenter = () => import('@/pages/alerts/NotificationCenter.vue')
 
-import ShiftType from '@/pages/attendance/ShiftType.vue'
+const ShiftType = () => import('@/pages/attendance/ShiftType.vue')
+import DashboardHome from '@/pages/DashboardHome.vue'
 import NonPage from '@/pages/NonPage.vue'
 import ForbiddenView from '@/pages/ForbiddenView.vue'
 
@@ -66,7 +67,7 @@ const appBase = window.location.pathname.startsWith('/retail_suite/') ? '/retail
 
 const routes = [
   { path: '/', redirect: '/login' },
-  { path: '/login', name: 'Login', component: Login, meta: { requiresAuth: false, layout: 'none' } },
+  { path: '/login', name: 'Login', component: Login, meta: { requiresAuth: false, layout: 'none' }, beforeEnter: () => { stopSessionCheck(); return true } },
   { path: '/pos', name: 'POS', component: POS, meta: { requiresAuth: true, layout: 'none' } },
   { path: '/settings', name: 'Settings', component: Setting, meta: { requiresAuth: true } },
   { path: '/archive', name: 'Archive', component: Archive, meta: { requiresAuth: true } },
@@ -74,6 +75,7 @@ const routes = [
   { path: '/newpayment', name: 'Newpayment', component: NewPayment, meta: { requiresAuth: true } },
   { path: '/notification-center', name: 'NotificationCenter', component: NotificationCenter, meta: { requiresAuth: true } },
   { path: '/mobile-scan', name: 'MobileScan', component: MobileScan, meta: { requiresAuth: false, layout: 'none' } },
+  { path: '/dashboard', name: 'Dashboard', component: DashboardHome, meta: { requiresAuth: true } },
   { path: '/403', name: 'Forbidden', component: ForbiddenView },
   { path: '/inventory', name: 'inventory-dashboard', component: InventoryDashboard, meta: { title: 'Inventory Dashboard', requiresAuth: true } },
   { path: '/inventory/purchase-receipt', name: 'purchase-receipt', component: PurchaseReceipt, meta: { title: 'Purchase Receipts', requiresAuth: true } },
@@ -122,11 +124,38 @@ const router = createRouter({
   routes,
 })
 
+
+let sessionCheckInterval = null
+
+const startSessionCheck = () => {
+  if (sessionCheckInterval) return
+  sessionCheckInterval = setInterval(async () => {
+    if (window.location.hash.startsWith("#/login")) return
+    const ok = await checkSession()
+    if (!ok) {
+      clearInterval(sessionCheckInterval)
+      sessionCheckInterval = null
+      localStorage.removeItem("api_key")
+      localStorage.removeItem("api_secret")
+      sessionStorage.setItem("session_expired", "1")
+      window.location.hash = "#/login"
+    }
+  }, 30000)
+}
+
+const stopSessionCheck = () => {
+  if (sessionCheckInterval) {
+    clearInterval(sessionCheckInterval)
+    sessionCheckInterval = null
+  }
+}
+
 let sessionChecked = false
 router.beforeEach(async (to, from, next) => {
   if (!sessionChecked) {
     await checkSession()
     sessionChecked = true
+  startSessionCheck()
   }
 
   const isAuth = !!session.user

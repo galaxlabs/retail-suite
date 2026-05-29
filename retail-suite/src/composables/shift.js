@@ -123,7 +123,7 @@ export const updateShiftApi = async (data) => {
     return {
       status: res.status,
       data: res.data,
-      message: 'تم تحديث الوردية بنجاح'
+      message: 'تم اپ ڈیٹ کریں الوردية بنجاح'
     }
   } catch (error) {
     console.error('Error updating shift:', error)
@@ -145,7 +145,7 @@ export const deleteShiftApi = async (shiftName) => {
     return {
       status: 'success',
       data: res.data,
-      message: 'تم حذف الوردية بنجاح'
+      message: 'تم حذف کریں الوردية بنجاح'
     }
 
   } catch (error) {
@@ -157,7 +157,7 @@ export const deleteShiftApi = async (shiftName) => {
       error?.response?.data?.message ||
       error?.response?.data?._server_messages
 
-    let message = 'فشل حذف الوردية'
+    let message = 'فشل حذف کریں الوردية'
 
     // لو فيه server messages
     if (Array.isArray(frappeMessage)) {

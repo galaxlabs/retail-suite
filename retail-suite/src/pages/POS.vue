@@ -42,11 +42,25 @@
                 Retail
               </button>
               <button
+                @click="switchSalesChannel('retail')"
+                class="px-4 py-2 text-sm font-medium rounded-md transition"
+                :style="salesChannel === 'retail' ? `background: ${primaryColor}; color: #fff;` : 'color: var(--text-main);'"
+              >
+                Retail
+              </button>
+              <button
                 @click="switchSalesChannel('wholesale')"
                 class="px-4 py-2 text-sm font-medium rounded-md transition"
                 :style="salesChannel === 'wholesale' ? `background: ${primaryColor}; color: #fff;` : 'color: var(--text-main);'"
               >
                 Wholesale
+              </button>
+              <button
+                @click="switchSalesChannel('purchase')"
+                class="px-4 py-2 text-sm font-medium rounded-md transition"
+                :style="salesChannel === 'purchase' ? `background: ${primaryColor}; color: #fff;` : 'color: var(--text-main);'"
+              >
+                Purchase
               </button>
             </div>
             <input
@@ -77,6 +91,7 @@
             :mode="activeMenu === 'return' ? 'return' : 'sale'"
             :selected-invoice="selectedInvoice"
             :sales-channel="salesChannel"
+            :purchase-mode="salesChannel === 'purchase'"
             :customer-required="salesChannel === 'wholesale'"
             @submit="handleCartSubmit"
             @clear-invoice="handleClearInvoice"
@@ -98,7 +113,7 @@
         :receipt-data="receiptData"
         :store-name="settingsStore.settings?.store?.name || shiftStore.pos_profile?.company || 'Store'"
         :store-address="settingsStore.settings?.store?.address || shiftStore.pos_profile?.warehouse || ''"
-        :store-logo="settingsStore.settings?.store?.logoUrl || ''"
+        :store-logo="settingsStore.settings?.store?.logoUrl || shiftStore.pos_profile?.company_logo || ''"
         @close="closeReceiptModal"
         @proceed="handleReceiptPrinted"
         @save="handleReceiptSaved"
@@ -182,6 +197,7 @@
 <script setup>
 import { ref, onMounted, watch, watchEffect, reactive, computed } from 'vue'
 import { createResource } from 'frappe-ui'
+import { createPurchaseReceipt } from '@/services/api'
 import { storeToRefs } from 'pinia'
 import ShiftControl from '@/components/shift/ShiftControl.vue'
 import Sidebar from '@/layout/Sidebar.vue'
@@ -199,6 +215,7 @@ import { useInvoicesStore } from '@/stores/invoices'
 import ReturnInvoiceBox from '@/components/modals/ReturnInvoiceBox.vue'
 import { formatPrice } from '../utils/formatters'
 import { printReceipt } from '@/services/printer'
+import { getCompanyBranding } from '@/services/api'
 import WarningIcon from '@/components/icons/WarningIcon.svg'
 
 const hover = ref(false)
@@ -253,7 +270,7 @@ const handleScannerEnter = async () => {
   }
 
   if (query.length >= 2) {
-    await productsStore.loadProductsFromFrappeDB()
+    await loadProductsWithRetry()
     const refreshed = (productsStore.products || []).find((product) => extractBarcodes(product).includes(query))
     if (refreshed) {
       cartStore.addToCart(refreshed)
@@ -276,7 +293,7 @@ const resolvePriceListForChannel = (channel) => {
 
   const fallback = shiftStore.pos_profile?.selling_price_list || productsStore.selectedPriceList || "Standard Selling"
   if (!available.length) {
-    return channel === "wholesale" ? WHOLESALE_PRICE_LIST_NAME : RETAIL_PRICE_LIST_NAME
+    return fallback
   }
 
   if (channel === "wholesale") {
@@ -300,7 +317,6 @@ const applySalesChannel = async (channel) => {
 
   const nextPriceList = resolvePriceListForChannel(channel)
   productsStore.selectedPriceList = nextPriceList
-  productsStore.selectedPriceList = nextPriceList
 
   if (channel === "wholesale") {
     shiftStore.setCustomer(null)
@@ -310,12 +326,20 @@ const applySalesChannel = async (channel) => {
       shiftStore.setCustomer({ name: defaultCustomer })
     }
   }
-  await productsStore.loadProductsFromFrappeDB()
+  await loadProductsWithRetry()
 }
 
 const switchSalesChannel = async (channel) => {
   if (salesChannel.value === channel) return
   await applySalesChannel(channel)
+}
+
+const loadProductsWithRetry = async () => {
+  await productsStore.loadProductsFromFrappeDB()
+  if (!(productsStore.products || []).length) {
+    await new Promise((resolve) => setTimeout(resolve, 700))
+    await productsStore.loadProductsFromFrappeDB()
+  }
 }
 
 const settingsStore = useSettingsStore()
@@ -353,7 +377,11 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
         cartStore.clearCart() // تبدأ سلة جديدة
 
         showReturnInvoiceBox.value = false
-        console.log('Invoice selected:', invoice)
+
+        // Auto-select customer from the returned invoice
+        if (invoice.customer) {
+          shiftStore.setCustomer({ name: invoice.customer, customer_name: invoice.customer_name || invoice.customer })
+        }
 
       if (invoice.returnable_items && invoice.returnable_items.length) {
 
@@ -383,18 +411,16 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
 
     const handleCartSubmit = async (transactionData) => {
         try {
-          console.log('=== handleCartSubmit Called ===')
-          console.log('Transaction Data from Cart:', transactionData)
-          console.log('Mode:', transactionData.mode)
 
           // تحقق من نوع المعاملة
           const isReturn = transactionData.mode === 'return'
+          const isPurchase = salesChannel.value === 'purchase'
 
-          if (isReturn) {
-            console.log('🔄 Processing RETURN transaction...')
+          if (isPurchase) {
+            await handlePurchaseTransaction(transactionData)
+          } else if (isReturn) {
             await handleReturnTransaction(transactionData)
           } else {
-            console.log('💰 Processing SALE transaction...')
             await handleSaleTransaction(transactionData)
           }
 
@@ -417,7 +443,7 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
 
           receiptData.value = {
             ...transactionData,
-            storeName: settingsStore.settings?.store?.name || shiftStore.pos_profile?.company || "Store",
+            storeName: settingsStore.settings?.store?.name || shiftStore.pos_profile?.company || shiftStore.pos_profile?.company || "POS Store",
             storeAddress: settingsStore.settings?.store?.address || shiftStore.pos_profile?.warehouse || "",
             storeLogo: settingsStore.settings?.store?.logoUrl || "",
             footerMessage: settingsStore.settings?.receipt?.footerMessage || "",
@@ -432,6 +458,10 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
 
           receiptData.value = {
             ...transactionData,
+            storeName: settingsStore.settings?.store?.name || shiftStore.pos_profile?.company || shiftStore.pos_profile?.company || "POS Store",
+            storeAddress: settingsStore.settings?.store?.address || shiftStore.pos_profile?.warehouse || "",
+            storeLogo: settingsStore.settings?.store?.logoUrl || "",
+            footerMessage: settingsStore.settings?.receipt?.footerMessage || "",
             invoiceNo: invoiceResponse.name || transactionData.invoiceNo,
             invoiceId: invoiceResponse.name || transactionData.invoiceNo,
             isFastMode: false,
@@ -465,8 +495,6 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
 
     const handleReturnTransaction = async (returnData) => {
       try {
-        console.log('🔄 handleReturnTransaction: Starting...')
-        console.log('Return data:', returnData)
 
         // معالجة خاصة للواپسیات
         const returnTransaction = {
@@ -480,7 +508,6 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
         // هنا ممكن تستدعي دالة خاصة للواپسیات
         // مثلاً: await invoicesStore.processReturn(returnTransaction)
 
-        console.log('✅ Return processed successfully')
 
         if (window.$toast) {
           window.$toast.success(
@@ -523,7 +550,6 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
     // Handle return processed
     const handleReturnProcessed = async (returnData) => {
     try {
-      console.log('Processing return:', returnData)
 
       // Add return transaction to shift
       const returnTransaction = {
@@ -573,7 +599,6 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
 
     // Handle return cancelled
     const handleReturnCancelled = () => {
-      console.log('Return cancelled')
       cartStore.clearCart()
       selectedInvoice.value = null
 
@@ -584,14 +609,12 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
 
     // Handle shift events
     const handleShiftOpened = async (shift) => {
-      // await shiftStore.checkActiveShift()
       showOpenShiftModal.value = false
+      await shiftStore.checkActiveShift()
+      await loadProductsWithRetry()
     }
 
     const handleShiftClosed = async (shift) => {
-      console.log('Shift closed:', shift)
-      console.log('Open Closing Shift modal')
-      console.log('shift user', shift.user)
 
       showOpenShiftModal.value = true
       // Clear current cart when shift closes
@@ -605,7 +628,7 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
 
     // Load sample data
     const loadProductsData = async () => {
-      await productsStore.loadProductsFromFrappeDB()
+      await loadProductsWithRetry()
       showFirstTimeModal.value = false
     }
 
@@ -621,22 +644,13 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
 
     // Proceed after print - SAVE INVOICE HERE
     const proceedAfterPrint = async (receiptDataParam) => {
-      console.log('=== proceedAfterPrint Called ===')
-      console.log('Receipt data:', receiptDataParam)
 
       try {
         // Save invoice to database
         const savedInvoice = await invoicesStore.saveInvoice(receiptDataParam)
 
-        console.log('✅ Invoice saved successfully:', savedInvoice)
 
         if (savedInvoice) {
-          console.log("✅ Saved invoice details:", {
-            id: savedInvoice.id,
-            receiptNo: savedInvoice.receiptNo,
-            invoiceNo: receiptDataParam.invoiceNo
-          })
-
           // ✅ استخدم البيانات الصحيحة
           if (window.$toast) {
             const displayName = receiptDataParam.invoiceNo || savedInvoice.receiptNo || savedInvoice.id
@@ -675,7 +689,6 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
     // ✅ استخدم watchEffect - أقوى من watch
     watchEffect(() => {
       const color = settingsStore.settings.appearance.primaryColor
-      console.log('🎨 POS: Primary color is now:', color)
       // الـ component بتتحدث تلقائياً
     })
 
@@ -688,10 +701,46 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
         await shiftStore.loadShifts()
         await shiftStore.checkActiveShift()
         settingsStore.syncStoreIdentityFromCompany({}, shiftStore.pos_profile || {})
+        const companyName = shiftStore.pos_profile?.company
+        if (companyName) {
+          const branding = await getCompanyBranding(companyName)
+          settingsStore.syncStoreIdentityFromCompany(branding, shiftStore.pos_profile || {})
+        }
         await productsStore.loadFilterOptions()
         await applySalesChannel(salesChannel.value)
         isCheckingShift.value = false
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', handleKeyboardShortcuts)
     })
+
+    const handleKeyboardShortcuts = (e) => {
+      // Ctrl+F or / → focus search
+      if ((e.ctrlKey && e.key === 'f') || (e.key === '/' && !e.ctrlKey && e.target.tagName !== 'INPUT')) {
+        e.preventDefault()
+        const searchInput = document.querySelector('input[placeholder*="Search"]')
+        if (searchInput) searchInput.focus()
+        return
+      }
+      // Escape → clear search
+      if (e.key === 'Escape') {
+        searchKeyword.value = ''
+        return
+      }
+      // F8 → toggle Retail/Wholesale/Purchase
+      if (e.key === 'F8' && !e.ctrlKey) {
+        e.preventDefault()
+        const channels = ['retail', 'wholesale', 'purchase']
+        const current = channels.indexOf(salesChannel.value)
+        const next = channels[(current + 1) % channels.length]
+        switchSalesChannel(next)
+      }
+      // F5 → Refresh products
+      if (e.key === 'F5' && !e.ctrlKey) {
+        e.preventDefault()
+        loadProductsWithRetry()
+      }
+    }
 
 
 
@@ -699,7 +748,6 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
     watch(
       () => settingsStore.settings,
       (newSettings) => {
-        console.log('🎨 Settings changed:', newSettings)
         settingsStore.saveSettings()
       },
       { deep: true }
@@ -709,16 +757,13 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
     watch(
       () => settingsStore.settings.appearance.primaryColor,
       (newColor) => {
-        console.log('🎨 Primary color changed to:', newColor)
         // الـ Sidebar بتتحدث تلقائياً
       }
     )
     watch(showReturnInvoiceBox, (v) => {
-      console.log('showReturnInvoiceBox:', v)
     })
 
     watch(isShiftOpen, (val) => {
-      console.log('POS saw isShiftOpen change to:', val)
     })
     const settings = computed(() => settingsStore.settings)
     const primaryColor = computed(() => {

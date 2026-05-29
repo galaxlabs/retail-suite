@@ -11,26 +11,43 @@
         background: 'var(--input-bg)'
       }"
     >
-      <!-- Customer Select -->
-      <select
-        v-model="selectedCustomer"
-        @change="handleCustomerChange"
-        class="flex-grow p-2 px-3 outline-none cursor-pointer transition-all"
-        :style="{
-          background: 'var(--input-bg)',
-          color: 'var(--text-main)',
-          border: 'none'
-        }"
-      >
-        <option value="">+ Create New Customer</option>
-        <option
-          v-for="cust in customers"
-          :key="cust.name"
-          :value="cust.name"
+      <!-- Customer Search -->
+      <div class="flex flex-col flex-grow">
+        <input
+          v-model="searchQuery"
+          @input="filterCustomers"
+          type="text"
+          class="p-2 px-3 outline-none text-sm"
+          :style="{
+            background: 'var(--input-bg)',
+            color: 'var(--text-main)',
+            border: 'none'
+          }"
+          placeholder="Search customer..."
+          @focus="showDropdown = true"
+        />
+        <select
+          v-model="selectedCustomer"
+          @change="handleCustomerChange"
+          size="4"
+          class="flex-grow p-2 px-3 outline-none cursor-pointer transition-all text-xs"
+          :style="{
+            background: 'var(--input-bg)',
+            color: 'var(--text-main)',
+            border: 'none',
+            display: showDropdown ? 'block' : 'none'
+          }"
         >
-          {{ cust.customer_name }}
-        </option>
-      </select>
+          <option value="">+ Create New Customer</option>
+          <option
+            v-for="cust in filteredCustomers"
+            :key="cust.name"
+            :value="cust.name"
+          >
+            {{ cust.customer_name }}
+          </option>
+        </select>
+      </div>
 
       <!-- Add Customer Button -->
       <button
@@ -105,7 +122,17 @@ const showAddCustomerModal = ref(false)
 const shiftStore = useShiftStore()
 const pos_profile = computed(() => shiftStore.pos_profile || {})
 
-console.log("** pos_profile **",pos_profile.value.customer)
+const searchQuery = ref('')
+const showDropdown = ref(false)
+const filteredCustomers = computed(() => {
+  if (!searchQuery.value) return customers.value
+  const q = searchQuery.value.toLowerCase()
+  return customers.value.filter(c =>
+    c.customer_name?.toLowerCase().includes(q) ||
+    c.name?.toLowerCase().includes(q)
+  )
+})
+
 // تحميل العملاء عند أول ظهور للصفحة فقط
 const loadCustomers = async () => {
   try {
@@ -121,10 +148,10 @@ const loadCustomers = async () => {
   }
 }
 
-// فتح مودال جديد
+// فتح مودال نیا
 const handleCustomerChange = () => {
   if (!selectedCustomer.value) {
-    // الخيار الفاضي -> إنشاء عميل جديد
+    // الخيار الفاضي -> إنشاء عميل نیا
     showAddCustomerModal.value = true
     customer_id.value = null
     customer_info.value = {}
@@ -132,7 +159,6 @@ const handleCustomerChange = () => {
     // اختيار عميل موجود
     const cust = customers.value.find(c => c.name === selectedCustomer.value)
     if (cust) {
-      console.log('Selected customer info:', cust)
       customer_id.value = cust.name
       customer_info.value = { ...cust }
       emit('customer-selected', cust)
@@ -142,19 +168,15 @@ const handleCustomerChange = () => {
 
 
 const handleCustomerUpdated = async (updatedCustomer) => {
- const res = await loadCustomers() // إعادة تحميل العملاء من السيرفر
-  console.log('🔄 loadCustomers:', res)
+ const res = await loadCustomers() // إعادة تحميل العملاء سے السيرفر
 
 
   const existingIndex = res.findIndex(c => c.name === updatedCustomer.name)
-  console.log('🔍 index:', existingIndex)
   if (existingIndex !== -1) {
 
     customers.value[existingIndex] = { ...updatedCustomer }
-    console.log('Customer updated in list at index:', existingIndex)
   } else {
     customers.value.push({ ...updatedCustomer })
-    console.log(' New customer added to list')
   }
 
   customer_id.value = updatedCustomer.name
@@ -167,7 +189,6 @@ const handleCustomerUpdated = async (updatedCustomer) => {
 const closeCustomerModal = () => {
   showAddCustomerModal.value = false
   const currentCustomer = shiftStore.$state.currentCustomer
-  console.log("currentCustomer",currentCustomer)
   if (currentCustomer?.name) {
     const cust = customers.value.find(c => c.name === currentCustomer.name)
     if (cust) {
@@ -198,7 +219,6 @@ watch(
 
         emit('customer-selected', defaultCustomer)
 
-        console.log('✅ Default customer set from POS Profile')
       }
     }
   },
@@ -220,8 +240,16 @@ watch(
 //   { immediate: true }
 // )
 
+const filterCustomers = () => { showDropdown.value = true }
+
 onMounted(async () => {
   const list = await loadCustomers()
+  // Default to Walk-in Customer if nothing selected
+  if (!selectedCustomer.value && !shiftStore.$state.currentCustomer?.name) {
+    selectedCustomer.value = 'Walk-in Customer'
+    shiftStore.setCustomer({ name: 'Walk-in Customer', customer_name: 'Walk-in Customer' })
+    emit('customer-selected', { name: 'Walk-in Customer', customer_name: 'Walk-in Customer' })
+  }
   const savedCustomer = shiftStore.$state.currentCustomer
   if (savedCustomer?.name && list) {
     const exists = list.find(c => c.name === savedCustomer.name)

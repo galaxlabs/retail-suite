@@ -981,7 +981,7 @@ const onCodeDetected = (code) => {
 
 
 
-// ── التقاط صورة من الفيديو وإرسالها للAPI ──
+// ── التقاط صورة سے الفيديو وإرسالها للAPI ──
 const captureFrame = async () => {
   if (!videoRef.value) return
 

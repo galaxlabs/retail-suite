@@ -225,7 +225,7 @@
                       <td class="px-3 py-2 whitespace-nowrap">
                         <div class="flex items-center gap-3">
                           <img
-                            :src="product?.image? `${config.VUE_URL}${product?.image}`: defaultImageSrc"
+                            :src="product?.image? `${config.FRAPPE_URL}${product?.image}`: defaultImageSrc"
                             :alt="product.item_name"
                             class="w-10 h-10 object-cover rounded-md border"
                             :style="{ borderColor: 'var(--item-border)' }"
@@ -369,8 +369,8 @@ import { formatPrice } from '@/utils/formatters'
 import { getInventoryBalance } from '@/services/api'
 
 
-const defaultImage = '/src/assets/img/default-product.jpg'
-const defaultImageSrc = `${config.VUE_URL}${defaultImage}`
+const defaultImage = '/img/default-product.jpg'
+const defaultImageSrc = `${config.FRAPPE_URL}${defaultImage}`
 
 // ============================================================
 // STATE

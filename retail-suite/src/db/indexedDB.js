@@ -7,7 +7,7 @@ export async function initDB() {
 
   dbInstance = await openDB('TailwindPOS', 3, {
     upgrade(db) {
-      // جدول المنتجات
+      // جدول السےتجات
       if (!db.objectStoreNames.contains('products')) {
         db.createObjectStore('products', { keyPath: 'id' })
       }
@@ -25,7 +25,7 @@ export async function initDB() {
         shiftsStore.createIndex('status', 'status')
       }
 
-        // جدول الفواتير    
+        // جدول الانوائسز    
         if (!db.objectStoreNames.contains('invoices')) {
             const invoicesStore = db.createObjectStore('invoices', { keyPath: 'id' })
             invoicesStore.createIndex('date', 'date')

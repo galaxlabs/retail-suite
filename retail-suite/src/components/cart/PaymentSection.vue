@@ -401,7 +401,6 @@ const showPartialOption = ref(false)
 const allowPartialPayment = ref(false)
 const enablePartialPayment = (val) => {
     allowPartialPayment.value = val
-    console.log('💳 Partial payment enabled',allowPartialPayment.value)
 
     if (allowPartialPayment.value) {
       window.$toast.info('Partial payment activated ✔')
@@ -434,7 +433,6 @@ function mapIcon(name) {
     default: return 'CashIcon'
   }
 }
-console.log("paymentMethods",paymentMethods)
 // Computed properties
 const changeAmount = computed(() => {
   return cashAmount.value - cartStore.totalPrice
@@ -447,7 +445,6 @@ const isExactAmount = computed(() => {
 const canSubmit = computed(() => {
   const hasEnoughCash = cashAmount.value >= cartStore.totalPrice
   const canPayPartially = allowPartialPayment.value && cashAmount.value < cartStore.totalPrice
-  console.log("(hasEnoughCash || canPayPartially)",(hasEnoughCash || canPayPartially))
   return cartStore.cart.length > 0 &&
       !cartStore.isProcessing &&
       !hasPaymentError.value &&
@@ -601,7 +598,6 @@ const handleQuickSubmit = () => {
 
 // Handle submit
 const handleSubmit = async () => {
-  console.log("1️⃣ PaymentSection: handleSubmit started")
   if (!canSubmit.value) return
 
   // Final validation
@@ -615,12 +611,8 @@ const handleSubmit = async () => {
   try {
     // Show success animation briefly
     showSuccessAnimation.value = true
-    console.log("2️⃣ PaymentSection: About to process transaction")
-    console.log("   Mode prop:", props.mode)
 
     const transactionData = await cartStore.processTransaction(props.mode)
-    console.log("3️⃣ PaymentSection: Got transactionData!")
-    console.log("   Data:", transactionData)
 
     const fullData = {
         ...transactionData,
@@ -629,14 +621,10 @@ const handleSubmit = async () => {
         paymentMethod: selectedPaymentMethod.value
       }
     // Emit success
-    console.log("4️⃣ PaymentSection: Full data prepared")
-    console.log("   Full data:", fullData)
 
     // ✅ أطلع emit
-    console.log("5️⃣ PaymentSection: Emitting 'submit'...")
     emit('submit', fullData)
 
-    console.log("6️⃣ PaymentSection: Emit done!")
 
     // Reset form
     setTimeout(() => {

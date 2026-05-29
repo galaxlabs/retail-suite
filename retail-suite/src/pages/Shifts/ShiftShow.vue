@@ -5,7 +5,7 @@
     ════════════════════════════════════════════ -->
     <div v-if="loading" class="ss-loader">
       <div class="ss-loader__ring"></div>
-      <span class="ss-loader__text">جاري التحميل...</span>
+      <span class="ss-loader__text">لوڈ ہو رہا ہے...</span>
     </div>
 
     <!-- ═══════════════════════════════════════════
@@ -18,29 +18,29 @@
         <div class="ss-header__left">
           <button class="ss-back-btn" @click="goBack">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-            رجوع
+            واپس
           </button>
           <div class="ss-header__title-group">
             <h1 class="ss-header__title">الوردية #{{ shift.id || shift.name }}</h1>
             <div class="ss-badge" :class="shift.status === 'open' ? 'ss-badge--open' : 'ss-badge--closed'">
               <span class="ss-badge__dot"></span>
-              {{ shift.status === 'open' ? 'مفتوحة' : 'مغلقة' }}
+              {{ shift.status === 'open' ? 'کھلا ہوا' : 'بند' }}
             </div>
           </div>
           <div class="ss-header__meta">
             <span>{{ formatDate(shift.period_start_date) }}</span>
             <span class="ss-sep">→</span>
-            <span>{{ shift.period_end_date ? formatDate(shift.period_end_date) : 'الآن' }}</span>
+            <span>{{ shift.period_end_date ? formatDate(shift.period_end_date) : 'ابھی' }}</span>
           </div>
         </div>
         <div class="ss-header__actions">
           <button class="ss-btn ss-btn--ghost" @click="printShiftReport">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-            طباعة
+            پرنٹ کریں
           </button>
           <button v-if="shift.status === 'open'" class="ss-btn ss-btn--danger" @click="showCloseShiftModal = true">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-            إغلاق الوردية
+            بند کریں الوردية
           </button>
         </div>
       </header>
@@ -53,9 +53,9 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
           </div>
           <div class="ss-kpi__body">
-            <span class="ss-kpi__label">إجمالي المبيعات</span>
+            <span class="ss-kpi__label">کل فروخت</span>
             <span class="ss-kpi__value">{{ formatCurrency(shift.total_sales, currencyCode, locale) }}</span>
-            <span class="ss-kpi__sub">{{ invoices.length }} فاتورة</span>
+            <span class="ss-kpi__sub">{{ invoices.length }} انوائس</span>
           </div>
         </div>
 
@@ -64,7 +64,7 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
           </div>
           <div class="ss-kpi__body">
-            <span class="ss-kpi__label">رصيد الافتتاح</span>
+            <span class="ss-kpi__label">ابتدائی بیلنس</span>
             <span class="ss-kpi__value">{{ formatCurrency(shift.opening_cash, currencyCode, locale) }}</span>
             <span class="ss-kpi__sub">{{ shift.opened_by_name || '—' }}</span>
           </div>
@@ -75,7 +75,7 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
           </div>
           <div class="ss-kpi__body">
-            <span class="ss-kpi__label">رصيد الإغلاق</span>
+            <span class="ss-kpi__label">رصيد البند کریں</span>
             <span class="ss-kpi__value">{{ formatCurrency(shift.closing_cash, currencyCode, locale) }}</span>
             <span class="ss-kpi__sub">{{ shift.closed_by_name || '—' }}</span>
           </div>
@@ -86,9 +86,9 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           </div>
           <div class="ss-kpi__body">
-            <span class="ss-kpi__label">متوسط الفاتورة</span>
+            <span class="ss-kpi__label">اوسط انوائس</span>
             <span class="ss-kpi__value">{{ formatCurrency(avgInvoice, currencyCode, locale) }}</span>
-            <span class="ss-kpi__sub">{{ salesInvoicesCount }} فاتورة مبيعات</span>
+            <span class="ss-kpi__sub">{{ salesInvoicesCount }} سیلز انوائس</span>
           </div>
         </div>
 
@@ -97,9 +97,9 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h2l.4 2M7 13h10l4-8H5.4"/><circle cx="9" cy="19" r="1"/><circle cx="20" cy="19" r="1"/></svg>
           </div>
           <div class="ss-kpi__body">
-            <span class="ss-kpi__label">إجمالي الكميات</span>
+            <span class="ss-kpi__label">کل مقداریں</span>
             <span class="ss-kpi__value">{{ totalQty }}</span>
-            <span class="ss-kpi__sub">صنف مباع</span>
+            <span class="ss-kpi__sub">فروخت شدہ اشیاء</span>
           </div>
         </div>
 
@@ -119,11 +119,11 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
           </div>
           <div class="ss-kpi__body">
-            <span class="ss-kpi__label">الفارق النقدي</span>
+            <span class="ss-kpi__label">نقد فرق</span>
             <span class="ss-kpi__value" :class="cashDifference < 0 ? 'ss-kpi__value--red' : cashDifference > 0 ? 'ss-kpi__value--green' : ''">
               {{ cashDifference >= 0 ? '+' : '' }}{{ formatCurrency(cashDifference, currencyCode, locale) }}
             </span>
-            <span class="ss-kpi__sub">{{ cashDifference === 0 ? 'متوازن' : cashDifference > 0 ? 'فائض' : 'عجز' }}</span>
+            <span class="ss-kpi__sub">{{ cashDifference === 0 ? 'متوازن' : cashDifference > 0 ? 'فاضل' : 'خسارہ' }}</span>
           </div>
         </div>
 
@@ -135,7 +135,7 @@
         <!-- Payment breakdown bar -->
         <div class="ss-card ss-analytics-payments">
           <div class="ss-card__header">
-            <h2 class="ss-card__title">توزيع طرق الدفع</h2>
+            <h2 class="ss-card__title">توزيع طرق ادائیگی</h2>
           </div>
           <div class="ss-payment-bars">
             <div v-for="pm in paymentBreakdown" :key="pm.mode_of_payment" class="ss-payment-bar-item">
@@ -148,14 +148,14 @@
               </div>
               <div class="ss-payment-bar-item__pct">{{ pm.pct }}%</div>
             </div>
-            <p v-if="!paymentBreakdown.length" class="ss-empty">ادائیگیاں موجود نہیں</p>
+            <p v-if="!paymentBreakdown.length" class="ss-empty">کوئی ادائیگی نہیں</p>
           </div>
         </div>
 
         <!-- Hourly sales mini chart -->
         <div class="ss-card ss-analytics-hourly">
           <div class="ss-card__header">
-            <h2 class="ss-card__title">المبيعات حسب الساعة</h2>
+            <h2 class="ss-card__title">گھنٹہ وار فروخت</h2>
           </div>
           <div class="ss-hourly-chart" v-if="hourlySales.length">
             <div
@@ -168,13 +168,13 @@
               <span class="ss-hourly-bar__label">{{ h.hour }}</span>
             </div>
           </div>
-          <p v-else class="ss-empty" style="padding: 14px">لا توجد بيانات</p>
+          <p v-else class="ss-empty" style="padding: 14px">کوئی ڈیٹا نہیں</p>
         </div>
 
         <!-- Staff performance -->
         <div class="ss-card ss-analytics-staff">
           <div class="ss-card__header">
-            <h2 class="ss-card__title">أداء الكاشيرية</h2>
+            <h2 class="ss-card__title">أداء کیشیرية</h2>
           </div>
           <div class="ss-staff-list">
             <div v-for="(s, idx) in staffPerformance" :key="s.owner" class="ss-staff-item">
@@ -182,11 +182,11 @@
               <div class="ss-staff-item__avatar">{{ initials(s.owner) }}</div>
               <div class="ss-staff-item__info">
                 <span class="ss-staff-item__name">{{ s.fullName || s.owner }}</span>
-                <span class="ss-staff-item__sub">{{ s.count }} فاتورة</span>
+                <span class="ss-staff-item__sub">{{ s.count }} انوائس</span>
               </div>
               <div class="ss-staff-item__sales">{{ formatCurrency(s.total, currencyCode, locale) }}</div>
             </div>
-            <p v-if="!staffPerformance.length" class="ss-empty">لا توجد بيانات</p>
+            <p v-if="!staffPerformance.length" class="ss-empty">کوئی ڈیٹا نہیں</p>
           </div>
         </div>
 
@@ -215,15 +215,15 @@
           <div class="ss-table-toolbar">
             <div class="ss-search">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-              <input v-model="invoiceSearch" class="ss-search__input" placeholder="بحث بالفاتورة، العميل، الكاشير..." />
+              <input v-model="invoiceSearch" class="ss-search__input" placeholder="تلاش کریں بانوائس، کسٹمر، کیشیر..." />
               <button v-if="invoiceSearch" class="ss-search__clear" @click="invoiceSearch = ''">✕</button>
             </div>
             <div class="ss-filters">
               <select v-model="invoiceStatusFilter" class="ss-select">
-                <option value="">كل الحالات</option>
+                <option value="">تمام حالتیں</option>
                 <option value="Paid">ادا شدہ</option>
                 <option value="Return">واپسی</option>
-                <option value="Draft">مسودہ</option>
+                <option value="Draft">ڈرافٹ</option>
                 <option value="credit note issued">کریڈٹ نوٹ</option>
                 <option value="partly paid">جزوی ادائیگی</option>
                 <option value="unpaid">غیر ادا شدہ</option>
@@ -231,21 +231,21 @@
 
               </select>
               <select v-model="invoicePaymentFilter" class="ss-select">
-                <option value="">كل طرق الدفع</option>
+                <option value="">كل طرق ادائیگی</option>
                 <option v-for="pm in uniquePaymentMethods" :key="pm" :value="pm">{{ pm }}</option>
               </select>
               <select v-model="invoiceSortBy" class="ss-select">
-                <option value="date_desc">الأحدث أولاً</option>
-                <option value="date_asc">الأقدم أولاً</option>
-                <option value="total_desc">الأعلى قيمة</option>
-                <option value="total_asc">الأقل قيمة</option>
+                <option value="date_desc">تازہ ترین پہلے</option>
+                <option value="date_asc">پرانا پہلے</option>
+                <option value="total_desc">زیادہ قیمت</option>
+                <option value="total_asc">کم قیمت</option>
               </select>
             </div>
             <div class="ss-table-meta">
-              <span class="ss-table-meta__count">{{ filteredInvoices.length }} نتيجة</span>
+              <span class="ss-table-meta__count">{{ filteredInvoices.length }} نتیجہ</span>
               <button class="ss-btn ss-btn--ghost ss-btn--sm" @click="exportInvoices">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-                تصدير
+                ایکسپورٹ
               </button>
             </div>
           </div>
@@ -255,15 +255,15 @@
               <thead>
                 <tr>
                   <th>#</th>
-                  <th class="ss-th-sort" @click="setSortInvoice('name')">الفاتورة</th>
-                  <th class="ss-th-sort" @click="setSortInvoice('posting_date')">التاريخ والوقت</th>
-                  <th>العميل</th>
-                  <th class="ss-th-sort" @click="setSortInvoice('grand_total')">الإجمالي</th>
-                  <th>الكمية</th>
-                  <th>الدفع</th>
-                  <th>الكاشير</th>
-                  <th>الحالة</th>
-                  <th>إجراءات</th>
+                  <th class="ss-th-sort" @click="setSortInvoice('name')">انوائس</th>
+                  <th class="ss-th-sort" @click="setSortInvoice('posting_date')">تاریخ ووقت</th>
+                  <th>کسٹمر</th>
+                  <th class="ss-th-sort" @click="setSortInvoice('grand_total')">کل</th>
+                  <th>مقدار</th>
+                  <th>ادائیگی</th>
+                  <th>کیشیر</th>
+                  <th>حیثیت</th>
+                  <th>ایکشنز</th>
                 </tr>
               </thead>
               <tbody>
@@ -278,7 +278,7 @@
                     <button class="ss-link" @click="viewInvoice(inv.name)">{{ inv.name }}</button>
                   </td>
                   <td class="ss-td-muted">{{ formatDate(inv.posting_date) }} {{ formatTime(inv.posting_time) }}</td>
-                  <td>{{ inv.customer_name || 'زبون عادي' }}</td>
+                  <td>{{ inv.customer_name || 'عام کسٹمر' }}</td>
                   <td class="ss-td-amount" :class="flt(inv.grand_total) < 0 ? 'ss-td-amount--neg' : ''">
                     {{ formatCurrency(inv.total, currencyCode, locale) }}
                   </td>
@@ -311,22 +311,22 @@
                   </td>
                   <td>
                     <div class="ss-row-actions">
-                      <button class="ss-icon-btn" title="عرض" @click="viewInvoice(inv.name)">
+                      <button class="ss-icon-btn" title="دیکھیں" @click="viewInvoice(inv.name)">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                       </button>
-                      <button class="ss-icon-btn ss-icon-btn--green" title="طباعة" @click="printInvoice(inv.name)">
+                      <button class="ss-icon-btn ss-icon-btn--green" title="پرنٹ کریں" @click="printInvoice(inv.name)">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
                       </button>
                     </div>
                   </td>
                 </tr>
                 <tr v-if="!filteredInvoices.length">
-                  <td colspan="10" class="ss-empty-row">لا توجد نتائج مطابقة</td>
+                  <td colspan="10" class="ss-empty-row">کوئی مماثل نتیجہ نہیں</td>
                 </tr>
               </tbody>
               <tfoot v-if="filteredInvoices.length">
                 <tr class="ss-tfoot">
-                  <td colspan="4" class="ss-tfoot__label">الإجمالي ({{ filteredInvoices.length }} فاتورة)</td>
+                  <td colspan="4" class="ss-tfoot__label">کل ({{ filteredInvoices.length }} انوائس)</td>
                   <td class="ss-tfoot__val">{{ formatCurrency(filteredInvoicesTotal, currencyCode, locale) }}</td>
                   <td>{{ filteredInvoicesQty }}</td>
                   <td colspan="4"></td>
@@ -357,17 +357,17 @@
           <div class="ss-table-toolbar">
             <div class="ss-search">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-              <input v-model="txSearch" class="ss-search__input" placeholder="بحث في المعاملات..." />
+              <input v-model="txSearch" class="ss-search__input" placeholder="تلاش کریں في المعاملات..." />
               <button v-if="txSearch" class="ss-search__clear" @click="txSearch = ''">✕</button>
             </div>
             <div class="ss-filters">
               <select v-model="txTypeFilter" class="ss-select">
-                <option value="">كل الأنواع</option>
-                <option value="in">وارد</option>
-                <option value="out">صادر</option>
+                <option value="">تمام اقسام</option>
+                <option value="in">اندراج</option>
+                <option value="out">اخراج</option>
               </select>
               <select v-model="txPaymentFilter" class="ss-select">
-                <option value="">كل طرق الدفع</option>
+                <option value="">كل طرق ادائیگی</option>
                 <option v-for="pm in uniquePaymentMethods" :key="pm" :value="pm">{{ pm }}</option>
               </select>
             </div>
@@ -382,11 +382,11 @@
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>النوع</th>
-                  <th>الوصف</th>
-                  <th>طريقة الدفع</th>
-                  <th>المبلغ</th>
-                  <th>التاريخ</th>
+                  <th>قسم</th>
+                  <th>تفصیل</th>
+                  <th>طريقة ادائیگی</th>
+                  <th>رقم</th>
+                  <th>تاریخ</th>
                   <th>بواسطة</th>
                 </tr>
               </thead>
@@ -402,7 +402,7 @@
                     <div class="ss-tx-type" :class="tx.type === 'in' ? 'ss-tx-type--in' : 'ss-tx-type--out'">
                       <svg v-if="tx.type === 'in'" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
                       <svg v-else width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>
-                      {{ tx.type === 'in' ? 'وارد' : 'صادر' }}
+                      {{ tx.type === 'in' ? 'اندراج' : 'اخراج' }}
                     </div>
                   </td>
                   <td>{{ tx.description }}</td>
@@ -414,12 +414,12 @@
                   <td class="ss-td-muted">{{ tx.user_name }}</td>
                 </tr>
                 <tr v-if="!filteredTransactions.length">
-                  <td colspan="7" class="ss-empty-row">لا توجد معاملات</td>
+                  <td colspan="7" class="ss-empty-row">کوئی لین دین نہیں</td>
                 </tr>
               </tbody>
               <tfoot v-if="filteredTransactions.length">
                 <tr class="ss-tfoot">
-                  <td colspan="4" class="ss-tfoot__label">الصافي</td>
+                  <td colspan="4" class="ss-tfoot__label">خالص</td>
                   <td class="ss-tfoot__val" :class="txNet >= 0 ? '' : 'ss-td-amount--neg'">
                     {{ txNet >= 0 ? '+' : '−' }}{{ formatCurrency(Math.abs(txNet), currencyCode, locale) }}
                   </td>
@@ -438,7 +438,7 @@
           <div class="ss-table-toolbar">
             <div class="ss-search">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-              <input v-model="pmSearch" class="ss-search__input" placeholder="بحث في طرق الدفع..." />
+              <input v-model="pmSearch" class="ss-search__input" placeholder="تلاش کریں في طرق ادائیگی..." />
             </div>
           </div>
 
@@ -446,12 +446,12 @@
             <table class="ss-table">
               <thead>
                 <tr>
-                  <th>طريقة الدفع</th>
-                  <th>الرصيد الافتتاحي</th>
-                  <th>المتوقع</th>
-                  <th>الفعلي</th>
-                  <th>الفارق</th>
-                  <th>نسبة الفارق</th>
+                  <th>طريقة ادائیگی</th>
+                  <th>بیلنس الافتتاحي</th>
+                  <th>متوقع</th>
+                  <th>اصل</th>
+                  <th>فرق</th>
+                  <th>نسبة فرق</th>
                 </tr>
               </thead>
               <tbody>
@@ -475,7 +475,7 @@
                   </td>
                 </tr>
                 <tr v-if="!filteredPayments.length">
-                  <td colspan="6" class="ss-empty-row">لا توجد بيانات</td>
+                  <td colspan="6" class="ss-empty-row">کوئی ڈیٹا نہیں</td>
                 </tr>
               </tbody>
             </table>
@@ -483,33 +483,33 @@
         </div>
       </section>
 
-      <!-- Tab جديد: مشاكل التسوية -->
+      <!-- Tab نیا: تصفیہ کے مسائل -->
       <section v-show="activeTab === 'issues'" class="ss-table-section">
         <div class="ss-card">
 
             <!-- ملخص سريع -->
             <div v-if="shift.reconciliation_issues?.length" class="ss-alert ss-alert--warning">
-            ⚠️ يوجد {{ shift.reconciliation_issues.length }} فاتورة بها فروقات في الدفع
+            ⚠️ يوجد {{ shift.reconciliation_issues.length }} انوائس بها فروقات في ادائیگی
             </div>
 
             <div class="ss-table-wrap">
             <table class="ss-table">
                 <thead>
                 <tr v-if="shift.reconciliation_issues?.length">
-                    <th>الفاتورة</th>
-                    <th>العميل</th>
-                    <th>إجمالي الفاتورة</th>
-                    <th>مجموع الدفعات</th>
-                    <th>الفارق</th>
-                    <th>النوع</th>
+                    <th>انوائس</th>
+                    <th>کسٹمر</th>
+                    <th>إجمالي انوائس</th>
+                    <th>مجموع ادائیگیات</th>
+                    <th>فرق</th>
+                    <th>قسم</th>
                 </tr>
 
                 <tr v-if="shift.unallocated_payments?.length">
-                    <th>رقم الدفع</th>
-                    <th>العميل</th>
+                    <th>رقم ادائیگی</th>
+                    <th>کسٹمر</th>
                     <th>ادا شدہ رقم</th>
-                    <th>المبلغ غير المخصص</th>
-                    <th>الحالة</th>
+                    <th>رقم غير المخصص</th>
+                    <th>حیثیت</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -530,15 +530,15 @@
                     </td>
                     <td>
                     <span class="ss-chip" :class="issue.issue_type === 'overpaid' ? 'ss-chip--success' : 'ss-chip--danger'">
-                        {{ issue.issue_type === 'overpaid' ? 'دفع زائد' : 'دفع ناقص' }}
+                        {{ issue.issue_type === 'overpaid' ? 'زائد ادائیگی' : 'کم ادائیگی' }}
                     </span>
                     </td>
                 </tr>
 
-                <!-- الدفعات غير المخصصة -->
+                <!-- ادائیگیات غير المخصصة -->
                 <tr v-if="shift.unallocated_payments?.length">
                     <td colspan="6" style="background:var(--warning-bg);padding:6px 12px;font-size:11px;color:var(--warning-border);font-weight:600;">
-                    ⚠️ دفعات غير مخصصة لأي فاتورة ({{ shift.unallocated_payments.length }})
+                    ⚠️ دفعات غیر مختص لأي انوائس ({{ shift.unallocated_payments.length }})
                     </td>
                 </tr>
                 <tr v-for="pe in shift.unallocated_payments" :key="pe.payment_entry" class="ss-tr ss-tr--return">
@@ -548,11 +548,11 @@
                     <td class="ss-td-amount--neg">
                     {{ formatCurrency(pe.unallocated_amount, currencyCode, locale) }}
                     </td>
-                    <td><span class="ss-chip ss-chip--warning">غير مخصصة</span></td>
+                    <td><span class="ss-chip ss-chip--warning">غیر مختص</span></td>
                 </tr>
 
                 <tr v-if="!shift.reconciliation_issues?.length && !shift.unallocated_payments?.length">
-                    <td colspan="6" class="ss-empty-row">✅ لا توجد فروقات، كل الدفعات متطابقة</td>
+                    <td colspan="6" class="ss-empty-row">✅ لا توجد فروقات، كل ادائیگیات متطابقة</td>
                 </tr>
                 </tbody>
             </table>
@@ -578,7 +578,7 @@
 
     <!-- NO DATA -->
     <div v-else class="ss-loader">
-      <span class="ss-loader__text">لا توجد بيانات للوردية</span>
+      <span class="ss-loader__text">کوئی ڈیٹا نہیں للوردية</span>
     </div>
 </template>
 
@@ -717,10 +717,10 @@ const uniquePaymentMethods = computed(() => {
 })
 // ─── Tabs ─────────────────────────────────────────────
 const tabs = computed(() => [
-  { key: 'invoices',     label: 'الفواتير',           count: invoices.value.length },
+  { key: 'invoices',     label: 'الانوائسز',           count: invoices.value.length },
   { key: 'transactions', label: 'المعاملات النقدية',   count: transactions.value.length },
-  { key: 'payments',     label: 'مقارنة الدفع',       count: payments.value.length },
-  { key:   'issues',     label: 'مشاكل التسوية',      count: shift.value?.reconciliation_issues?.length || 0,
+  { key: 'payments',     label: 'مقارنة ادائیگی',       count: payments.value.length },
+  { key:   'issues',     label: 'تصفیہ کے مسائل',      count: shift.value?.reconciliation_issues?.length || 0,
     alert: shift.value?.has_issues   // لتلوين الـ tab باللون الأحمر
   },
 ])
@@ -731,7 +731,7 @@ const getInvoicePrimaryPayment = (inv) => inv.payments?.[0]?.mode_of_payment || 
 const getStatusLabel = (inv) => {
   if (flt(inv.grand_total) < 0) return 'واپسی'
   const s = (inv.status || '').toLowerCase()
-  return ({ paid: 'ادا شدہ',unpaid: 'غیر ادا شدہ', 'partly paid': 'جزوی ادائیگی', return: 'واپسی', draft: 'مسودہ', cancelled: 'منسوخ', 'credit note issued': 'کریڈٹ نوٹ' })[s] || inv.status || '—'
+  return ({ paid: 'ادا شدہ',unpaid: 'غیر ادا شدہ', 'partly paid': 'جزوی ادائیگی', return: 'واپسی', draft: 'ڈرافٹ', cancelled: 'سےسوخ', 'credit note issued': 'کریڈٹ نوٹ' })[s] || inv.status || '—'
 }
 const getStatusClass = (inv) => {
   if (flt(inv.grand_total) < 0) return 'ss-chip--warning'
@@ -850,7 +850,7 @@ const getUniquePayments = (inv) => {
 }
 
 const onShiftClosed = (closedShift) => {
-  // حدّث الـ shift المحلي بعد الإغلاق
+  // حدّث الـ shift المحلي بعد البند کریں
   if (shift.value) {
     shift.value.status = 'closed'
   }

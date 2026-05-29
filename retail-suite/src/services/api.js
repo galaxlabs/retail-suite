@@ -1283,7 +1283,7 @@ export const processAutoAttendanceApi = async (shiftName) => {
     return {
       status: res.status,
       data: res.data,
-      message: 'تم معالجة الحضور بنجاح'
+      message: 'تم معالجة حاضری بنجاح'
     }
   } catch (error) {
     console.error('Error processing auto attendance:', error)
@@ -1396,7 +1396,7 @@ export const updateShiftAssignmentApi = async (data) => {
     return {
       status: res.status,
       data: res.data,
-      message: 'تم تحديث تعيين الوردية بنجاح'
+      message: 'تم اپ ڈیٹ کریں تعيين الوردية بنجاح'
     }
   } catch (error) {
     console.error('Error updating shift assignment:', error)
@@ -1858,9 +1858,11 @@ export const createPurchaseReceipt = async (receiptData) => {
     const res = await call(`${BASE_PURCHASE_RECEIPTS}.create_purchase_receipt`, {
       data: JSON.stringify(receiptData)
     })
+    const result = res?.message || res?.data || res
     return {
       status: 'success',
-      data: res.data.message?.data || res.data.message || {},
+      data: result,
+      name: result?.name || result?.data?.name,
       message: 'Receipt created successfully'
     }
   } catch (error) {
@@ -2098,6 +2100,22 @@ export const getDefaultCompany = async () => {
   } catch (err) {
     console.error('Error loading default company:', err)
     return ''
+  }
+}
+
+export const getCompanyBranding = async (companyName) => {
+  if (!companyName) return {}
+  try {
+    const list = await getCompanies()
+    const companies = Array.isArray(list) ? list : (list?.message || list?.data || [])
+    const doc = (companies || []).find((c) => c.name === companyName) || {}
+    return {
+      name: doc.company_name || doc.name || companyName,
+      logo: doc.company_logo || '',
+    }
+  } catch (err) {
+    console.error('Error loading company branding:', err)
+    return {}
   }
 }
 

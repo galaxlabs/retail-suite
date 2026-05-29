@@ -317,7 +317,7 @@ const handleDroidCamConnect = async () => {
     try {
       showNotification('Connecting to DroidCam...', 'connecting')
 
-      // استخدم IP من المتغير أو القيمة الافتراضية
+      // استخدم IP سے المتغير أو القيمة پہلے سے طے شدہة
       const ipAddress = droidcamIP.value || '192.168.8.15'
 
       await connectToDroidCam(ipAddress, 4747)
@@ -353,7 +353,7 @@ const handleBarcodeScanned = (event) => {
 }
 
 /**
- * عرض إشعار DroidCam
+ * دیکھیں إشعار DroidCam
  */
 const showNotification = (message, status = 'connecting') => {
   droidcamNotificationMessage.value = message
@@ -374,7 +374,7 @@ const showNotification = (message, status = 'connecting') => {
 }
 
 /**
- * تحديث مدة Shift
+ * اپ ڈیٹ کریں مدة Shift
  */
 const updateShiftDuration = () => {
   if (shiftStore.isShiftOpen && currentShift.value) {

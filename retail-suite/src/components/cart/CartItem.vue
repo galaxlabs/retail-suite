@@ -182,7 +182,7 @@ const imageError = ref(false)
 const hasError = ref(false)
 const displayQuantity = ref(props.item.qty)
 const pendingQuantity = ref(props.item.qty)
-const defaultImage = '/src/assets/img/default-product.jpg'
+const defaultImage = '/img/default-product.jpg'
 const defaultImageSrc = `${config.VUE_URL}${defaultImage}`
 const currentSrc = ref(
   props.item?.image
@@ -218,26 +218,21 @@ const increaseQuantity = () => {
     if (newQty < props.item.originalQuantity) {
       newQty -= 1
 
-            console.log("(+) newQty ", newQty)
     } else {
       if (window.$toast) window.$toast.warning('You cannot return more than original quantity')
     }
   } else {
-    console.log("Mode: Sale")
     newQty += 1
   }
-  console.log("increaseQuantity", newQty, props.mode,props.item.originalQuantity)
   emit('update-quantity', props.item.item_code, newQty, props.mode)
 }
 
 const decreaseQuantity = () => {
   let newQty = props.item.qty
-  console.log("(-) decreaseQuantity ",props.mode)
   if (props.mode === 'return') {
 
     if (newQty < -1) {
       newQty += 1
-      console.log("(-) decreaseQuantity & newQty",props.mode, newQty)
     } else {
       if (window.$toast) window.$toast.info('Cannot reduce below -1')
     }
@@ -246,7 +241,6 @@ const decreaseQuantity = () => {
       newQty -= 1
     } else {
       emit('remove-item', props.item.item_code)
-      console.log("(-) props mode",props.mode)
       return
     }
   }
@@ -297,7 +291,6 @@ const updateQuantity = async (newQuantity) => {
   if (isUpdating.value) return
 
   const isReturnMode = props.mode === 'return'
-  console.log('🟢 updateQuantity fired', props.mode, props.item.item_code, newQuantity)
 
   //  Validate quantity range
   if (!isReturnMode && (newQuantity < 1 || newQuantity > 999 || isNaN(newQuantity))) {
@@ -335,7 +328,6 @@ const updateQuantity = async (newQuantity) => {
 
   // Handle remove item
   const handleRemove = async () => {
-    console.log("! Removed")
     if (isUpdating.value) return
 
     // Show confirmation for expensive items

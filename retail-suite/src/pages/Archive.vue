@@ -106,7 +106,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { formatPrice } from '@/utils/formatters'
 import ArchiveIcon from '@/components/icons/ArchiveIcon.svg'
 import ReceiptIcon from '@/components/icons/ReceiptIcon.svg'
@@ -114,10 +114,23 @@ import DollarIcon from '@/components/icons/DollarIcon.svg'
 import TrendingUpIcon from '@/components/icons/TrendingUpIcon.svg'
 import CheckIcon from '@/components/icons/CheckIcon.svg'
 import ClockIcon from '@/components/icons/ClockIcon.svg'
+import { safeCall } from '@/services/apiClient'
 import Header from '@/layout/Header.vue'
-const totalTransactions = 247
-const totalSales = 12450000
-const averageSale = 50405
+const totalTransactions = ref(0)
+const totalSales = ref(0)
+const averageSale = ref(0)
+
+const fetchArchiveStats = async () => {
+  const result = await safeCall('retail.retail.api.common.get_dashboard_summary')
+  if (result.success && result.data) {
+    const s = result.data.sales || {}
+    totalTransactions.value = s.invoice_count_week || 0
+    totalSales.value = s.this_month || 0
+    averageSale.value = totalTransactions.value > 0 ? Math.round(totalSales.value / totalTransactions.value) : 0
+  }
+}
+
+onMounted(() => fetchArchiveStats())
 const formattedTotalSales = computed(() => formatPrice(totalSales))
 const formattedAverageSale = computed(() => formatPrice(averageSale))
 </script>

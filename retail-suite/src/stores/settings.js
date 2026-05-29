@@ -134,7 +134,7 @@ export const useSettingsStore = defineStore("settings", () => {
     return config;
   };
 
-  // ✅ تحويل Hex إلى HSL
+  // ✅ تحويل Hex تک HSL
   const hexToHsl = (hex) => {
     let r = parseInt(hex.slice(1, 3), 16) / 255;
     let g = parseInt(hex.slice(3, 5), 16) / 255;
@@ -163,7 +163,7 @@ export const useSettingsStore = defineStore("settings", () => {
     };
   };
 
-  // ✅ تحويل HSL إلى Hex
+  // ✅ تحويل HSL تک Hex
   const hslToHex = (h, s, l) => {
     s /= 100;
     l /= 100;
@@ -234,7 +234,7 @@ export const useSettingsStore = defineStore("settings", () => {
       const settingsToSave = normalizeSettings(toRaw(settings));
       const color = settings.appearance.primaryColor;
 
-      // تطبيق الألوان قبل الحفظ
+      // تطبيق الألوان قبل المحفوظ کریں
       generateAndApplyColorShades(color);
 
       localStorage.setItem(
@@ -281,7 +281,7 @@ export const useSettingsStore = defineStore("settings", () => {
     saveSettings();
   };
 
-  // إعادة تعيين الإعدادات إلى القيم الافتراضية
+  // إعادة تعيين الإعدادات تک القيم پہلے سے طے شدہة
   const resetSettings = () => {
     try {
       Object.assign(settings, createDefaultSettings());
@@ -294,7 +294,7 @@ export const useSettingsStore = defineStore("settings", () => {
     }
   };
 
-  // ✅ مراقبة التغييرات والحفظ التلقائي
+  // ✅ مراقبة التغييرات والمحفوظ کریں التلقائي
   watch(
     () => settings.appearance.primaryColor,
     (newColor) => {

@@ -75,7 +75,7 @@ const containerRef = ref(null)
 const linesContainer = ref(null)
 const stepElements = reactive({})
 
-// دالة لحفظ مرجع كل خطوة
+// دالة لمحفوظ کریں مرجع كل خطوة
 const setStepRef = (index) => {
   return (el) => {
     if (el) stepElements[index] = el
@@ -91,7 +91,7 @@ const getDistance = (el1, el2, containerRect) => {
   const x1 = rect1.left - containerRect.left + rect1.width / 2
   const y1 = rect1.top - containerRect.top + rect1.height / 2
 
-  // مركز الدائرة الثانية
+  // مركز الدائرة السیکنڈ
   const x2 = rect2.left - containerRect.left + rect2.width / 2
   const y2 = rect2.top - containerRect.top + rect2.height / 2
 
@@ -150,7 +150,7 @@ onMounted(() => {
   window.addEventListener('resize', drawLines)
 })
 
-// عند كل تحديث
+// عند كل اپ ڈیٹ کریں
 onUpdated(() => {
   drawLines()
 })

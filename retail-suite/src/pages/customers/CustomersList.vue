@@ -302,7 +302,7 @@ const filteredCustomers = computed(() => {
     }
 
     const deleteCustomer = async (id) => {
-      if (confirm('هل تريد حذف هذا العميل؟')) {
+      if (confirm('Delete this customer?')) {
         customers.value = customers.value.filter(c => c.id !== id)
       }
     }
@@ -324,7 +324,7 @@ const filteredCustomers = computed(() => {
     }
 const exportCustomers = () => {
   const csv = [
-    ['اسم العميل', 'الهاتف', 'البريد', 'العنوان', 'الديون', 'إجمالي المشتريات', 'الحالة'],
+    ['Customer Name', 'Phone', 'Email', 'Address', 'Debt', 'Total Purchases', 'Status'],
     ...filteredCustomers.value.map(c => [
       c.customer_name,
       c.contacts.length > 0 ? c.contacts[0].phone || c.contacts[0].mobile : '-',
@@ -349,7 +349,7 @@ const exportCustomers = () => {
 
 // const exportCustomers = () => {
 //   const csv = [
-//     ['اسم العميل', 'الهاتف', 'البريد', 'العنوان', 'الديون', 'إجمالي المشتريات', 'الحالة'],
+//     ['Customer Name', 'Phone', 'Email', 'Address', 'Debt', 'Total Purchases', 'Status'],
 //     ...filteredCustomers.value.map(c => [
 //       c.name,
 //       c.phone,

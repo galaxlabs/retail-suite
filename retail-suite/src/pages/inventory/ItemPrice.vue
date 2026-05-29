@@ -770,7 +770,7 @@ const deletePrice = async (price) => {
     itemPrices.value = itemPrices.value.filter(p => p.name !== price.name)
   } catch (e) {
     console.error(e)
-    alert('Error deleting price')
+    window.$toast?.error('Error deleting price')
   }
 }
 

@@ -20,22 +20,22 @@
         <!-- Statistics Cards -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
           <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 border border-green-200">
-            <p class="text-green-600 text-sm font-semibold mb-1">إجمالي المشتريات</p>
+            <p class="text-green-600 text-sm font-semibold mb-1">کل خریداری</p>
             <p class="text-2xl font-bold text-green-900">{{ formatCurrency(customer.totalPurchases) }}</p>
           </div>
 
           <div :class="['bg-gradient-to-br rounded-lg p-4 border', customer.debt > 0 ? 'from-red-50 to-red-100 border-red-200' : 'from-green-50 to-green-100 border-green-200']">
-            <p :class="['text-sm font-semibold mb-1', customer.debt > 0 ? 'text-red-600' : 'text-green-600']">الديون المتبقية</p>
+            <p :class="['text-sm font-semibold mb-1', customer.debt > 0 ? 'text-red-600' : 'text-green-600']">باقی قرض</p>
             <p :class="['text-2xl font-bold', customer.debt > 0 ? 'text-red-900' : 'text-green-900']">{{ formatCurrency(customer.debt) }}</p>
           </div>
 
           <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200">
-            <p class="text-blue-600 text-sm font-semibold mb-1">عدد الطلبات</p>
+            <p class="text-blue-600 text-sm font-semibold mb-1">آرڈرز کی تعداد</p>
             <p class="text-2xl font-bold text-blue-900">{{ purchases.length }}</p>
           </div>
 
           <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
-            <p class="text-purple-600 text-sm font-semibold mb-1">متوسط الطلب</p>
+            <p class="text-purple-600 text-sm font-semibold mb-1">اوسط آرڈر</p>
             <p class="text-2xl font-bold text-purple-900">{{ formatCurrency(averageOrder) }}</p>
           </div>
         </div>
@@ -53,13 +53,13 @@
               @click="activeTab = 'purchases'"
               :class="['px-4 py-3 font-medium border-b-2 transition', activeTab === 'purchases' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-600 hover:text-gray-900']"
             >
-              سجل المشتريات
+              خریداری کا ریکارڈ
             </button>
             <button
               @click="activeTab = 'transactions'"
               :class="['px-4 py-3 font-medium border-b-2 transition', activeTab === 'transactions' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-600 hover:text-gray-900']"
             >
-              كشف الحساب
+              اکاونٹ سٹیٹسےٹ
             </button>
           </div>
         </div>
@@ -70,42 +70,42 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Personal Info -->
             <div class="bg-gray-50 rounded-lg p-4 space-y-3">
-              <h3 class="font-semibold text-gray-900 mb-4">المعلومات الشخصية</h3>
+              <h3 class="font-semibold text-gray-900 mb-4">ذاتی معلومات</h3>
               <div>
-                <p class="text-sm text-gray-600">الاسم</p>
+                <p class="text-sm text-gray-600">نام</p>
                 <p class="font-medium text-gray-900">{{ customer.name }}</p>
               </div>
               <div>
-                <p class="text-sm text-gray-600">البريد الإلكتروني</p>
+                <p class="text-sm text-gray-600">ای میل</p>
                 <p class="font-medium text-gray-900">{{ customer.email }}</p>
               </div>
               <div>
-                <p class="text-sm text-gray-600">رقم الهاتف</p>
+                <p class="text-sm text-gray-600">فون نمبر</p>
                 <p class="font-medium text-gray-900">{{ customer.phone }}</p>
               </div>
               <div>
-                <p class="text-sm text-gray-600">العنوان</p>
+                <p class="text-sm text-gray-600">پتہ</p>
                 <p class="font-medium text-gray-900">{{ customer.address }}</p>
               </div>
             </div>
 
             <!-- Financial Info -->
             <div class="bg-gray-50 rounded-lg p-4 space-y-3">
-              <h3 class="font-semibold text-gray-900 mb-4">المعلومات المالية</h3>
+              <h3 class="font-semibold text-gray-900 mb-4">مالی معلومات</h3>
               <div>
-                <p class="text-sm text-gray-600">حد الائتمان</p>
+                <p class="text-sm text-gray-600">کریڈٹ لمٹ</p>
                 <p class="font-medium text-gray-900">{{ formatCurrency(customer.creditLimit || 0) }}</p>
               </div>
               <div>
-                <p class="text-sm text-gray-600">الخصم</p>
+                <p class="text-sm text-gray-600">ڈسکاونٹ</p>
                 <p class="font-medium text-gray-900">{{ customer.discount || 0 }}%</p>
               </div>
               <div>
-                <p class="text-sm text-gray-600">شروط الدفع</p>
-                <p class="font-medium text-gray-900">{{ customer.paymentTerms || 0 }} أيام</p>
+                <p class="text-sm text-gray-600">شروط ادائیگی</p>
+                <p class="font-medium text-gray-900">{{ customer.paymentTerms || 0 }} دن</p>
               </div>
               <div>
-                <p class="text-sm text-gray-600">الحالة</p>
+                <p class="text-sm text-gray-600">حیثیت</p>
                 <span :class="getStatusClass(customer.status)" class="px-2 py-1 rounded text-xs font-semibold">
                   {{ getStatusLabel(customer.status) }}
                 </span>
@@ -116,7 +116,7 @@
           <!-- Notes -->
           <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
             <h3 class="font-semibold text-gray-900 mb-2">ملاحظات</h3>
-            <p class="text-gray-700">{{ customer.notes || 'لا توجد ملاحظات' }}</p>
+            <p class="text-gray-700">{{ customer.notes || 'کوئی نوٹس نہیں' }}</p>
           </div>
         </div>
 
@@ -126,10 +126,10 @@
             <table class="w-full text-sm">
               <thead class="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th class="px-4 py-2 text-right font-semibold text-gray-900">رقم الفاتورة</th>
-                  <th class="px-4 py-2 text-right font-semibold text-gray-900">التاريخ</th>
-                  <th class="px-4 py-2 text-right font-semibold text-gray-900">المبلغ</th>
-                  <th class="px-4 py-2 text-right font-semibold text-gray-900">الحالة</th>
+                  <th class="px-4 py-2 text-right font-semibold text-gray-900">رقم انوائس</th>
+                  <th class="px-4 py-2 text-right font-semibold text-gray-900">تاریخ</th>
+                  <th class="px-4 py-2 text-right font-semibold text-gray-900">رقم</th>
+                  <th class="px-4 py-2 text-right font-semibold text-gray-900">حیثیت</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200">
@@ -156,7 +156,7 @@
               type="date"
               class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             />
-            <span class="text-gray-600">إلى</span>
+            <span class="text-gray-600">تک</span>
             <input
               v-model="dateFilterTo"
               type="date"
@@ -168,11 +168,11 @@
             <table class="w-full text-sm">
               <thead class="bg-gray-50 border-b border-gray-200">
                 <tr>
-                  <th class="px-4 py-2 text-right font-semibold text-gray-900">التاريخ</th>
-                  <th class="px-4 py-2 text-right font-semibold text-gray-900">الوصف</th>
-                  <th class="px-4 py-2 text-right font-semibold text-gray-900">مدين</th>
-                  <th class="px-4 py-2 text-right font-semibold text-gray-900">دائن</th>
-                  <th class="px-4 py-2 text-right font-semibold text-gray-900">الرصيد</th>
+                  <th class="px-4 py-2 text-right font-semibold text-gray-900">تاریخ</th>
+                  <th class="px-4 py-2 text-right font-semibold text-gray-900">تفصیل</th>
+                  <th class="px-4 py-2 text-right font-semibold text-gray-900">ڈیبٹ</th>
+                  <th class="px-4 py-2 text-right font-semibold text-gray-900">کریڈٹ</th>
+                  <th class="px-4 py-2 text-right font-semibold text-gray-900">بیلنس</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200">
@@ -192,15 +192,15 @@
           <!-- Summary -->
           <div class="grid grid-cols-3 gap-4 mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
             <div>
-              <p class="text-sm text-gray-600">إجمالي المدين</p>
+              <p class="text-sm text-gray-600">إجمالي الڈیبٹ</p>
               <p class="text-lg font-bold text-red-600">{{ formatCurrency(totalDebit) }}</p>
             </div>
             <div>
-              <p class="text-sm text-gray-600">إجمالي الدائن</p>
+              <p class="text-sm text-gray-600">إجمالي الکریڈٹ</p>
               <p class="text-lg font-bold text-green-600">{{ formatCurrency(totalCredit) }}</p>
             </div>
             <div>
-              <p class="text-sm text-gray-600">الرصيد النهائي</p>
+              <p class="text-sm text-gray-600">بیلنس النهائي</p>
               <p :class="['text-lg font-bold', (totalDebit - totalCredit) <= 0 ? 'text-green-600' : 'text-red-600']">
                 {{ formatCurrency(totalDebit - totalCredit) }}
               </p>
@@ -215,13 +215,13 @@
           @click="printStatement"
           class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition"
         >
-          🖨️ طباعة
+          🖨️ پرنٹ کریں
         </button>
         <button
           @click="$emit('close')"
           class="px-4 py-2 bg-gray-300 text-gray-900 rounded-lg hover:bg-gray-400 transition"
         >
-          إغلاق
+          بند کریں
         </button>
       </div>
     </div>
@@ -247,16 +247,16 @@ import { ref, computed } from 'vue'
     const purchases = ref([
       { id: 1001, date: '2025-01-25', amount: 1500, status: 'paid', statusLabel: 'ادا شدہ' },
       { id: 1002, date: '2025-01-20', amount: 2000, status: 'paid', statusLabel: 'ادا شدہ' },
-      { id: 1003, date: '2025-01-15', amount: 1200, status: 'pending', statusLabel: 'قيد الانتظار' }
+      { id: 1003, date: '2025-01-15', amount: 1200, status: 'pending', statusLabel: 'زیر التوا' }
     ])
 
     // Sample transactions for account statement
     const transactions = ref([
-      { date: '2025-01-01', description: 'رصيد افتتاحي', debit: 500, credit: 0, balance: 500 },
-      { date: '2025-01-05', description: 'شراء #1001', debit: 1500, credit: 0, balance: 2000 },
-      { date: '2025-01-10', description: 'دفع نقدي', debit: 0, credit: 1000, balance: 1000 },
-      { date: '2025-01-15', description: 'شراء #1002', debit: 2000, credit: 0, balance: 3000 },
-      { date: '2025-01-20', description: 'شراء #1003', debit: 1200, credit: 0, balance: 4200 },
+      { date: '2025-01-01', description: 'ابتدائی بیلنس', debit: 500, credit: 0, balance: 500 },
+      { date: '2025-01-05', description: 'خریداری #1001', debit: 1500, credit: 0, balance: 2000 },
+      { date: '2025-01-10', description: 'نقد ادائیگی', debit: 0, credit: 1000, balance: 1000 },
+      { date: '2025-01-15', description: 'خریداری #1002', debit: 2000, credit: 0, balance: 3000 },
+      { date: '2025-01-20', description: 'خریداری #1003', debit: 1200, credit: 0, balance: 4200 },
       { date: '2025-01-25', description: 'دفع بشيك', debit: 0, credit: 2000, balance: 2200 }
     ])
 
@@ -292,9 +292,9 @@ import { ref, computed } from 'vue'
 
     const getStatusLabel = (status) => {
       const labels = {
-        active: 'نشط',
-        inactive: 'غير نشط',
-        blocked: 'محظور'
+        active: 'فعال',
+        inactive: 'غير فعال',
+        blocked: 'بلاک شدہ'
       }
       return labels[status] || status
     }

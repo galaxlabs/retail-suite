@@ -58,7 +58,7 @@ const normalizePayment = (summary = {}) => {
       return 'اس آئٹم کا اسٹاک کم ہے، اس لیے انوائس ڈرافٹ میں محفوظ کر دی گئی ہے۔ براہ کرم بعد میں اسٹاک اپڈیٹ کریں۔'
     }
     if (
-      text.includes('المبلغ المدفوع أكبر من إجمالي الفاتورة') ||
+      text.includes('رقم المدفوع أكبر سے إجمالي انوائس') ||
       text.includes('paid amount is greater than invoice total')
     ) {
       return 'ادا کی گئی رقم بل کے کل سے زیادہ ہے۔ براہ کرم رقم درست کریں۔'
@@ -70,7 +70,7 @@ const normalizePayment = (summary = {}) => {
     const selectedCustomer = shiftStore.currentCustomer?.name || null
     if (selectedCustomer) return selectedCustomer
     if (salesChannel === 'wholesale') {
-      throw new Error('ہول سیل فروخت کے لیے کسٹمر منتخب کرنا ضروری ہے۔')
+      throw new Error('ہول سیل فروخت کے لیے کسٹمر سےتخب کرنا ضروری ہے۔')
     }
     return shiftStore.pos_profile?.customer || 'Walk-in Customer'
   }

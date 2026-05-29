@@ -361,7 +361,7 @@ import CouponModal from '@/components/modals/CouponModal.vue'
     }
 
     const enableBulkDiscount = () => {
-      alert('سيتم فتح نافذة إنشاء خصم جماعي')
+      window.$toast?.info('Opening bulk discount window')
     }
 
 </script>

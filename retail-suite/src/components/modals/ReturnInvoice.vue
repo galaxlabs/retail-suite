@@ -361,7 +361,7 @@ const handleProcessReturn = async () => {
     returnNotes.value = ''
   } catch (error) {
     console.error('Return processing failed:', error)
-    alert('Failed to process return. Please try again.')
+    window.$toast?.error('Failed to process return. Please try again.')
   } finally {
     isProcessing.value = false
   }

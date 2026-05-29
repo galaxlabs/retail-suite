@@ -40,7 +40,7 @@ defineProps({
 const emit = defineEmits(['update:modelValue'])
 const productsStore = useProductsStore()
 
-// استخرج الـ categories الفريدة من الـ products
+// استخرج الـ categories الفريدة سے الـ products
 const categories = computed(() => {
   const cats = productsStore.products
     .map(p => p.item_group)

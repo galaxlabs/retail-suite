@@ -200,7 +200,7 @@ const capitalizeStatus = (status) =>
 
   const downloadBarcode = () => {
     // TODO: Implement download as image
-    alert('Downloading barcode as image...')
+    window.$toast?.info('Downloading barcode...')
   }
 
   const printBarcode = () => {
@@ -221,7 +221,7 @@ const capitalizeStatus = (status) =>
         url: window.location.href
       }).catch(err => console.log('Share error:', err))
     } else {
-      alert('Share functionality not supported on this device')
+      window.$toast?.warning('Share not supported')
     }
   }
 

@@ -887,7 +887,7 @@ const shiftStore     = useShiftStore()
 const inventoryStore = useInventoryStore()
 const cartStore      = useCartStore()
 const { confirm } = useConfirm()
-const defaultImageSrc = ref(`${config.VUE_URL}/src/assets/img/default-product.jpg`)
+const defaultImageSrc = ref(`${config.FRAPPE_URL}/img/default-product.jpg`)
 const handleImageError = (e) => { e.target.src = 'https://via.placeholder.com/40?text=?' }
 
 // ────────────────────────────────────────────

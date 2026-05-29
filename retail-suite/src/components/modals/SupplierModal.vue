@@ -380,7 +380,7 @@ const resetForm = () => {
 
 const handleSubmit = () => {
   if (!formData.value.supplier_name) {
-    alert('Please fill in required fields')
+    window.$toast?.warning('Please fill in required fields')
     return
   }
   emit('save', { ...formData.value })

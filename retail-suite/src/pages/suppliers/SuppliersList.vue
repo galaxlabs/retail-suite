@@ -336,7 +336,7 @@ const viewSupplier = (supplier) => {
 }
 
 const deleteSupplier = async (id) => {
-  if (confirm('هل تريد حذف هذا المورد؟')) {
+  if (confirm('Delete this supplier?')) {
     suppliers.value = suppliers.value.filter(s => s.id !== id)
   }
 }
@@ -362,7 +362,7 @@ const saveSupplier = async (supplier) => {
 
 const exportSuppliers = () => {
   const csv = [
-    ['اسم المورد', 'الهاتف', 'البريد', 'العنوان', 'المبلغ المستحق', 'إجمالي المورادات', 'الحالة'],
+    ['Supplier Name', 'Phone', 'Email', 'Address', 'Due Amount', 'Total Purchases', 'Status'],
     ...filteredSuppliers.value.map(s => [
       s.name,
       s.mobile_no,

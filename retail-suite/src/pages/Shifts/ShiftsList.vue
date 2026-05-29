@@ -708,7 +708,7 @@ async function loadShifts() {
 function viewShift(name)    { router.push(`/shifts/${name}`) }
 function viewCurrentShift() { router.push('/shifts/current') }
 function printShift(id)     { console.log('🖨️ Print shift:', id) }
-function closeShift(id)     { if (confirm('هل أنت متأكد من إغلاق هذا الشيفت؟')) console.log('🔒 Close shift:', id) }
+function closeShift(id)     { if (confirm('هل أنت متأكد سے بند کریں هذا الشيفت؟')) console.log('🔒 Close shift:', id) }
 function searchShifts()     { currentPage.value = 1 }
 function applyFilters()     { currentPage.value = 1; loadShifts() }
 function exportShifts()     { console.log('📤 Export shifts') }

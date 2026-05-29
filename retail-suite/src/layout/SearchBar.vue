@@ -2,7 +2,7 @@
   <div class="sticky top-0 z-10 flex px-2 flex-row gap-2">
     <!-- Status Display -->
     <div v-if="lastBarcode" class="barcode-display">
-      <h3>آخر باركود:</h3>
+      <h3>Last Barcode:</h3>
       <p>{{ lastBarcode }}</p>
     </div>
 
@@ -70,7 +70,7 @@
       </svg>
     </button>
 
-    <!-- UNIFIED INPUT - يعمل في الـ mode الاثنين -->
+    <!-- UNIFIED INPUT - يعمل في الـ mode پیر -->
     <input
       ref="mainInput"
       type="text"
@@ -168,9 +168,9 @@ import qrBot from '@/services/qrBot.js'
 
     const getStatusTitle = () => {
       if (qrBot.isConnected.value) {
-        return '📱 وضع الباسح - جاهز للمسح أو الكتابة'
+        return 'Scanner mode - ready'
       }
-      return '⌨️ وضع البحث اليدوي'
+      return 'Manual search mode'
     }
 
     const switchToBarcode = () => {
@@ -230,7 +230,7 @@ import qrBot from '@/services/qrBot.js'
 
         if (!shiftStore.isShiftOpen) {
           if (window.$toast) {
-            window.$toast.warning('الرجاء فتح الشيفت أولاً')
+            window.$toast.warning('براہ کرم پہلے شفٹ کھولیں')
           }
           return
         }
@@ -254,13 +254,13 @@ import qrBot from '@/services/qrBot.js'
           console.log('✅ Product found and added to cart:', product.item_name)
         } else {
           if (window.$toast) {
-            window.$toast.error(`❌ المنتج برقم ${barcode} غير موجود`)
+            window.$toast.error('Product ' + barcode + ' not found')
           }
         }
       } catch (error) {
         console.error('❌ Error processing barcode:', error)
         if (window.$toast) {
-          window.$toast.error('خطأ في معالجة الباركود')
+          window.$toast.error('Barcode processing error')
         }
       } finally {
         isLoading.value = false
@@ -275,7 +275,7 @@ import qrBot from '@/services/qrBot.js'
       const value = event.target.value
       emit('update:modelValue', value)
 
-      // التحقق من الباركود التلقائي
+      // التحقق سے الباركود التلقائي
       const isBarcodePattern = /^\d{8,20}$/.test(value)
 
       if (qrBot.isConnected.value && isBarcodePattern) {
@@ -310,7 +310,7 @@ import qrBot from '@/services/qrBot.js'
         return
       }
 
-      // إذا Enter = معالجة البحث أو الباركود
+      // إذا Enter = معالجة التلاش کریں أو الباركود
       if (event.key === 'Enter') {
         event.preventDefault()
         const value = event.target.value.trim()

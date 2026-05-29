@@ -208,7 +208,6 @@ export const useCartStore = defineStore('cart', () => {
     }
 
     _updateChange()
-    console.log('📄 Draft loaded:', invoice.name)
   }
 
   const clearDraftMode = () => {
@@ -373,7 +372,6 @@ export const useCartStore = defineStore('cart', () => {
   ============================================================ */
   const _updateChange = () => {
     // computed handles it, just trigger reactivity log
-    console.log('💰 Total:', totalPrice.value, '| Change:', changeAmount.value)
   }
 
   const _generateTransactionId = () => {
@@ -384,7 +382,6 @@ export const useCartStore = defineStore('cart', () => {
   const _saveTransaction = async (transactionData) => {
     return new Promise(resolve => {
       setTimeout(() => {
-        console.log('✅ Transaction saved:', transactionData)
         resolve(transactionData)
       }, 500)
     })

@@ -39,7 +39,7 @@
         :style="selectStyle"
         @change="emit('update:selectedWarehouse', $event.target.value)"
       >
-        <option value="">الافتراضي</option>
+        <option value="">پہلے سے طے شدہ</option>
         <option
           v-for="wh in warehouses"
           :key="wh.name"

@@ -277,10 +277,14 @@ const cartStore = useCartStore()
 const pos_opening_shift = computed(() => shiftStore.pos_opening_shift?.name || "")
 
 const filteredInvoices = computed(() => {
+  // Only show invoices with returnable items
+  let list = allInvoices.value.filter(inv =>
+    inv.returnable_items?.length > 0 && (inv.total_returnable_qty > 0)
+  )
   if (!searchQuery.value) {
-    return allInvoices.value
+    return list
   }
-  return allInvoices.value.filter(invoice =>
+  return list.filter(invoice =>
     invoice.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   )
 })

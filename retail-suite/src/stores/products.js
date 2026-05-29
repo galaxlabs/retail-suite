@@ -18,7 +18,10 @@ export const useProductsStore = defineStore('products', {
     warehouses: [],
 
     db: null,
-    error: null
+    error: null,
+    hasMore: true,
+    pageStart: 0,
+    PAGE_SIZE: 50
   }),
 
   getters: {
@@ -70,9 +73,6 @@ export const useProductsStore = defineStore('products', {
     async loadFilterOptions() {
       try {
         const [pl, wh] = await Promise.all([getPriceLists(), getWarehouses()])
-                // console.log('➡️ POS Profile :', posProfileName)
-        console.log('➡️ **Price List**  :', pl)
-        console.log('➡️ **warehouses**    :', wh)
         this.priceLists = pl || []
         this.warehouses = wh || []
       } catch (e) {
@@ -83,7 +83,6 @@ export const useProductsStore = defineStore('products', {
     // ─── Main load ────────────────────────────────────────────────────
     async loadProductsFromFrappeDB() {
       try {
-        console.log('========== Load Products ==========')
         const shiftStore = useShiftStore()
         const hasLocalShift = Boolean(shiftStore.pos_profile && shiftStore.pos_opening_shift)
         const hasActiveShift = hasLocalShift ? true : await shiftStore.checkActiveShift()
@@ -94,18 +93,15 @@ export const useProductsStore = defineStore('products', {
         }
 
         const currentPOSProfile = shiftStore.pos_profile || {}
-        const posProfileName    = currentPOSProfile.name
+        const posProfileName    = currentPOSProfile.name || shiftStore.pos_profile_name || (typeof currentPOSProfile === "string" ? currentPOSProfile : "")
         const currentPriceList  =
           this.selectedPriceList ||
           currentPOSProfile.selling_price_list ||
           "Standard Selling"
         const currentCustomer = currentPOSProfile.customer || ''
+        const posProfilePayload = typeof currentPOSProfile === "string" ? { name: posProfileName, selling_price_list: currentPriceList, customer: currentCustomer } : currentPOSProfile
         const selectedWarehouse = this.selectedWarehouse || null  // null → backend uses pos_profile default
 
-        console.log('➡️ POS Profile :', posProfileName)
-        console.log('➡️ Price List  :', currentPriceList)
-        console.log('➡️ Customer    :', currentCustomer)
-        console.log('➡️ Warehouse   :', selectedWarehouse)
 
         if (!posProfileName || !currentPriceList) {
           console.warn('⚠️ Missing required profile details!')
@@ -114,23 +110,24 @@ export const useProductsStore = defineStore('products', {
 
         this.isLoading = true
         const products = await getItemsFromFrappeDB(
-          currentPOSProfile,
+          posProfilePayload,
           currentPriceList,
           currentCustomer,
           this.searchKeyword,
           selectedWarehouse
         )
 
-        console.log("AFTER API CALL", products)
-        console.log('✅ Products loaded:', products?.length)
+        this.pageStart = 0
+        this.hasMore = (products || []).length >= this.PAGE_SIZE
+        this.error = null
         this.products = products || []
 
-        // حفظ الـ defaults أول مرة
+        // محفوظ کریں الـ defaults أول مرة
         if (!this.selectedPriceList) this.selectedPriceList = currentPriceList
 
         return this.products
       } catch (error) {
-        console.error('❌ Error loading products:', error)
+        this.error = error?.message || 'Failed to load products'; console.error('Error loading products:', error)
         return []
       } finally {
         this.isLoading = false
@@ -254,7 +251,6 @@ export const useProductsStore = defineStore('products', {
       ]
       try {
         const Response = await createSampleItems(sample_products)
-        console.log("response createSampleItems", Response)
         window.$toast.success("✅ Sample items created successfully")
       } catch (error) {
         console.error("error", error)
@@ -266,7 +262,6 @@ export const useProductsStore = defineStore('products', {
       try {
         const response = await deleteSampleItems()
         window.$toast.success("Delete sample items Successfully")
-        console.log("response deleteSampleItems", response)
       } catch (error) {
         window.$toast.error("❌ Failed to Delete sample items")
         console.error("error deleting sample data", error)

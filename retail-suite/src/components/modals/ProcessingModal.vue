@@ -13,14 +13,14 @@
 
       <!-- Title -->
       <h2 class="text-2xl font-bold text-gray-900 mb-2">
-        {{ progress === 100 ? 'تم بنجاح!' : 'جاري المعالجة' }}
+        {{ progress === 100 ? 'کامیاب!' : 'پروسیسنگ جاری ہے' }}
       </h2>
 
       <!-- Subtitle -->
       <p class="text-gray-600 mb-6">
         {{ progress === 100
-          ? `تم معالجة الحضور للوردية: ${shiftName}`
-          : `جاري معالجة الحضور للوردية: ${shiftName}`
+          ? `تم معالجة حاضری للوردية: ${shiftName}`
+          : `جاري معالجة حاضری للوردية: ${shiftName}`
         }}
       </p>
 
@@ -48,7 +48,7 @@
 
       <!-- Estimated Time -->
       <div v-if="progress < 100" class="mb-6 text-sm text-gray-500">
-        <p>الوقت المتبقي: <span class="font-semibold">{{ estimatedTime }}</span></p>
+        <p>وقت المتبقي: <span class="font-semibold">{{ estimatedTime }}</span></p>
       </div>
 
       <!-- Close Button -->
@@ -57,7 +57,7 @@
         @click="$emit('close')"
         class="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
       >
-        إغلاق
+        بند کریں
       </button>
     </div>
   </div>
@@ -88,7 +88,7 @@ const emit = defineEmits(['close'])
    State
 ======================== */
 const statusMessages = ref([
-  'جاري بدء معالجة الحضور...'
+  'جاري بدء معالجة حاضری...'
 ])
 const startTime = ref(Date.now())
 const estimatedTotalTime = 30000 // 30 seconds (configurable)
@@ -106,11 +106,11 @@ const estimatedTime = computed(() => {
   const seconds = Math.ceil(remaining / 1000)
 
   if (seconds < 60) {
-    return `${seconds} ثانية`
+    return `${seconds} سیکنڈ`
   }
 
   const minutes = Math.ceil(seconds / 60)
-  return `${minutes} دقيقة`
+  return `${minutes} سےٹ`
 })
 
 /* ========================
@@ -132,16 +132,16 @@ onMounted(() => {
   // Simulate progress updates (in real app, these would come from backend)
   const interval = setInterval(() => {
     if (props.progress >= 25 && statusMessages.value.length === 1) {
-      addStatusMessage('✓ تم تحميل سجلات الدخول والخروج')
+      addStatusMessage('✓ داخلے اور خارجے کے ریکارڈ لوڈ ہو گئے')
     }
     if (props.progress >= 50 && statusMessages.value.length === 2) {
-      addStatusMessage('✓ جاري معالجة فترات العمل')
+      addStatusMessage('✓ کام کے اوقات پروسیس ہو رہے ہیں')
     }
     if (props.progress >= 75 && statusMessages.value.length === 3) {
-      addStatusMessage('✓ جاري تحديث سجلات الغياب')
+      addStatusMessage('✓ جاري اپ ڈیٹ کریں سجلات الغياب')
     }
     if (props.progress >= 95 && statusMessages.value.length === 4) {
-      addStatusMessage('✓ جاري الانتهاء من المعالجة')
+      addStatusMessage('✓ پروسیسنگ مکمل ہو رہی ہے')
     }
   }, 500)
 

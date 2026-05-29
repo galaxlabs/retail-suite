@@ -229,7 +229,7 @@ import {
 
     const settingsStore = useSettingsStore()
 
-    // ✅ الحصول على الإعدادات من Store مباشرة
+    // ✅ الحصول على الإعدادات سے Store مباشرة
     const settings = computed(() => settingsStore.settings)
 
     // متغير محلي لتتبع اللون والـ Theme
@@ -257,15 +257,15 @@ import {
       }
     }
 
-    // ✅ مراقبة تغييرات localStorage من صفحات أخرى
+    // ✅ مراقبة تغييرات localStorage سے صفحات أخرى
     const handleStorageChange = (event) => {
       if (event.key === 'tailwind-pos-settings' || !event.key) {
         console.log('🔔 localStorage changed from another tab/window!')
 
-        // إعادة تحميل الإعدادات من localStorage
+        // إعادة تحميل الإعدادات سے localStorage
         settingsStore.loadSettings()
 
-        // تطبيق الـ Theme الجديد
+        // تطبيق الـ Theme النیا
         setTimeout(() => {
           applyTheme()
         }, 100)
@@ -275,16 +275,16 @@ import {
     onMounted(() => {
 
 
-      // تحميل الإعدادات من localStorage
+      // تحميل الإعدادات سے localStorage
       settingsStore.loadSettings()
 
       // تطبيق الـ Theme الأولي
       applyTheme()
 
-      // ✅ الاستماع لأحداث storage (من صفحات أخرى)
+      // ✅ الاستماع لأحداث storage (سے صفحات أخرى)
       window.addEventListener('storage', handleStorageChange)
 
-      // ✅ مراقبة اللون الأساسي (من نفس الصفحة)
+      // ✅ مراقبة اللون الأساسي (سے نفس الصفحة)
       watch(
         () => primaryColor.value,
         (newColor) => {
@@ -292,7 +292,7 @@ import {
         }
       )
 
-      // ✅ مراقبة الـ Theme (من نفس الصفحة)
+      // ✅ مراقبة الـ Theme (سے نفس الصفحة)
       watch(
         () => theme.value,
         (newTheme) => {
@@ -303,7 +303,7 @@ import {
     })
 
     onUnmounted(() => {
-      // ✅ إزالة event listener عند إغلاق المكون
+      // ✅ إزالة event listener عند بند کریں المكون
       window.removeEventListener('storage', handleStorageChange)
       console.log('👋 Sidebar unmounted')
     })

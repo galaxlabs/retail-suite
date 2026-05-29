@@ -124,7 +124,8 @@ import {
   Truck,
   Wallet
 } from 'lucide-vue-next'
-import { useSettingsStore } from "@/stores/settings"
+import { useSettingsStore } from '@/stores/settings'
+import { safeCall } from '@/services/apiClient'
 
     // stores
     const settingsStore = useSettingsStore()
@@ -171,26 +172,21 @@ import { useSettingsStore } from "@/stores/settings"
       }
     ])
 
-    const calculateStats = () => {
-    //   const invoices = accountingStore.invoices || []
-    //   const bills = accountingStore.bills || []
-        const invoices = []
-      const bills =  []
-      stats.totalRevenue = invoices.reduce((total, invoice) => {
-        return total + (invoice.amount || 0)
-      }, 0)
-
-      stats.totalExpenses = bills.reduce((total, bill) => {
-        return total + (bill.amount || 0)
-      }, 0)
-
-      stats.netProfit = stats.totalRevenue - stats.totalExpenses
-
-      stats.accountsPayable = bills
-        .filter(b => b.status !== 'Paid')
-        .reduce((total, bill) => {
-          return total + (bill.amount || 0)
-        }, 0)
+    const calculateStats = async () => {
+      try {
+        const result = await safeCall('retail.retail.api.common.get_dashboard_summary')
+        if (result.success && result.data) {
+          const s = result.data.sales || {}
+          const c = result.data.cash || {}
+          const p = result.data.purchases || {}
+          stats.totalRevenue = s.this_month || 0
+          stats.totalExpenses = p.this_month || 0
+          stats.netProfit = (s.this_month || 0) - (p.this_month || 0)
+          stats.accountsPayable = c.flow_month?.cash_out || 0
+        }
+      } catch (e) {
+        console.error('Accounting dashboard failed:', e)
+      }
     }
 
     const navigateTo = (route) => {

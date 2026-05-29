@@ -33,7 +33,7 @@
           FIRST TIME?
         </h3>
         <p class="text-gray-600 text-sm md:text-base">
-          Welcome to Tailwind POS! Let's get you started.
+          Welcome to Retail Suite! Let's get you started.
         </p>
       </div>
 
@@ -158,7 +158,7 @@ const emit = defineEmits(['load-sample', 'start-blank', 'close'])
           emit('load-sample')
       } catch (error) {
           console.error('Error loading sample data:', error)
-          alert('Failed to load sample data. Please try again.')
+          window.$toast?.error('Failed to load sample data. Please try again.')
       } finally {
           isLoading.value = false
           loadingText.value = ''
@@ -179,7 +179,7 @@ const emit = defineEmits(['load-sample', 'start-blank', 'close'])
       emit('start-blank')
     } catch (error) {
       console.error('Error starting blank:', error)
-      alert('Failed to initialize. Please try again.')
+      window.$toast?.error('Failed to initialize. Please try again.')
     } finally {
       isLoading.value = false
       loadingText.value = ''

@@ -37,7 +37,7 @@ export const useShiftStore = defineStore('shift', {
     isShiftOpen: false,
     statistics: {},
     users: [],
-    showOpeningVoucherDialog: false, // ✨ جديد
+    showOpeningVoucherDialog: false, // ✨ نیا
     payment_methods: [],
     pos_profiles_list: []
   }),
@@ -100,7 +100,10 @@ export const useShiftStore = defineStore('shift', {
 
   actions: {
     async setCustomer(customer) {
-      this.currentCustomer = customer
+      this.currentCustomer = customer || { name: 'Walk-in Customer', customer_name: 'Walk-in Customer' }
+    },
+    async setSupplier(supplier) {
+      this.currentCustomer = supplier
     },
     async getAvailablePosprofiles(company, currency) {
       console.log("this.pos_profile.posa_allow_mpesa_reconcile_payments", this.pos_profile.posa_allow_mpesa_reconcile_payments)
@@ -234,9 +237,9 @@ export const useShiftStore = defineStore('shift', {
     },
     set_payment_methods() {
       // get payment methods from pos profile
-      if (!this.pos_profile.posa_allow_make_new_payments) return;
+      // Always load payment methods from POS profile
       this.payment_methods = [];
-      this.pos_profile.payments.forEach((method) => {
+      ;(this.pos_profile.payments || []).forEach((method) => {
         this.payment_methods.push({
           row_id: method.name,
           mode_of_payment: method.mode_of_payment,
@@ -336,7 +339,7 @@ export const useShiftStore = defineStore('shift', {
       const end = shift.period_end_date ? new Date(shift.period_end_date) : new Date()
 
       // getTIme return in Date ms
-      // const diffMs = 10845000 // يعني حوالي 3 ساعات و 0 دقيقة و 45 ثانية
+      // const diffMs = 10845000 // يعني حوالي 3 ساعات و 0 سےٹ و 45 سیکنڈ
       // const hours = Math.floor(diffMs / 3600000) // 3
       // const minutes = Math.floor((diffMs % 3600000) / 60000) // 0
       // const seconds = Math.floor((diffMs % 60000) / 1000) // 45
@@ -442,14 +445,14 @@ export const useShiftStore = defineStore('shift', {
         return {
           status: response.status === 200 ? 'success' : 'error',
           data: response.data || {},
-          message: response.message || 'تم تحديث الوردية بنجاح'
+          message: response.message || 'تم اپ ڈیٹ کریں الوردية بنجاح'
         }
       } catch (error) {
         console.error('Error updating shift:', error)
         return {
           status: 'error',
           data: {},
-          message: error.response?.data?.message || 'حدث خطأ في تحديث الوردية'
+          message: error.response?.data?.message || 'حدث خطأ في اپ ڈیٹ کریں الوردية'
         }
       }
     },
@@ -479,14 +482,14 @@ export const useShiftStore = defineStore('shift', {
         return {
           status: response.status === 200 ? 'success' : 'error',
           data: response.data || {},
-          message: response.message || 'تم معالجة الحضور بنجاح'
+          message: response.message || 'تم معالجة حاضری بنجاح'
         }
       } catch (error) {
         console.error('Error processing auto attendance:', error)
         return {
           status: 'error',
           data: {},
-          message: error.response?.data?.message || 'حدث خطأ في معالجة الحضور'
+          message: error.response?.data?.message || 'حدث خطأ في معالجة حاضری'
         }
       }
     },
@@ -572,7 +575,7 @@ export const useShiftStore = defineStore('shift', {
         return {
           status: 'error',
           data: {},
-          message: error.response?.data?.message || 'حدث خطأ في تحديث تعيين الوردية'
+          message: error.response?.data?.message || 'حدث خطأ في اپ ڈیٹ کریں تعيين الوردية'
         }
       }
     },
@@ -591,7 +594,7 @@ export const useShiftStore = defineStore('shift', {
         return {
           status: 'error',
           data: {},
-          message: error.response?.data?.message || 'حدث خطأ في حذف تعيين الوردية'
+          message: error.response?.data?.message || 'حدث خطأ في حذف کریں تعيين الوردية'
         }
       }
     }

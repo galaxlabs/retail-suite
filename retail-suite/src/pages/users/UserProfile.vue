@@ -500,8 +500,8 @@ const handleResetPassword = async () => {
   if (!confirm(`Send password reset email to ${userProfile.email}?`)) return
   try {
     await call('frappe.core.doctype.user.user.reset_password', { user: viewingUser.value })
-    alert('✅ Reset email sent successfully')
-  } catch (e) { alert('❌ Error sending reset email') }
+    window.$toast?.success('Reset email sent successfully')
+  } catch (e) { window.$toast?.error('Error sending reset email') }
 }
 
 const showPasswordModal  = ref(false)

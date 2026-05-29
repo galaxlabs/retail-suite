@@ -4,7 +4,7 @@ import { ref, computed } from 'vue'
 import { searchProductByBarcode, searchProduct } from '@/api/api'
 
 export const useBarcode = () => {
-    // ✅ الحالة
+    // ✅ حیثیت
     const scannedBarcodes = ref([])
     const scanHistory = ref([])
     const scannerStats = ref({
@@ -34,17 +34,17 @@ export const useBarcode = () => {
         scannerStats.value.totalScans++
         scannerStats.value.successfulScans++
 
-        // تحديث متوسط الثقة
+        // اپ ڈیٹ کریں متوسط الثقة
         const totalConfidence =
             scannerStats.value.averageConfidence * (scannerStats.value.successfulScans - 1) + confidence
         scannerStats.value.averageConfidence = totalConfidence / scannerStats.value.successfulScans
 
-        // تحديث متوسط وقت الاستجابة
+        // اپ ڈیٹ کریں متوسط وقت الاستجابة
         const totalTime =
             scannerStats.value.averageResponseTime * (scannerStats.value.successfulScans - 1) + responseTime
         scannerStats.value.averageResponseTime = totalTime / scannerStats.value.successfulScans
 
-        // إضافة للسجل
+        // شامل کریں للسجل
         const scanRecord = {
             barcode,
             itemCode: product.item_code,
@@ -62,7 +62,7 @@ export const useBarcode = () => {
         lastScanTime.value = new Date()
         isScannerActive.value = true
 
-        // احفظ آخر 100 scan فقط
+        // امحفوظ کریں آخر 100 scan فقط
         if (scanHistory.value.length > 100) {
             scanHistory.value.pop()
         }
@@ -88,7 +88,7 @@ export const useBarcode = () => {
         console.warn('❌ Scan failed:', failureRecord)
     }
 
-    // ✅ البحث عن الباركود
+    // ✅ التلاش کریں عن الباركود
     const searchBarcode = async (barcode, posProfile, priceList) => {
         const startTime = Date.now()
 
@@ -124,7 +124,7 @@ export const useBarcode = () => {
         }
     }
 
-    // ✅ البحث المتقدم
+    // ✅ التلاش کریں المتقدم
     const advancedSearch = async (searchTerm, posProfile, priceList) => {
         const startTime = Date.now()
 
@@ -167,7 +167,7 @@ export const useBarcode = () => {
         }
     }
 
-    // ✅ تصدير الإحصائيات
+    // ✅ ایکسپورٹ الإحصائيات
     const exportStats = () => {
         const stats = getDetailedStats()
         const csv = `
@@ -210,7 +210,7 @@ export const useBarcode = () => {
         console.log('🔄 Scanner stats reset')
     }
 
-    // ✅ طباعة الإحصائيات
+    // ✅ پرنٹ کریں الإحصائيات
     const printStats = () => {
         const stats = getDetailedStats()
         console.log(`
@@ -233,7 +233,7 @@ export const useBarcode = () => {
     }
 
     return {
-        // الحالة
+        // حیثیت
         scannedBarcodes,
         scanHistory,
         scannerStats,

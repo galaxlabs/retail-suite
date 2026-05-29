@@ -31,7 +31,7 @@
             class="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 border border-green-200"
           >
             <p class="text-green-600 text-sm font-semibold mb-1">
-              الراتب الأساسي
+              بنیادی تنخواہ
             </p>
             <p class="text-2xl font-bold text-green-900">
               {{ formatCurrency(staff.salary) }}
@@ -42,7 +42,7 @@
             class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200"
           >
             <p class="text-blue-600 text-sm font-semibold mb-1">
-              الصافي الشهري
+              خالص مہینہي
             </p>
             <p class="text-2xl font-bold text-blue-900">
               {{ formatCurrency(netSalary) }}
@@ -99,7 +99,7 @@
                   : 'border-transparent text-gray-600 hover:text-gray-900',
               ]"
             >
-              الرواتب
+              تنخواہیں
             </button>
             <button
               @click="activeTab = 'attendance'"
@@ -110,7 +110,7 @@
                   : 'border-transparent text-gray-600 hover:text-gray-900',
               ]"
             >
-              الحضور
+              حاضری
             </button>
             <button
               @click="activeTab = 'performance'"
@@ -121,7 +121,7 @@
                   : 'border-transparent text-gray-600 hover:text-gray-900',
               ]"
             >
-              الأداء
+              کارکردگی
             </button>
           </div>
         </div>
@@ -133,14 +133,14 @@
             <!-- Personal Info -->
             <div class="bg-gray-50 rounded-lg p-4 space-y-3">
               <h3 class="font-semibold text-gray-900 mb-4">
-                المعلومات الشخصية
+                ذاتی معلومات
               </h3>
               <div>
-                <p class="text-sm text-gray-600">الاسم</p>
+                <p class="text-sm text-gray-600">نام</p>
                 <p class="font-medium text-gray-900">{{ staff.employee_name }}</p>
               </div>
               <div>
-                <p class="text-sm text-gray-600">البريد الإلكتروني</p>
+                <p class="text-sm text-gray-600">ای میل</p>
                 <p class="font-medium text-gray-900">{{ staff.company_email }}</p>
               </div>
               <div>
@@ -148,7 +148,7 @@
                 <p class="font-medium text-gray-900">{{ staff.cell_number }}</p>
               </div>
               <div>
-                <p class="text-sm text-gray-600">العنوان</p>
+                <p class="text-sm text-gray-600">پتہ</p>
                 <p class="font-medium text-gray-900">{{ staff.address }}</p>
               </div>
             </div>
@@ -156,18 +156,18 @@
             <!-- Job Info -->
             <div class="bg-gray-50 rounded-lg p-4 space-y-3">
               <h3 class="font-semibold text-gray-900 mb-4">
-                المعلومات الوظيفية
+                ملازمت کی معلومات
               </h3>
               <div>
-                <p class="text-sm text-gray-600">الرقم الوظيفي</p>
+                <p class="text-sm text-gray-600">ملازم نمبر</p>
                 <p class="font-medium text-gray-900">#{{ staff.name }}</p>
               </div>
               <div>
-                <p class="text-sm text-gray-600">الوظيفة</p>
+                <p class="text-sm text-gray-600">عہدہ</p>
                 <p class="font-medium text-gray-900">{{ staff.designation }}</p>
               </div>
               <div>
-                <p class="text-sm text-gray-600">القسم</p>
+                <p class="text-sm text-gray-600">شعبہ</p>
                 <p class="font-medium text-gray-900">
                   {{ getDepartmentLabel(staff.department) }}
                 </p>
@@ -186,19 +186,19 @@
         <div v-if="activeTab === 'salary'" class="space-y-4">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
-              <p class="text-blue-600 text-sm font-semibold">الراتب الأساسي</p>
+              <p class="text-blue-600 text-sm font-semibold">بنیادی تنخواہ</p>
               <p class="text-2xl font-bold text-blue-900 mt-2">
                 {{ formatCurrency(staff.salary) }}
               </p>
             </div>
             <div class="bg-green-50 rounded-lg p-4 border border-green-200">
-              <p class="text-green-600 text-sm font-semibold">العلاوة</p>
+              <p class="text-green-600 text-sm font-semibold">الاونس</p>
               <p class="text-2xl font-bold text-green-900 mt-2">
                 {{ formatCurrency(staff.bonus || 0) }}
               </p>
             </div>
             <div class="bg-red-50 rounded-lg p-4 border border-red-200">
-              <p class="text-red-600 text-sm font-semibold">الخصومات</p>
+              <p class="text-red-600 text-sm font-semibold">کٹوتیاں</p>
               <p class="text-2xl font-bold text-red-900 mt-2">
                 {{ formatCurrency(staff.deductions || 0) }}
               </p>
@@ -207,16 +207,16 @@
 
           <!-- Salary History -->
           <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
-            <h4 class="font-semibold text-gray-900 mb-4">سجل الرواتب</h4>
+            <h4 class="font-semibold text-gray-900 mb-4">سجل تنخواہیں</h4>
             <div class="overflow-x-auto">
               <table class="w-full text-sm">
                 <thead class="bg-gray-100 border-b border-gray-200">
                   <tr>
-                    <th class="px-4 py-2 text-right font-semibold">الشهر</th>
+                    <th class="px-4 py-2 text-right font-semibold">مہینہ</th>
                     <th class="px-4 py-2 text-right font-semibold">الراتب</th>
-                    <th class="px-4 py-2 text-right font-semibold">العلاوة</th>
-                    <th class="px-4 py-2 text-right font-semibold">الخصومات</th>
-                    <th class="px-4 py-2 text-right font-semibold">الصافي</th>
+                    <th class="px-4 py-2 text-right font-semibold">الاونس</th>
+                    <th class="px-4 py-2 text-right font-semibold">کٹوتیاں</th>
+                    <th class="px-4 py-2 text-right font-semibold">خالص</th>
                   </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -249,19 +249,19 @@
         <div v-if="activeTab === 'attendance'" class="space-y-4">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="bg-green-50 rounded-lg p-4 border border-green-200">
-              <p class="text-green-600 text-sm font-semibold">أيام الحضور</p>
+              <p class="text-green-600 text-sm font-semibold">دن حاضری</p>
               <p class="text-3xl font-bold text-green-900 mt-2">
                 {{ attendanceStats.present }}
               </p>
             </div>
             <div class="bg-yellow-50 rounded-lg p-4 border border-yellow-200">
-              <p class="text-yellow-600 text-sm font-semibold">أيام الغياب</p>
+              <p class="text-yellow-600 text-sm font-semibold">غیر حاضری کے دن</p>
               <p class="text-3xl font-bold text-yellow-900 mt-2">
                 {{ attendanceStats.absent }}
               </p>
             </div>
             <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
-              <p class="text-blue-600 text-sm font-semibold">معدل الحضور</p>
+              <p class="text-blue-600 text-sm font-semibold">معدل حاضری</p>
               <p class="text-3xl font-bold text-blue-900 mt-2">
                 {{ attendanceStats.percentage }}%
               </p>
@@ -274,7 +274,7 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div class="bg-blue-50 rounded-lg p-4 border border-blue-200">
               <p class="text-blue-600 text-sm font-semibold mb-2">
-                تقييم الأداء
+                تقييم کارکردگی
               </p>
               <div class="flex items-center gap-2">
                 <div class="flex gap-1">
@@ -298,7 +298,7 @@
 
             <div class="bg-purple-50 rounded-lg p-4 border border-purple-200">
               <p class="text-purple-600 text-sm font-semibold mb-2">
-                المبيعات هذا الشهر
+                المبيعات هذا مہینہ
               </p>
               <p class="text-2xl font-bold text-purple-900">
                 {{ formatCurrency(performance.sales) }}
@@ -322,13 +322,13 @@
           @click="printProfile"
           class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-100 transition"
         >
-          🖨️ طباعة
+          🖨️ پرنٹ کریں
         </button>
         <button
           @click="$emit('close')"
           class="px-4 py-2 bg-gray-300 text-gray-900 rounded-lg hover:bg-gray-400 transition"
         >
-          إغلاق
+          بند کریں
         </button>
       </div>
     </div>
@@ -367,7 +367,7 @@ const attendanceStats = ref({
 const performance = ref({
   rating: 4,
   sales: 150000,
-  notes: "موظف متفاني ويعمل بجد، أداء ممتاز هذا الشهر",
+  notes: "موظف متفاني ويعمل بجد، أداء ممتاز هذا مہینہ",
 })
 
 /* =========================
@@ -395,7 +395,7 @@ const getDepartmentLabel = (dept) => {
   const labels = {
     sales: "المبيعات",
     warehouse: "المستودع",
-    cashier: "الكاشيرز",
+    cashier: "کیشیرز",
     management: "الإدارة",
   }
   return labels[dept] || dept
@@ -403,8 +403,8 @@ const getDepartmentLabel = (dept) => {
 
 const getStatusLabel = (status) => {
   const labels = {
-    Active: "نشط",
-    Inactive: "غير نشط",
+    Active: "فعال",
+    Inactive: "غير فعال",
     Suspended: "موقوف",
     Left: "مغادر",
   }

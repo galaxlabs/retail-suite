@@ -4,7 +4,7 @@
       <!-- Header -->
       <div class="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
         <h2 class="text-xl font-bold text-gray-900">
-          {{ rule ? 'تعديل القاعدة' : 'قاعدة خصم جديدة' }}
+          {{ rule ? 'ترمیم کریں القاعدة' : 'قاعدة خصم نیاة' }}
         </h2>
         <button
           @click="$emit('close')"
@@ -18,11 +18,11 @@
       <form @submit.prevent="handleSubmit" class="p-6 space-y-6">
         <!-- Quantity Discount Form -->
         <div v-if="ruleType === 'quantity'" class="space-y-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">خصم حسب الكمية</h3>
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">خصم حسب مقدار</h3>
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">الكمية الدنيا *</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">مقدار الدنيا *</label>
               <input
                 v-model.number="form.minQty"
                 type="number"
@@ -34,7 +34,7 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">الكمية العليا *</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">مقدار العليا *</label>
               <input
                 v-model.number="form.maxQty"
                 type="number"
@@ -47,21 +47,21 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">نوع الخصم *</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">نوع ڈسکاونٹ *</label>
             <select
               v-model="form.discountType"
               required
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
-              <option value="">اختر النوع</option>
-              <option value="percentage">نسبة مئوية (%)</option>
-              <option value="fixed">مبلغ ثابت (ج.م)</option>
+              <option value="">اختر قسم</option>
+              <option value="percentage">فیصد (%)</option>
+              <option value="fixed">مقررہ رقم</option>
             </select>
           </div>
 
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">
-              قيمة الخصم *
+              قيمة ڈسکاونٹ *
               <span class="text-gray-500 text-xs">({{ form.discountType === 'percentage' ? '%' : 'ج.م' }})</span>
             </label>
             <input
@@ -75,7 +75,7 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">الوصف</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">تفصیل</label>
             <textarea
               v-model="form.description"
               rows="3"
@@ -87,28 +87,28 @@
 
         <!-- Tiered Discount Form -->
         <div v-if="ruleType === 'tiered'" class="space-y-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">خصم متدرج</h3>
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">مرحلہ وار ڈسکاونٹ</h3>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">اسم القاعدة *</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">اصول کا نام *</label>
             <input
               v-model="form.name"
               type="text"
               required
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="مثال: الخصم المتدرج حسب المبلغ"
+              placeholder="مثال: ڈسکاونٹ المتدرج حسب رقم"
             />
           </div>
 
           <div class="space-y-4">
-            <label class="block text-sm font-medium text-gray-700">المستويات *</label>
+            <label class="block text-sm font-medium text-gray-700">سطحیں *</label>
             <div
               v-for="(tier, idx) in form.tiers"
               :key="idx"
               class="border border-gray-200 rounded-lg p-4 space-y-3"
             >
               <div class="flex items-center justify-between">
-                <h4 class="font-semibold text-gray-900">المستوى {{ idx + 1 }}</h4>
+                <h4 class="font-semibold text-gray-900">سطح {{ idx + 1 }}</h4>
                 <button
                   v-if="form.tiers.length > 1"
                   @click="removeTier(idx)"
@@ -121,7 +121,7 @@
 
               <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
-                  <label class="text-xs font-medium text-gray-700">المبلغ الأدنى (ج.م) *</label>
+                  <label class="text-xs font-medium text-gray-700">رقم الأدنى (ج.م) *</label>
                   <input
                     v-model.number="tier.amount"
                     type="number"
@@ -132,7 +132,7 @@
                 </div>
 
                 <div>
-                  <label class="text-xs font-medium text-gray-700">الخصم (%) *</label>
+                  <label class="text-xs font-medium text-gray-700">ڈسکاونٹ (%) *</label>
                   <input
                     v-model.number="tier.discount"
                     type="number"
@@ -150,32 +150,32 @@
               type="button"
               class="w-full px-4 py-2 border-2 border-dashed border-gray-300 text-gray-600 rounded-lg hover:border-blue-500 hover:text-blue-600 transition"
             >
-              ➕ إضافة مستوى
+              ➕ شامل کریں مستوى
             </button>
           </div>
         </div>
 
         <!-- Category Discount Form -->
         <div v-if="ruleType === 'category'" class="space-y-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">خصم حسب الفئة</h3>
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">کیٹیگری ڈسکاونٹ</h3>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">اختر الفئة *</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">کیٹیگری سےتخب کریں *</label>
             <select
               v-model="form.category"
               required
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
-              <option value="">اختر الفئة</option>
-              <option value="beverages">المشروبات</option>
-              <option value="food">الطعام</option>
-              <option value="desserts">الحلويات</option>
-              <option value="snacks">المقبلات</option>
+              <option value="">کیٹیگری سےتخب کریں</option>
+              <option value="beverages">مشروبات</option>
+              <option value="food">کھانا</option>
+              <option value="desserts">میٹھائیاں</option>
+              <option value="snacks">اسنیکس</option>
             </select>
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">نسبة الخصم (%) *</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">نسبة ڈسکاونٹ (%) *</label>
             <input
               v-model.number="form.discount"
               type="number"
@@ -188,22 +188,22 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">الوصف</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">تفصیل</label>
             <textarea
               v-model="form.description"
               rows="3"
               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-              placeholder="وصف الخصم"
+              placeholder="وصف ڈسکاونٹ"
             ></textarea>
           </div>
         </div>
 
         <!-- Time-Based Discount Form -->
         <div v-if="ruleType === 'time'" class="space-y-6">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4">خصم حسب الوقت</h3>
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">خصم حسب وقت</h3>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">اسم الخصم الزمني *</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">اسم ڈسکاونٹ الزسےي *</label>
             <input
               v-model="form.name"
               type="text"
@@ -214,7 +214,7 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">اختر الأيام *</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">دن سےتخب کریں *</label>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
               <label
                 v-for="day in daysOfWeek"
@@ -234,7 +234,7 @@
 
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">وقت البداية *</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">شروع کا وقت *</label>
               <input
                 v-model="form.startTime"
                 type="time"
@@ -244,7 +244,7 @@
             </div>
 
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">وقت النهاية *</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">اختتام کا وقت *</label>
               <input
                 v-model="form.endTime"
                 type="time"
@@ -255,7 +255,7 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">نسبة الخصم (%) *</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">نسبة ڈسکاونٹ (%) *</label>
             <input
               v-model.number="form.discount"
               type="number"
@@ -275,13 +275,13 @@
             @click="$emit('close')"
             class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition"
           >
-            إلغاء
+            سےسوخ کریں
           </button>
           <button
             type="submit"
             class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
           >
-            {{ rule ? 'تحديث' : 'إضافة' }}
+            {{ rule ? 'اپ ڈیٹ کریں' : 'شامل کریں' }}
           </button>
         </div>
       </form>
@@ -304,7 +304,7 @@ const props = defineProps( {
 })
 const emit = defineEmits(['save', 'close'])
 
-  const daysOfWeek = ['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة']
+  const daysOfWeek = ['ہفتہ', 'اتوار', 'پیر', 'سےگل', 'بدھ', 'جمعرات', 'جمعہ']
 
   const form = ref({
     // Quantity
@@ -323,7 +323,7 @@ const emit = defineEmits(['save', 'close'])
     category: '',
 
     // Time
-    days: ['السبت'],
+    days: ['ہفتہ'],
     startTime: '09:00',
     endTime: '17:00',
 
@@ -350,7 +350,7 @@ const emit = defineEmits(['save', 'close'])
       name: '',
       tiers: [{ tier: 1, amount: 0, discount: 0 }],
       category: '',
-      days: ['السبت'],
+      days: ['ہفتہ'],
       startTime: '09:00',
       endTime: '17:00',
       discount: 0,
@@ -381,40 +381,40 @@ const emit = defineEmits(['save', 'close'])
   const validateForm = () => {
     if (props.ruleType === 'quantity') {
       if (!form.value.minQty && form.value.minQty !== 0) {
-        alert('الرجاء إدخال الكمية الدنيا')
+        alert('براہ کرم کم از کم مقدار درج کریں')
         return false
       }
       if (!form.value.maxQty) {
-        alert('الرجاء إدخال الكمية العليا')
+        alert('براہ کرم زیادہ سے زیادہ مقدار درج کریں')
         return false
       }
       if (form.value.minQty > form.value.maxQty) {
-        alert('الكمية الدنيا يجب أن تكون أقل من الكمية العليا')
+        alert('کم از کم مقدار زیادہ سے زیادہ مقدار سے کم ہونی چاہیے')
         return false
       }
     }
 
     if (props.ruleType === 'tiered') {
       if (!form.value.name) {
-        alert('الرجاء إدخال اسم القاعدة')
+        alert('براہ کرم اصول کا نام درج کریں')
         return false
       }
     }
 
     if (props.ruleType === 'category') {
       if (!form.value.category) {
-        alert('الرجاء اختيار الفئة')
+        alert('براہ کرم کیٹیگری منتخب کریں')
         return false
       }
     }
 
     if (props.ruleType === 'time') {
       if (!form.value.name) {
-        alert('الرجاء إدخال الاسم')
+        alert('براہ کرم نام درج کریں')
         return false
       }
       if (form.value.days.length === 0) {
-        alert('الرجاء اختيار يوم واحد على الأقل')
+        alert('براہ کرم کم از کم ایک دن منتخب کریں')
         return false
       }
     }

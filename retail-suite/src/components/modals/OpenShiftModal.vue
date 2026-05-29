@@ -239,13 +239,15 @@ import AlertIcon from '@/components/icons/AlertIcon.svg'
         settingsStore.settings.pricing.currency
 
     const syncProfilesForCompany = (selectedCompany) => {
+        // Show all profiles regardless of company
         pos_profiles.value = pos_profiles_data.value
-            .filter(el => el.company === selectedCompany)
             .map(el => el.name)
 
-        pos_profile.value = pos_profiles.value.length
-            ? pos_profiles.value[0]
-            : ''
+        // Pre-select first profile matching the company if possible
+        const matching = pos_profiles_data.value.filter(el => el.company === selectedCompany)
+        pos_profile.value = matching.length
+            ? matching[0].name
+            : (pos_profiles.value.length ? pos_profiles.value[0] : '')
     }
 
     watch(company, syncProfilesForCompany)

@@ -295,10 +295,10 @@ import ClockIcon from '@/components/icons/ClockIcon.svg'
   function getUserRole(userId) {
       const shiftStore = useShiftStore();
 
-      // هات معلومات اليوزر من الـ store
+      // هات معلومات اليوزر سے الـ store
       const userInfo = shiftStore.$state.CurrentUserInfo;
 
-      // لو مفيش يوزر أو الاسم مش مطابق
+      // لو مفيش يوزر أو نام مش مطابق
       if (!userInfo || userInfo.user !== userId) {
         return null;
       }
@@ -308,7 +308,7 @@ import ClockIcon from '@/components/icons/ClockIcon.svg'
         const userRoles = (userInfo.roles || []).map(r => r.trim().toLowerCase());
         const shiftRoles = ['Cashier', 'System Manager', 'Sales User', 'Administrator']
   .map(r => r.trim().toLowerCase());
-      // هات أول رول من userRoles موجود داخل shiftRoles
+      // هات أول رول سے userRoles موجود داخل shiftRoles
       const match = userRoles.find(role => shiftRoles.includes(role));
       console.log('match',match)
       console.log('userRoles',userRoles)

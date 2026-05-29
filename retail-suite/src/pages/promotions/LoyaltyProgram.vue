@@ -393,23 +393,23 @@ import { ref, computed } from 'vue'
     }
 
     const editMember = (member) => {
-      alert(`تعديل بيانات ${member.name}`)
+      window.$toast?.info('Editing ' + member.name)
     }
 
     const viewMemberDetails = (member) => {
-      alert(`عرض تفاصيل ${member.name}`)
+      window.$toast?.info('Viewing ' + member.name)
     }
 
     const openRewardModal = () => {
-      alert('فتح نافذة إضافة مكافأة جديدة')
+      window.$toast?.info('Opening new reward window')
     }
 
     const editReward = (reward) => {
-      alert(`تعديل ${reward.name}`)
+      window.$toast?.info('Editing ' + reward.name)
     }
 
     const deleteReward = (id) => {
-      alert('حذف المكافأة')
+      window.$toast?.warning('Deleting reward')
     }
 
 

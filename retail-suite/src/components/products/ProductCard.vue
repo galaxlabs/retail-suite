@@ -164,14 +164,13 @@ import { useProductsStore } from '@/stores/products'
 
 const store = useProductsStore()
 
-console.log("store.products[0]",store.products[0])
 
 const emit = defineEmits(['add-to-cart', 'remove-from-cart', 'view-details'])
 
 const isLoading = ref(false)
 const imageError = ref(false)
 
-const defaultImageSrc = `${config.VUE_URL}/src/assets/img/default-product.jpg`
+const defaultImageSrc = `${config.FRAPPE_URL}/img/default-product.jpg`
 
 const stockLabel = computed(() => {
   const qty = props.product.actual_qty

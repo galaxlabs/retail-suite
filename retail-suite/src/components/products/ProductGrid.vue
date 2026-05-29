@@ -15,7 +15,24 @@
 
     <div class="flex-1 overflow-y-auto px-1">
       <div
-        v-if="productsStore.products.length === 0 && !productsStore.isLoading"
+        v-if="productsStore.error && productsStore.products.length === 0"
+        class="select-none rounded-3xl flex flex-wrap content-center justify-center h-full"
+        :style="{ background: 'var(--warning-bg)', color: 'var(--warning-border)' }"
+      >
+        <div class="w-full text-center px-4">
+          <WarningIcon class="w-12 h-12 mx-auto mb-2" />
+          <p class="text-lg font-semibold">Failed to load items</p>
+          <p class="text-sm mt-1 opacity-75">{{ productsStore.error }}</p>
+          <button
+            @click="productsStore.loadProductsFromFrappeDB()"
+            class="mt-4 px-4 py-2 rounded-lg text-white text-sm font-medium"
+            :style="{ background: 'var(--focus-ring)' }"
+          >Retry</button>
+        </div>
+      </div>
+
+      <div
+        v-else-if="productsStore.products.length === 0 && !productsStore.isLoading"
         class="select-none rounded-3xl flex flex-wrap content-center justify-center h-full opacity-25"
         :style="{ background: 'var(--item-bg)', color: 'var(--text-main)' }"
       >
@@ -67,6 +84,20 @@
       </div>
 
       <div
+        v-if="productsStore.hasMore && !simpleMode && !searchKeyword"
+        class="flex justify-center py-3"
+      >
+        <button
+          @click="productsStore.loadMoreProducts()"
+          :disabled="productsStore.isLoading"
+          class="px-6 py-2 rounded-lg text-sm font-medium transition disabled:opacity-50"
+          :style="{ background: 'var(--item-bg)', color: 'var(--focus-ring)', border: '1px solid var(--focus-ring)' }"
+        >
+          {{ productsStore.isLoading ? 'Loading...' : 'Load More' }}
+        </button>
+      </div>
+
+      <div
         v-if="(searchKeyword || selectedCategory) && filteredProducts.length > 0"
         class="text-center text-xs mt-2 pb-2"
         :style="{ color: 'var(--text-muted)' }"
@@ -86,6 +117,7 @@ import { useProductsStore } from '@/stores/products'
 import { useCartStore } from '@/stores/cart'
 import EmptyDatabaseIcon from '@/components/icons/EmptyDatabaseIcon.svg'
 import EmptySearchIcon from '@/components/icons/EmptySearchIcon.svg'
+import WarningIcon from '@/components/icons/WarningIcon.svg'
 
 const props = defineProps({
   searchKeyword: { type: String, default: '' },

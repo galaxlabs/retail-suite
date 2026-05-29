@@ -336,15 +336,15 @@ import DiscountRuleModal from '@/components/modals/DiscountRuleModal.vue'
     }
 
     const addTieredRule = () => {
-      alert('سيتم فتح نافذة إنشاء خصم متدرج')
+      window.$toast?.info('مرحلہ وار ڈسکاونٹ بنانے کی ونڈو کھل رہی ہے')
     }
 
     const addCategoryRule = () => {
-      alert('سيتم فتح نافذة إضافة خصم فئة')
+      window.$toast?.info('کیٹیگری ڈسکاونٹ بنانے کی ونڈو کھل رہی ہے')
     }
 
     const addTimeRule = () => {
-      alert('سيتم فتح نافذة إضافة خصم زمني')
+      window.$toast?.info('وقتی ڈسکاونٹ بنانے کی ونڈو کھل رہی ہے')
     }
 
 
