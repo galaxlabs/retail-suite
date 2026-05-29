@@ -51,19 +51,16 @@
         </button>
       </div>
 
-      <!-- Quick Add Button Overlay -->
-      <div
-        class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        :style="{ background: 'var(--overlay-dark)' }"
-      >
-        <button
-          class="w-full px-4 py-12 rounded-full font-semibold"
-          :style="{ background: 'var(--card-bg)', color: 'var(--accent-cyan)' }"
-          @click.stop="handleQuickAdd"
-        >
-          <PlusIcon class="w-4 h-4 inline mr-1" />
-          Add to Cart
+      <!-- Quick Add Overlay -->
+      <div class="absolute inset-0 flex flex-col items-center justify-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300" :style="{ background: 'var(--overlay-dark)' }">
+        <button class="w-10/12 px-4 py-8 rounded-full font-semibold text-sm" :style="{ background: 'var(--card-bg)', color: 'var(--accent-cyan)' }" @click.stop="handleQuickAdd">
+          <PlusIcon class="w-4 h-4 inline mr-1" /> Add to Cart
         </button>
+        <div class="grid grid-cols-3 gap-1 w-10/12">
+          <button @click.stop="$emit('add-to-cart', {...product, qty: 0.250})" class="rounded py-0.5 text-xs font-semibold transition active:scale-95" :style="{ background: 'var(--accent-cyan)', color: '#fff' }">250g</button>
+          <button @click.stop="$emit('add-to-cart', {...product, qty: 0.500})" class="rounded py-0.5 text-xs font-semibold transition active:scale-95" :style="{ background: 'var(--accent-cyan)', color: '#fff' }">500g</button>
+          <button @click.stop="$emit('add-to-cart', {...product, qty: 1})" class="rounded py-0.5 text-xs font-semibold transition active:scale-95" :style="{ background: 'var(--accent-cyan)', color: '#fff' }">1 KG</button>
+        </div>
       </div>
 
     </div>

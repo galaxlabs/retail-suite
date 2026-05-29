@@ -83,8 +83,8 @@
             @keyup.enter="handleQuantityEnter"
             @keyup.escape="resetQuantity"
             type="number"
-            min="1"
-            max="999"
+            min="0.001"
+            max="9999"
             class="rounded-lg text-center shadow focus:outline-none text-sm w-full py-1 transition-all duration-200"
             :style="{
               background: 'var(--input-bg)',
