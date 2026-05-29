@@ -159,8 +159,6 @@ def get_payments_entries(pos_opening_shift):
 def make_closing_shift_from_opening(opening_shift):
     opening_shift = json.loads(opening_shift)
 
-    submit_printed_invoices(opening_shift.get("name"))
-
     closing_shift = frappe.new_doc("POS Closing Shift")
     closing_shift.pos_opening_shift = opening_shift.get("name")
     closing_shift.period_start_date = opening_shift.get("period_start_date")
@@ -319,7 +317,6 @@ def get_shift_summary(pos_opening_shift_name):
                 pass
 
     pos_opening_shift = frappe.get_doc("POS Opening Shift", pos_opening_shift_name).as_dict()
-    submit_printed_invoices(pos_opening_shift.get("name"))
 
     invoices = get_pos_invoices(pos_opening_shift.get("name"))
     pos_payments = get_payments_entries(pos_opening_shift.get("name"))

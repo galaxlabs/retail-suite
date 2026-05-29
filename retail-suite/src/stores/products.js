@@ -29,9 +29,10 @@ export const useProductsStore = defineStore('products', {
 
       const keyword = state.searchKeyword.toLowerCase().trim()
       return state.products.filter(product =>
-        product.name.toLowerCase().includes(keyword) ||
-        product.category?.toLowerCase().includes(keyword) ||
-        product.description?.toLowerCase().includes(keyword)
+        (product.item_name || product.name || '').toLowerCase().includes(keyword) ||
+        (product.item_code || '').toLowerCase().includes(keyword) ||
+        (product.item_group || product.category || '').toLowerCase().includes(keyword) ||
+        (product.description || '').toLowerCase().includes(keyword)
       )
     },
 
@@ -44,9 +45,10 @@ export const useProductsStore = defineStore('products', {
 
       const keyword = state.searchKeyword.toLowerCase().trim()
       return state.products.filter(product =>
-        product.name.toLowerCase().includes(keyword) ||
-        product.category?.toLowerCase().includes(keyword) ||
-        product.description?.toLowerCase().includes(keyword)
+        (product.item_name || product.name || '').toLowerCase().includes(keyword) ||
+        (product.item_code || '').toLowerCase().includes(keyword) ||
+        (product.item_group || product.category || '').toLowerCase().includes(keyword) ||
+        (product.description || '').toLowerCase().includes(keyword)
       ).length
     },
 
@@ -83,17 +85,21 @@ export const useProductsStore = defineStore('products', {
       try {
         console.log('========== Load Products ==========')
         const shiftStore = useShiftStore()
-        const hasActiveShift = await shiftStore.checkActiveShift()
+        const hasLocalShift = Boolean(shiftStore.pos_profile && shiftStore.pos_opening_shift)
+        const hasActiveShift = hasLocalShift ? true : await shiftStore.checkActiveShift()
 
         if (!hasActiveShift) {
           console.warn('⚠️ No active shift / POS Profile')
           return []
         }
 
-        const currentPOSProfile = shiftStore.pos_profile
+        const currentPOSProfile = shiftStore.pos_profile || {}
         const posProfileName    = currentPOSProfile.name
-        const currentPriceList  = this.selectedPriceList || currentPOSProfile.selling_price_list
-        const currentCustomer   = currentPOSProfile.customer
+        const currentPriceList  =
+          this.selectedPriceList ||
+          currentPOSProfile.selling_price_list ||
+          "Standard Selling"
+        const currentCustomer = currentPOSProfile.customer || ''
         const selectedWarehouse = this.selectedWarehouse || null  // null → backend uses pos_profile default
 
         console.log('➡️ POS Profile :', posProfileName)
@@ -101,7 +107,7 @@ export const useProductsStore = defineStore('products', {
         console.log('➡️ Customer    :', currentCustomer)
         console.log('➡️ Warehouse   :', selectedWarehouse)
 
-        if (!posProfileName || !currentPriceList || !currentCustomer) {
+        if (!posProfileName || !currentPriceList) {
           console.warn('⚠️ Missing required profile details!')
           return []
         }

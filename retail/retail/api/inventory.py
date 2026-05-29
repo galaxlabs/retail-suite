@@ -8,7 +8,7 @@ from frappe.model.naming import NamingSeries, get_default_naming_series
 from frappe.client import get_value
 from frappe.utils.file_manager import save_file
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def generate_barcode_value(barcode_type):
     import random
 
@@ -91,7 +91,7 @@ def generate_barcode_value(barcode_type):
     return {'status': 'success', 'value': value}
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_barcode_types():
     try:
         meta = frappe.get_meta('Item Barcode')
@@ -110,13 +110,13 @@ def get_barcode_types():
         return {'status': 'error', 'message': str(e), 'data': []}
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_default_item_series():
     series = get_default_naming_series("Item")
     return series
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_all_barcodes():
     """
     جيب كل المنتجات مع الـ barcodes بتاعتها + preview image
@@ -253,7 +253,7 @@ def generate_barcode_image_base64(barcode_value, barcode_type=''):
         frappe.log_error(f"Barcode preview failed for '{barcode_value}' ({barcode_type}): {e}")
         return ''
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_item_barcodes(item_code):
     """
     جلب جميع الـ Barcodes للمنتج
@@ -299,7 +299,7 @@ def get_item_barcodes(item_code):
             'message': str(e)
         }
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def update_item_barcode(item_code, old_barcode, barcode_data):
     """
     Update a single barcode in an Item document.
@@ -377,7 +377,7 @@ def update_item_barcode(item_code, old_barcode, barcode_data):
         }
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def add_item_barcode(barcode_data):
     """
     إضافة barcode جديد للمنتج
@@ -436,7 +436,7 @@ def add_item_barcode(barcode_data):
         }
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def delete_item_barcode(item_code, barcode):
     """
     حذف barcode من المنتج
@@ -488,7 +488,7 @@ def delete_item_barcode(item_code, barcode):
             'message': str(e)
         }
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def bulk_update_item_barcodes(item_code, barcodes_data):
     """
     تحديث عدة barcodes في نفس الوقت
@@ -586,7 +586,7 @@ def generate_barcode_svg(barcode_value, barcode_type):
 
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def generate_barcode_img(barcode_value, barcode_type):
     try:
         if not barcode_value:
@@ -632,11 +632,11 @@ def generate_barcode_img(barcode_value, barcode_type):
             'data': ''
         }
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_unit_of_measures():
     return frappe.get_list("UOM","name")
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_item_category():
     return frappe.get_list("Item Group","name")
 
@@ -663,7 +663,7 @@ def clear_posa_cache():
         frappe.logger().warning(f"Cache clearing error: {e}")
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def delete_item(item_code):
     """
     حذف Item وتنظيف الـ cache
@@ -750,7 +750,7 @@ def clear_posa_cache():
         pass
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def update_item(item_code, item_data):
     """
     تحديث Item وتنظيف الـ cache
@@ -858,7 +858,7 @@ def generate_item_code():
 
     return f'STO-ITEM-{year}-{str(next_num).zfill(5)}'
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def add_item(item_data):
     try:
         if isinstance(item_data, str):
@@ -925,7 +925,7 @@ def add_item(item_data):
         return {"status": "error", "message": str(e)}
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_inventory_balance():
     """
     Returns a flat list of items × warehouses with actual_qty,

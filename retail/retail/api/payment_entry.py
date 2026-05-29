@@ -124,7 +124,7 @@ def set_paid_amount_and_received_amount(
 
     return paid_amount, received_amount
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_outstanding_invoices(company, currency, customer=None, pos_profile_name=None):
     if customer:
         precision = frappe.get_precision("Sales Invoice", "outstanding_amount") or 2
@@ -194,7 +194,7 @@ def get_outstanding_invoices(company, currency, customer=None, pos_profile_name=
 
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_unallocated_payments(customer=None, company=None, currency=None, mode_of_payment=None):
     filters = {
         "docstatus": 1,
@@ -233,7 +233,7 @@ def get_unallocated_payments(customer=None, company=None, currency=None, mode_of
     )
     return unallocated_payment
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def process_pos_payment(payload):
     data = json.loads(payload)
     data = frappe._dict(data)
@@ -435,7 +435,7 @@ def process_pos_payment(payload):
     }
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_available_pos_profiles(company, currency):
     pos_profiles_list = frappe.get_list(
         "POS Profile",

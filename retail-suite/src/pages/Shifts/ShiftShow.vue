@@ -108,9 +108,9 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg>
           </div>
           <div class="ss-kpi__body">
-            <span class="ss-kpi__label">المرتجعات</span>
+            <span class="ss-kpi__label">واپسیاں</span>
             <span class="ss-kpi__value ss-kpi__value--red">{{ formatCurrency(totalReturns, currencyCode, locale) }}</span>
-            <span class="ss-kpi__sub">{{ returnInvoicesCount }} مرتجع</span>
+            <span class="ss-kpi__sub">{{ returnInvoicesCount }} واپسی</span>
           </div>
         </div>
 
@@ -148,7 +148,7 @@
               </div>
               <div class="ss-payment-bar-item__pct">{{ pm.pct }}%</div>
             </div>
-            <p v-if="!paymentBreakdown.length" class="ss-empty">لا توجد مدفوعات</p>
+            <p v-if="!paymentBreakdown.length" class="ss-empty">ادائیگیاں موجود نہیں</p>
           </div>
         </div>
 
@@ -221,12 +221,12 @@
             <div class="ss-filters">
               <select v-model="invoiceStatusFilter" class="ss-select">
                 <option value="">كل الحالات</option>
-                <option value="Paid">مدفوع</option>
-                <option value="Return">مرتجع</option>
-                <option value="Draft">مسودة</option>
-                <option value="credit note issued">إشعار دائن</option>
-                <option value="partly paid">جزئي الدفع</option>
-                <option value="unpaid">غير مدفوع</option>
+                <option value="Paid">ادا شدہ</option>
+                <option value="Return">واپسی</option>
+                <option value="Draft">مسودہ</option>
+                <option value="credit note issued">کریڈٹ نوٹ</option>
+                <option value="partly paid">جزوی ادائیگی</option>
+                <option value="unpaid">غیر ادا شدہ</option>
 
 
               </select>
@@ -507,7 +507,7 @@
                 <tr v-if="shift.unallocated_payments?.length">
                     <th>رقم الدفع</th>
                     <th>العميل</th>
-                    <th>المبلغ المدفوع</th>
+                    <th>ادا شدہ رقم</th>
                     <th>المبلغ غير المخصص</th>
                     <th>الحالة</th>
                 </tr>
@@ -729,9 +729,9 @@ const tabs = computed(() => [
 const getInvoicePrimaryPayment = (inv) => inv.payments?.[0]?.mode_of_payment || '—'
 
 const getStatusLabel = (inv) => {
-  if (flt(inv.grand_total) < 0) return 'مرتجع'
+  if (flt(inv.grand_total) < 0) return 'واپسی'
   const s = (inv.status || '').toLowerCase()
-  return ({ paid: 'مدفوع',unpaid: 'غير مدفوع', 'partly paid': 'جزئي الدفع', return: 'مرتجع', draft: 'مسودة', cancelled: 'ملغي', 'credit note issued': 'إشعار دائن' })[s] || inv.status || '—'
+  return ({ paid: 'ادا شدہ',unpaid: 'غیر ادا شدہ', 'partly paid': 'جزوی ادائیگی', return: 'واپسی', draft: 'مسودہ', cancelled: 'منسوخ', 'credit note issued': 'کریڈٹ نوٹ' })[s] || inv.status || '—'
 }
 const getStatusClass = (inv) => {
   if (flt(inv.grand_total) < 0) return 'ss-chip--warning'

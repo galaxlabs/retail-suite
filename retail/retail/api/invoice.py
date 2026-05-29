@@ -206,7 +206,7 @@ def calc_delivery_charges(doc):
     if calculate_taxes_and_totals:
         doc.calculate_taxes_and_totals()
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def create_sales_return(invoice_name: str, items: list, pos_profile_name: str):
     """
     إنشاء فاتورة مرتجع من فاتورة بيع معينة لعدة منتجات وكميات.
@@ -515,7 +515,7 @@ def has_full_return(invoice_name):
     # Check if fully returned
     return returned_qty >= original_qty
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_returnable_invoices_api(customer=None, from_date=None, to_date=None, return_days_limit=None):
     """
     API للحصول على الفواتير القابلة للإرجاع
@@ -531,7 +531,7 @@ def get_returnable_invoices_api(customer=None, from_date=None, to_date=None, ret
         return_days_limit=return_days_limit
     )
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_invoice_return_details(invoice_name):
     """
     الحصول على تفاصيل الإرجاع لفاتورة معينة

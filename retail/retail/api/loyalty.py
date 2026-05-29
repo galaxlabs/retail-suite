@@ -94,7 +94,7 @@ def get_current_tier(total_points, tiers):
 # Public API Methods
 # ──────────────────────────────────────────────
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_loyalty_summary():
     """
     Returns loyalty summary for current customer:
@@ -151,7 +151,7 @@ def get_loyalty_summary():
     return summary
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_points_history(limit=20, offset=0):
     """Returns paginated points transaction history for current customer"""
     customer = get_customer_from_session()
@@ -187,7 +187,7 @@ def get_points_history(limit=20, offset=0):
     return {"history": history, "total": total}
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_available_rewards():
     """Returns active rewards from the loyalty program"""
     program = get_active_loyalty_program()
@@ -214,7 +214,7 @@ def get_available_rewards():
     ]
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def redeem_reward(reward_id):
     """
     Redeem a reward by deducting points and creating a Loyalty Point Entry
@@ -270,7 +270,7 @@ def redeem_reward(reward_id):
     }
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_referral_code():
     """Get or create referral code for current customer"""
     customer = get_customer_from_session()
@@ -287,7 +287,7 @@ def get_referral_code():
     return {"referral_code": ref_code, "customer": customer}
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def add_points(customer, points, entry_type="Earned", description="", reference_doctype=None, reference_name=None):
     """
     Internal method to add points (called from Sales Invoice hooks etc.)

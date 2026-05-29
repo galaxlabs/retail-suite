@@ -153,7 +153,7 @@
                         <th class="px-4 py-3 text-right font-semibold text-gray-900">رقم الفاتورة</th>
                         <th class="px-4 py-3 text-right font-semibold text-gray-900">التاريخ</th>
                         <th class="px-4 py-3 text-right font-semibold text-gray-900">المبلغ</th>
-                        <th class="px-4 py-3 text-right font-semibold text-gray-900">المدفوع</th>
+                        <th class="px-4 py-3 text-right font-semibold text-gray-900">الادا شدہ</th>
                         <th class="px-4 py-3 text-right font-semibold text-gray-900">المتبقي</th>
                         <th class="px-4 py-3 text-right font-semibold text-gray-900">الحالة</th>
                         <th class="px-4 py-3 text-right font-semibold text-gray-900">الإجراءات</th>
@@ -425,9 +425,9 @@ const getPurchaseStatusClass = (status) => ({
 }[status] ?? 'bg-gray-100 text-gray-800')
 
 const getPurchaseStatusLabel = (status) => ({
-  paid:      'مدفوع',
+  paid:      'ادا شدہ',
   pending:   'قيد الانتظار',
-  partial:   'جزئي',
+  partial:   'جزوی',
   cancelled: 'ملغى',
 }[status] ?? status)
 

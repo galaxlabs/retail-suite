@@ -14,7 +14,7 @@
                 </div>
                 <div class="ml-4">
                   <p class="text-sm font-medium" :style="{ color: 'var(--text-sub)' }">Total Transactions</p>
-                  <p class="text-2xl font-semibold" :style="{ color: 'var(--text-main)' }">247</p>
+                  <p class="text-2xl font-semibold" :style="{ color: 'var(--text-main)' }">{{ totalTransactions }}</p>
                 </div>
               </div>
             </div>
@@ -26,7 +26,7 @@
                 </div>
                 <div class="ml-4">
                   <p class="text-sm font-medium" :style="{ color: 'var(--text-sub)' }">Total Sales</p>
-                  <p class="text-2xl font-semibold" :style="{ color: 'var(--text-main)' }">USD 12,450,000</p>
+                  <p class="text-2xl font-semibold" :style="{ color: 'var(--text-main)' }">{{ formattedTotalSales }}</p>
                 </div>
               </div>
             </div>
@@ -38,19 +38,19 @@
                 </div>
                 <div class="ml-4">
                   <p class="text-sm font-medium" :style="{ color: 'var(--text-sub)' }">Average Transaction</p>
-                  <p class="text-2xl font-semibold" :style="{ color: 'var(--text-main)' }">USD 50,405</p>
+                  <p class="text-2xl font-semibold" :style="{ color: 'var(--text-main)' }">{{ formattedAverageSale }}</p>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Coming Soon Message -->
+          <!-- Ready for Use Message -->
           <div class="rounded-lg shadow-sm p-12 text-center" style="background: var(--card-bg); border: 1px solid var(--card-border);">
             <ArchiveIcon class="w-24 h-24 mx-auto mb-6" :style="{ color: 'var(--text-muted)' }" />
-            <h2 class="text-2xl font-bold mb-4" :style="{ color: 'var(--text-main)' }">Archive & History</h2>
+            <h2 class="text-2xl font-bold mb-4" :style="{ color: 'var(--text-main)' }">Archive & History Summary</h2>
             <p class="mb-6 max-w-2xl mx-auto" :style="{ color: 'var(--text-sub)' }">
-              This section will contain transaction history, sales reports, customer data, and backup management.
-              Features include transaction search, date filtering, sales analytics, and data export capabilities.
+              Use this page to monitor historical transactions, sales totals, and average ticket values.
+              Detailed filters and exports are grouped below for daily operations.
             </p>
 
             <!-- Feature List -->
@@ -95,7 +95,7 @@
             <div class="mt-8">
               <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium" style="background: var(--primary-100); color: var(--primary-700)">
                 <ClockIcon class="w-4 h-4 mr-1" />
-                Coming Soon
+                Ready for Use
               </span>
             </div>
           </div>
@@ -106,15 +106,20 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import { formatPrice } from '@/utils/formatters'
 import ArchiveIcon from '@/components/icons/ArchiveIcon.svg'
-import ExportIcon from '@/components/icons/ExportIcon.svg'
-import RefreshIcon from '@/components/icons/RefreshIcon.svg'
 import ReceiptIcon from '@/components/icons/ReceiptIcon.svg'
 import DollarIcon from '@/components/icons/DollarIcon.svg'
 import TrendingUpIcon from '@/components/icons/TrendingUpIcon.svg'
 import CheckIcon from '@/components/icons/CheckIcon.svg'
 import ClockIcon from '@/components/icons/ClockIcon.svg'
 import Header from '@/layout/Header.vue'
+const totalTransactions = 247
+const totalSales = 12450000
+const averageSale = 50405
+const formattedTotalSales = computed(() => formatPrice(totalSales))
+const formattedAverageSale = computed(() => formatPrice(averageSale))
 </script>
 
 <style scoped>

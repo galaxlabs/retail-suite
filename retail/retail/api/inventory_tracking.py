@@ -4,7 +4,7 @@ import frappe
 from frappe import _
 from datetime import datetime
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_stock_ledger_data(**trackingData):
     """
     Get stock ledger data with filters
@@ -87,7 +87,7 @@ def get_stock_ledger_data(**trackingData):
     return result
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_items_list():
     """
     Get list of all items for filter dropdown
@@ -101,7 +101,7 @@ def get_items_list():
     return items
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_inventory_summary(item_code=None, from_date=None, to_date=None):
     """
     Get summary of inbound/outbound/net change
@@ -139,7 +139,7 @@ def get_inventory_summary(item_code=None, from_date=None, to_date=None):
 # # Purchase Receipt
 # ===================================================================
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_purchase_receipt_statuses():
     meta = frappe.get_meta("Purchase Receipt")
     field = meta.get_field("status")
@@ -150,7 +150,7 @@ def get_purchase_receipt_statuses():
     return field.options.split("\n")
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_purchase_receipts():
     receipts = frappe.get_all(
         "Purchase Receipt",

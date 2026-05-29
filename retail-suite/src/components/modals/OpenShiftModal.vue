@@ -278,7 +278,7 @@ import AlertIcon from '@/components/icons/AlertIcon.svg'
 
     // Computed properties
     const canSubmit = computed(() => {
-      if (!form.value.userId) return false
+      if (!company.value || !pos_profile.value) return false
       if (requireBalance.value && (!form.value.openingBalance || form.value.openingBalance < 0)) {
         return false
       }
@@ -399,6 +399,10 @@ import AlertIcon from '@/components/icons/AlertIcon.svg'
     const getCurrentUserData = async () => {
         try {
             const currentUserInfo = await shiftStore.getCurrentUserInfo();
+            if (!currentUserInfo || !currentUserInfo.user) {
+                form.value.userId = "";
+                return;
+            }
             form.value.userId = currentUserInfo.user; // Set the userId in the form
             console.log("Current User in Modal:", currentUserInfo);
 

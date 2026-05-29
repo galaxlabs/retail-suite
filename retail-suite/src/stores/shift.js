@@ -116,6 +116,11 @@ export const useShiftStore = defineStore('shift', {
       try {
 
         const CurrentUserInfo = await getCurrentUserInfoApi()
+        if (!CurrentUserInfo || !CurrentUserInfo.user) {
+          this.CurrentUserInfo = null
+          return null
+        }
+
         console.log("CurrentUserInfo", CurrentUserInfo)
         console.log("CurrentUserInfo of name", CurrentUserInfo.user)
         console.log("CurrentUserInfo of user", CurrentUserInfo.user)
@@ -130,7 +135,21 @@ export const useShiftStore = defineStore('shift', {
     async checkActiveShift() {
       try {
         const currentUserInfo = await this.getCurrentUserInfo()
-        const currentUser = currentUserInfo.user
+        const currentUser = currentUserInfo?.user
+        if (!currentUser) {
+          const hasLocalOpen = Boolean(this.pos_opening_shift && this.pos_profile)
+          if (hasLocalOpen) {
+            this.isShiftOpen = true
+            this.showOpeningVoucherDialog = false
+            return true
+          }
+          this.pos_opening_shift = null
+          this.currentShift = null
+          this.isShiftOpen = false
+          this.showOpeningVoucherDialog = true
+          return false
+        }
+
         const result = await get_user_opening_shift(currentUser);
 
         if (result) {
@@ -148,7 +167,12 @@ export const useShiftStore = defineStore('shift', {
           );
 
           if (shift.name) {
-            this.summary = await get_shift_summary(shift.name);
+            try {
+              this.summary = await get_shift_summary(shift.name);
+            } catch (summaryError) {
+              console.warn('Shift summary unavailable, continuing with open shift:', summaryError);
+              this.summary = null;
+            }
           }
 
           const totalSales = this.summary?.total_sales || 0;
@@ -197,9 +221,14 @@ export const useShiftStore = defineStore('shift', {
         }
       } catch (error) {
         console.error('Error fetching opening shift:', error);
+        const hasLocalOpen = Boolean(this.pos_opening_shift && this.pos_profile)
+        if (hasLocalOpen) {
+          this.isShiftOpen = true
+          this.showOpeningVoucherDialog = false
+          return true
+        }
         this.pos_opening_shift = null;
         this.isShiftOpen = false
-        this.showOpeningVoucherDialog = true // ✅ في حالة الخطأ افتح الـ dialog
         return false
       }
     },
@@ -337,9 +366,6 @@ export const useShiftStore = defineStore('shift', {
         open: () => {
           if (this.isShiftOpen) {
             return { valid: false, message: 'There is already an open shift' }
-          }
-          if (!data.userId) {
-            return { valid: false, message: 'User is required' }
           }
           if (data.openingBalance < 0) {
             return { valid: false, message: 'Opening balance cannot be negative' }

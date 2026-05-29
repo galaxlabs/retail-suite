@@ -33,15 +33,33 @@ const vuetify = createVuetify({
 })
 
 const app = createApp(App)
+const isVercelHost = /\.vercel\.app$/i.test(window.location.hostname)
+if (!API_BASE_URL && isVercelHost) {
+  console.error("[config] Missing VITE_API_BASE_URL. API calls will fail on Vercel host:", window.location.hostname)
+}
+
+// Browser should use session cookies by default.
+const USE_BROWSER_TOKEN_AUTH = (import.meta.env.VITE_USE_API_TOKEN === 'true') || (Boolean(API_BASE_URL) && (new URL(API_BASE_URL)).hostname !== window.location.hostname)
 
 const getAuthHeader = () => {
+  if (!USE_BROWSER_TOKEN_AUTH) return null
   const apiKey = localStorage.getItem('api_key')
   const apiSecret = localStorage.getItem('api_secret')
 
   return apiKey && apiSecret ? 'token ' + apiKey + ':' + apiSecret : null
 }
 
-const withAuthHeaders = (init = {}) => {
+const isPublicAuthEndpoint = (url = '') => {
+  const normalized = String(url || '')
+  return normalized.includes('/api/method/ping') ||
+    normalized.includes('/api/method/login') ||
+    normalized.includes('/api/method/logout') ||
+    normalized.includes('/api/method/retail.retail.api.vercel_auth.token_login')
+}
+
+const withAuthHeaders = (init = {}, url = '') => {
+  if (isPublicAuthEndpoint(url)) return init
+
   const authHeader = getAuthHeader()
   if (!authHeader) return init
 
@@ -60,11 +78,14 @@ const resolveResourceUrl = (url = '') => {
   return resolveBackendUrl('/api/method/' + url)
 }
 
-setConfig('resourceFetcher', (options) => frappeRequest({
-  ...options,
-  headers: withAuthHeaders({ headers: options.headers }).headers,
-  url: resolveResourceUrl(options.url),
-}))
+setConfig('resourceFetcher', (options) => {
+  const resolvedUrl = resolveResourceUrl(options.url)
+  return frappeRequest({
+    ...options,
+    headers: withAuthHeaders({ headers: options.headers }, resolvedUrl).headers,
+    url: resolvedUrl,
+  })
+})
 
 const originalFetch = window.fetch.bind(window)
 window.fetch = (input, init = {}) => {
@@ -73,11 +94,23 @@ window.fetch = (input, init = {}) => {
     const isBackendUrl = API_BASE_URL && input.startsWith(API_BASE_URL + '/api/')
 
     if (isBackendPath || isBackendUrl) {
+      if (isBackendPath && !API_BASE_URL) {
+        console.error("[fetch] Missing VITE_API_BASE_URL for backend path:", input)
+      }
+
       const requestUrl = isBackendPath ? resolveBackendUrl(input) : input
       return originalFetch(requestUrl, withAuthHeaders({
         ...init,
-        credentials: init.credentials ?? 'include',
-      }))
+        credentials: init.credentials ?? "include",
+      }, requestUrl)).catch((error) => {
+        console.error("[fetch] Backend request failed", {
+          input,
+          requestUrl,
+          apiBaseUrl: API_BASE_URL || null,
+          message: error?.message || String(error),
+        })
+        throw error
+      })
     }
   }
 
@@ -87,6 +120,11 @@ window.fetch = (input, init = {}) => {
 axios.defaults.baseURL = config.FRAPPE_URL || axios.defaults.baseURL
 axios.defaults.withCredentials = true
 axios.interceptors.request.use((requestConfig) => {
+  const requestUrl = String(requestConfig?.url || '')
+  if (isPublicAuthEndpoint(requestUrl)) {
+    return requestConfig
+  }
+
   const authHeader = getAuthHeader()
   if (authHeader) {
     requestConfig.headers = requestConfig.headers || {}
@@ -108,6 +146,15 @@ setTimeout(async () => {
 function initializeSocketLazy() {
   requestIdleCallback(() => {
     try {
+      const enableSocket = import.meta.env.VITE_ENABLE_SOCKET !== 'false'
+      const backendHost = API_BASE_URL ? new URL(API_BASE_URL).hostname : ''
+      const frontendHost = window.location.hostname
+      const isCrossHost = backendHost && backendHost !== frontendHost
+
+      if (!enableSocket || isCrossHost) {
+        return
+      }
+
       const siteName = import.meta.env.VITE_SITE_NAME || window.location.hostname
 
       if (!window.frappe) window.frappe = {}

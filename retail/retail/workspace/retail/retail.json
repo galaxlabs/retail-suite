@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\": \"retail_hdr_1\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Quick Access</b></span>\", \"col\": 12}}, {\"id\": \"retail_sc_1\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Sales Invoice\", \"col\": 3}}, {\"id\": \"retail_sc_2\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"POS Opening Shift\", \"col\": 3}}, {\"id\": \"retail_sc_3\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"POS Closing Shift\", \"col\": 3}}, {\"id\": \"retail_sc_4\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Customer\", \"col\": 3}}, {\"id\": \"retail_sc_5\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Item\", \"col\": 3}}, {\"id\": \"retail_sc_6\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"POS Profile\", \"col\": 3}}, {\"id\": \"retail_hdr_2\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Operations</b></span>\", \"col\": 12}}, {\"id\": \"retail_sc_7\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Sales Invoice Reference\", \"col\": 3}}, {\"id\": \"retail_sc_8\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Price List\", \"col\": 3}}, {\"id\": \"retail_sc_9\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Item Price\", \"col\": 3}}, {\"id\": \"retail_sc_10\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Warehouse\", \"col\": 3}}, {\"id\": \"retail_sc_11\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Supplier\", \"col\": 3}}, {\"id\": \"retail_sc_12\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Purchase Receipt\", \"col\": 3}}, {\"id\": \"retail_sc_13\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Delivery Note\", \"col\": 3}}, {\"id\": \"retail_hdr_3\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Loyalty</b></span>\", \"col\": 12}}, {\"id\": \"retail_sc_14\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"POS Coupon\", \"col\": 3}}, {\"id\": \"retail_sc_15\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"POS Offer\", \"col\": 3}}, {\"id\": \"retail_sc_16\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Loyalty Program\", \"col\": 3}}, {\"id\": \"retail_sc_17\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Loyalty Tier\", \"col\": 3}}, {\"id\": \"retail_sc_18\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Loyalty Reward\", \"col\": 3}}, {\"id\": \"retail_sc_19\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Loyalty Point Entry\", \"col\": 3}}, {\"id\": \"retail_hdr_4\", \"type\": \"header\", \"data\": {\"text\": \"<span class=\\\"h4\\\"><b>Store Content</b></span>\", \"col\": 12}}, {\"id\": \"retail_sc_20\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Delivery Charges\", \"col\": 3}}, {\"id\": \"retail_sc_21\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Delivery Charges POS Profile\", \"col\": 3}}, {\"id\": \"retail_sc_22\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Online Store Settings\", \"col\": 3}}, {\"id\": \"retail_sc_23\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"POS Supplier Group\", \"col\": 3}}, {\"id\": \"retail_sc_24\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Referral Code\", \"col\": 3}}, {\"id\": \"retail_sc_25\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Notes\", \"col\": 3}}, {\"id\": \"retail_sc_26\", \"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"All Notes\", \"col\": 3}}]",
+ "content": "[{\"id\":\"retail_hdr_1\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Quick Access</b></span>\",\"col\":12}},{\"id\":\"retail_sc_1\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Sales Invoice\",\"col\":3}},{\"id\":\"retail_sc_2\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"POS Opening Shift\",\"col\":3}},{\"id\":\"retail_sc_3\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"POS Closing Shift\",\"col\":3}},{\"id\":\"retail_sc_4\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customer\",\"col\":3}},{\"id\":\"retail_sc_5\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Item\",\"col\":3}},{\"id\":\"retail_sc_6\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"POS Profile\",\"col\":3}},{\"id\":\"retail_hdr_2\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Operations</b></span>\",\"col\":12}},{\"id\":\"twg8zO7EIX\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Point Of Sale\",\"col\":3}},{\"id\":\"retail_sc_10\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Warehouse\",\"col\":3}},{\"id\":\"retail_sc_11\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Supplier\",\"col\":3}},{\"id\":\"retail_hdr_3\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Loyalty</b></span>\",\"col\":12}},{\"id\":\"retail_hdr_4\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Store Content</b></span>\",\"col\":12}}]",
  "creation": "2026-05-23 00:00:00",
  "custom_blocks": [],
  "docstatus": 0,
@@ -13,15 +13,6 @@
  "is_hidden": 0,
  "label": "Retail",
  "links": [
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "POS & Sales",
-   "link_count": 0,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
   {
    "dependencies": "Item, Customer",
    "hidden": 0,
@@ -76,15 +67,6 @@
    "link_type": "DocType",
    "onboard": 1,
    "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Operations",
-   "link_count": 0,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
   },
   {
    "dependencies": "",
@@ -164,15 +146,6 @@
    "type": "Link"
   },
   {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Loyalty",
-   "link_count": 0,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
    "dependencies": "Item",
    "hidden": 0,
    "is_query_report": 0,
@@ -237,15 +210,6 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Store Content",
-   "link_count": 0,
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Card Break"
   },
   {
    "dependencies": "Item",
@@ -325,7 +289,7 @@
    "type": "Link"
   }
  ],
- "modified": "2026-05-23 13:48:09.100289",
+ "modified": "2026-05-23 14:14:51.089106",
  "modified_by": "Administrator",
  "module": "Retail",
  "name": "Retail",
@@ -356,6 +320,13 @@
    "link_to": "Sales Invoice",
    "stats_filter": "[]",
    "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Point Of Sale",
+   "link_to": "point-of-sale",
+   "type": "Page"
   },
   {
    "color": "Grey",

@@ -197,7 +197,7 @@
                     <th class="px-4 py-3 text-right font-semibold text-gray-900">رقم الفاتورة</th>
                     <th class="px-4 py-3 text-right font-semibold text-gray-900">التاريخ</th>
                     <th class="px-4 py-3 text-right font-semibold text-gray-900">المبلغ</th>
-                    <th class="px-4 py-3 text-right font-semibold text-gray-900">المدفوع</th>
+                    <th class="px-4 py-3 text-right font-semibold text-gray-900">الادا شدہ</th>
                     <th class="px-4 py-3 text-right font-semibold text-gray-900">المتبقي</th>
                     <th class="px-4 py-3 text-right font-semibold text-gray-900">الحالة</th>
                     <th class="px-4 py-3 text-right font-semibold text-gray-900">الإجراءات</th>
@@ -369,9 +369,9 @@ import CuromerProfileModal from '@/components/modals/CustomerProfileModal.vue'
     }
 
     const samplePurchases = [
-      { id: 1001, date: '2025-01-25', amount: 1500, paid: 1500, remaining: 0, status: 'paid', statusLabel: 'مدفوع' },
+      { id: 1001, date: '2025-01-25', amount: 1500, paid: 1500, remaining: 0, status: 'paid', statusLabel: 'ادا شدہ' },
       { id: 1002, date: '2025-01-20', amount: 2000, paid: 0, remaining: 2000, status: 'pending', statusLabel: 'قيد الانتظار' },
-      { id: 1003, date: '2025-01-15', amount: 1200, paid: 700, remaining: 500, status: 'partial', statusLabel: 'جزئي' }
+      { id: 1003, date: '2025-01-15', amount: 1200, paid: 700, remaining: 500, status: 'partial', statusLabel: 'جزوی' }
     ]
 
     const sampleTransactions = [
@@ -468,9 +468,9 @@ import CuromerProfileModal from '@/components/modals/CustomerProfileModal.vue'
 
     const getPurchaseStatusLabel = (status) => {
       const labels = {
-        paid: 'مدفوع',
+        paid: 'ادا شدہ',
         pending: 'قيد الانتظار',
-        partial: 'جزئي',
+        partial: 'جزوی',
         cancelled: 'ملغى'
       }
       return labels[status] || status

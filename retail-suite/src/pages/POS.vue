@@ -8,7 +8,7 @@
       @shift-error="handleShiftError"
     />
 
-    <div class="hide-print flex flex-row h-screen antialiased"
+    <div class="hide-print flex flex-row min-h-screen overflow-y-auto antialiased"
         :style="{
         background: isDark ? 'var(--bg)' : 'var(--card-bg)',
         color: 'var(--text-main)'
@@ -21,29 +21,52 @@
       />
 
       <!-- Main Content -->
-      <div class="flex-grow flex gap-4 px-4 mt-2">
+      <div class="flex-grow grid grid-cols-12 gap-4 px-4 mt-2 items-start">
 
         <!-- Products Section -->
         <div
-          class="w-8/12 flex flex-col h-full py-4 px-4 rounded-xl"
+          class="col-span-12 xl:col-span-8 flex flex-col min-h-[70vh] py-4 px-4 rounded-xl"
           :style="{
             background: 'var(--content-panel-bg)',
             border: '1px solid var(--content-panel-border)',
             boxShadow: 'var(--content-panel-shadow)'
           }"
         >
-          <div class="mb-4">
-            <SearchBar v-model="searchKeyword" />
+          <div class="mb-4 space-y-3">
+            <div class="inline-flex rounded-lg p-1" style="background: var(--item-bg); border: 1px solid var(--item-border);">
+              <button
+                @click="switchSalesChannel('retail')"
+                class="px-4 py-2 text-sm font-medium rounded-md transition"
+                :style="salesChannel === 'retail' ? `background: ${primaryColor}; color: #fff;` : 'color: var(--text-main);'"
+              >
+                Retail
+              </button>
+              <button
+                @click="switchSalesChannel('wholesale')"
+                class="px-4 py-2 text-sm font-medium rounded-md transition"
+                :style="salesChannel === 'wholesale' ? `background: ${primaryColor}; color: #fff;` : 'color: var(--text-main);'"
+              >
+                Wholesale
+              </button>
+            </div>
+            <input
+              v-model="searchKeyword"
+              @keydown.enter.prevent="handleScannerEnter"
+              type="text"
+              class="w-full h-12 rounded-xl px-4 text-base"
+              style="background: var(--input-bg); color: var(--input-text); border: 1px solid var(--input-border);"
+              placeholder="Search item by name, code, or category"
+            />
           </div>
 
           <div class="flex-1 overflow-y-auto">
-            <ProductGrid :search-keyword="searchKeyword" />
+            <ProductGrid :search-keyword="searchKeyword" :simple-mode="true" />
           </div>
         </div>
 
         <!-- Cart Section -->
         <div
-          class="w-4/12 flex flex-col h-full py-4 px-3 rounded-xl"
+          class="col-span-12 xl:col-span-4 flex flex-col py-4 px-3 rounded-xl self-start"
           :style="{
             background: 'var(--sidebar-panel-bg)',
             border: '1px solid var(--sidebar-panel-border)',
@@ -53,6 +76,8 @@
           <Cart
             :mode="activeMenu === 'return' ? 'return' : 'sale'"
             :selected-invoice="selectedInvoice"
+            :sales-channel="salesChannel"
+            :customer-required="salesChannel === 'wholesale'"
             @submit="handleCartSubmit"
             @clear-invoice="handleClearInvoice"
           />
@@ -71,6 +96,9 @@
       <ReceiptModal
         v-if="showReceiptModal"
         :receipt-data="receiptData"
+        :store-name="settingsStore.settings?.store?.name || shiftStore.pos_profile?.company || 'Store'"
+        :store-address="settingsStore.settings?.store?.address || shiftStore.pos_profile?.warehouse || ''"
+        :store-logo="settingsStore.settings?.store?.logoUrl || ''"
         @close="closeReceiptModal"
         @proceed="handleReceiptPrinted"
         @save="handleReceiptSaved"
@@ -157,7 +185,6 @@ import { createResource } from 'frappe-ui'
 import { storeToRefs } from 'pinia'
 import ShiftControl from '@/components/shift/ShiftControl.vue'
 import Sidebar from '@/layout/Sidebar.vue'
-import SearchBar from '@/layout/SearchBar.vue'
 import ProductGrid from '@/components/products/ProductGrid.vue'
 import Cart from '@/components/cart/Cart.vue'
 import FirstTimeModal from '@/components/modals/FirstTimeModal.vue'
@@ -192,6 +219,104 @@ const invoicesStore = useInvoicesStore()
 const returnInvoice = ref(null)
 const mode = ref('sale')
 const showReturnInvoiceBox = ref(false)
+const SALES_CHANNEL_KEY = "retail_sales_channel_mode"
+const salesChannel = ref(localStorage.getItem(SALES_CHANNEL_KEY) || "retail")
+
+const normalizeBarcode = (value) => String(value || "").trim().toLowerCase()
+
+const extractBarcodes = (product) => {
+  const direct = [product.barcode, product.item_code]
+  const fromItemBarcode = Array.isArray(product.item_barcode)
+    ? product.item_barcode.map((b) => b?.barcode)
+    : []
+  const fromBarcodes = Array.isArray(product.barcodes)
+    ? product.barcodes.map((b) => b?.barcode)
+    : []
+
+  return [...direct, ...fromItemBarcode, ...fromBarcodes]
+    .map((code) => normalizeBarcode(code))
+    .filter(Boolean)
+}
+
+const handleScannerEnter = async () => {
+  const query = normalizeBarcode(searchKeyword.value)
+  if (!query) return
+
+  const items = productsStore.products || []
+  const exact = items.find((product) => extractBarcodes(product).includes(query))
+
+  if (exact) {
+    cartStore.addToCart(exact)
+    searchKeyword.value = ""
+    window.$toast?.success(`Added ${exact.item_name}`)
+    return
+  }
+
+  if (query.length >= 2) {
+    await productsStore.loadProductsFromFrappeDB()
+    const refreshed = (productsStore.products || []).find((product) => extractBarcodes(product).includes(query))
+    if (refreshed) {
+      cartStore.addToCart(refreshed)
+      searchKeyword.value = ""
+      window.$toast?.success(`Added ${refreshed.item_name}`)
+    } else {
+      window.$toast?.warning("No product found for this barcode")
+    }
+  }
+}
+
+
+const RETAIL_PRICE_LIST_NAME = "Retail Selling"
+const WHOLESALE_PRICE_LIST_NAME = "Wholesale Selling"
+
+const resolvePriceListForChannel = (channel) => {
+  const available = (productsStore.priceLists || []).map((p) =>
+    typeof p === "string" ? p : (p.name || p.price_list_name || "")
+  ).filter(Boolean)
+
+  const fallback = shiftStore.pos_profile?.selling_price_list || productsStore.selectedPriceList || "Standard Selling"
+  if (!available.length) {
+    return channel === "wholesale" ? WHOLESALE_PRICE_LIST_NAME : RETAIL_PRICE_LIST_NAME
+  }
+
+  if (channel === "wholesale") {
+    return available.includes(WHOLESALE_PRICE_LIST_NAME)
+      ? WHOLESALE_PRICE_LIST_NAME
+      : fallback
+  }
+
+  return available.includes(RETAIL_PRICE_LIST_NAME)
+    ? RETAIL_PRICE_LIST_NAME
+    : fallback
+}
+
+const applySalesChannel = async (channel) => {
+  salesChannel.value = channel
+  localStorage.setItem(SALES_CHANNEL_KEY, channel)
+
+  if (!productsStore.priceLists?.length) {
+    await productsStore.loadFilterOptions()
+  }
+
+  const nextPriceList = resolvePriceListForChannel(channel)
+  productsStore.selectedPriceList = nextPriceList
+  productsStore.selectedPriceList = nextPriceList
+
+  if (channel === "wholesale") {
+    shiftStore.setCustomer(null)
+  } else {
+    const defaultCustomer = shiftStore.pos_profile?.customer
+    if (defaultCustomer) {
+      shiftStore.setCustomer({ name: defaultCustomer })
+    }
+  }
+  await productsStore.loadProductsFromFrappeDB()
+}
+
+const switchSalesChannel = async (channel) => {
+  if (salesChannel.value === channel) return
+  await applySalesChannel(channel)
+}
 
 const settingsStore = useSettingsStore()
 // Dark Mode from Settings Store
@@ -235,7 +360,7 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
         const returnedItems = invoice.returnable_items.map(item => ({
           item_code: item.item_code,
           item_name: item.item_name,
-          qty: Math.abs(item.returnable_qty), // الكمية سالبة للمرتجع
+          qty: Math.abs(item.returnable_qty), // الكمية سالبة للواپسی
           rate: item.rate,
           amount: item.amount,
           originalQuantity: item.returnable_qty, // للتحقق من الحد الأقصى
@@ -244,7 +369,7 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
         // push returnItems to  cart [] in Cart.js
         cartStore.loadReturnItems(returnedItems)
 
-        // نخلي selectedInvoice.value تحتوي على بيانات أساسية + عناصر للمرتجع فقط
+        // نخلي selectedInvoice.value تحتوي على بيانات أساسية + عناصر للواپسی فقط
         selectedInvoice.value = {
           name: invoice.name,
           customer: invoice.customer,
@@ -292,6 +417,10 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
 
           receiptData.value = {
             ...transactionData,
+            storeName: settingsStore.settings?.store?.name || shiftStore.pos_profile?.company || "Store",
+            storeAddress: settingsStore.settings?.store?.address || shiftStore.pos_profile?.warehouse || "",
+            storeLogo: settingsStore.settings?.store?.logoUrl || "",
+            footerMessage: settingsStore.settings?.receipt?.footerMessage || "",
             invoiceNo: invoiceResponse.invoiceNo,
             invoiceId: invoiceResponse.invoiceNo,
             isFastMode: true,
@@ -339,7 +468,7 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
         console.log('🔄 handleReturnTransaction: Starting...')
         console.log('Return data:', returnData)
 
-        // معالجة خاصة للمرتجعات
+        // معالجة خاصة للواپسیات
         const returnTransaction = {
           ...returnData,
           type: 'return',
@@ -348,7 +477,7 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
           returnedAt: new Date().toISOString()
         }
 
-        // هنا ممكن تستدعي دالة خاصة للمرتجعات
+        // هنا ممكن تستدعي دالة خاصة للواپسیات
         // مثلاً: await invoicesStore.processReturn(returnTransaction)
 
         console.log('✅ Return processed successfully')
@@ -376,27 +505,18 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
         window.$toast.success('Receipt copy downloaded')
       }
     }
-    // Proceed = Submit
+    // Proceed = keep as draft only
     const handleReceiptPrinted = async (receiptDataParam) => {
-          console.log('🔍 invoiceId:', receiptDataParam.invoiceId)
-          console.log('🔍 isFastMode:', receiptDataParam.isFastMode)
-
       try {
-        if (receiptDataParam.isFastMode) {
-          // Fast Mode: الفاتورة اتسبمتت خلاص - مفيش حاجة
-          if (window.$toast) window.$toast.success(`Invoice ${receiptDataParam.invoiceNo} completed!`)
-        } else {
-          // Normal Mode: submit دلوقتي
-          await invoicesStore.proceedInvoice(receiptDataParam)
-          if (window.$toast) window.$toast.success(`Invoice ${receiptDataParam.invoiceNo} submitted!`)
+        if (window && window["$toast"]) {
+          const name = receiptDataParam?.invoiceNo || "---"
+          window["$toast"].success("انوائس " + name + " ڈرافٹ میں محفوظ ہو گئی")
         }
-      } catch (error) {
-        if (window.$toast) window.$toast.error(error.message || 'Failed to submit invoice')
       } finally {
         cartStore.clearCart()
         selectedInvoice.value = null
         showReceiptModal.value = false
-        activeMenu.value = 'pos'
+        activeMenu.value = "pos"
       }
     }
 
@@ -562,13 +682,15 @@ const isDark = computed(() => settingsStore.settings.appearance.theme === 'dark'
     // Initialize on mount
     onMounted(async () => {
         const currentUserInfo = await shiftStore.getCurrentUserInfo()
-        const currentUser = currentUserInfo.user
+        const currentUser = currentUserInfo?.user || null
         user.value = currentUser
+        settingsStore.loadSettings()
         await shiftStore.loadShifts()
         await shiftStore.checkActiveShift()
-        await loadProductsData()
+        settingsStore.syncStoreIdentityFromCompany({}, shiftStore.pos_profile || {})
+        await productsStore.loadFilterOptions()
+        await applySalesChannel(salesChannel.value)
         isCheckingShift.value = false
-        settingsStore.loadSettings()
     })
 
 

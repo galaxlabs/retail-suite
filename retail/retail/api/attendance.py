@@ -29,7 +29,7 @@ def get_checkins(company=None):
 
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_checkins_for_attendance(employee, attendance_date):
 	"""
 	الحصول على سجلات الدخول والخروج (Employee Checkin) للموظف في تاريخ معين
@@ -56,7 +56,7 @@ def get_checkins_for_attendance(employee, attendance_date):
 		frappe.log_error(frappe.get_traceback())
 		frappe.throw(str(e))
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_monthly_attendance_summary(employee, month, year):
 	"""
 	الحصول على ملخص الحضور الشهري
@@ -105,7 +105,7 @@ def get_monthly_attendance_summary(employee, month, year):
 		frappe.throw(str(e))
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def create_attendance(
 employee,
 attendance_date,
@@ -150,7 +150,7 @@ early_exit=False
         }
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def bulk_mark_attendance(data):
     """
     وظيفة لتسجيل الحضور لعدة أيام للموظف الواحد
@@ -201,7 +201,7 @@ def bulk_mark_attendance(data):
         frappe.throw(str(e))
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_employee_attendance_history(employee=None, from_date=None, to_date=None, limit=30):
     """
     الحصول على سجل الحضور للموظف
@@ -240,7 +240,7 @@ def get_employee_attendance_history(employee=None, from_date=None, to_date=None,
         frappe.throw(str(e))
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_monthly_attendance_summary(employee, month, year):
     """
     الحصول على ملخص الحضور الشهري
@@ -300,7 +300,7 @@ def get_monthly_attendance_summary(employee, month, year):
         frappe.throw(str(e))
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def check_attendance_exists(employee, attendance_date):
     """
     التحقق من وجود سجل حضور للموظف في تاريخ معين
@@ -323,7 +323,7 @@ def check_attendance_exists(employee, attendance_date):
         frappe.throw(str(e))
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def cancel_and_delete_attendance(name):
     doc = frappe.get_doc("Attendance", name)
 
@@ -333,7 +333,7 @@ def cancel_and_delete_attendance(name):
     frappe.delete_doc("Attendance", name)
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def bulk_cancel_and_delete_attendance(attendance_ids):
     """
     Cancel and delete one or multiple Attendance records.
@@ -386,7 +386,7 @@ def bulk_cancel_and_delete_attendance(attendance_ids):
         "message": f"Deleted {len(deleted)} attendance record(s). Failed: {len(failed)}"
     }
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def edit_attendance(attendance_data):
     try:
         # If attendance_data comes as JSON string

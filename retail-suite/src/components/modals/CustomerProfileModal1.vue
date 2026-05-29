@@ -245,8 +245,8 @@ import { ref, computed } from 'vue'
 
     // Sample purchases
     const purchases = ref([
-      { id: 1001, date: '2025-01-25', amount: 1500, status: 'paid', statusLabel: 'مدفوع' },
-      { id: 1002, date: '2025-01-20', amount: 2000, status: 'paid', statusLabel: 'مدفوع' },
+      { id: 1001, date: '2025-01-25', amount: 1500, status: 'paid', statusLabel: 'ادا شدہ' },
+      { id: 1002, date: '2025-01-20', amount: 2000, status: 'paid', statusLabel: 'ادا شدہ' },
       { id: 1003, date: '2025-01-15', amount: 1200, status: 'pending', statusLabel: 'قيد الانتظار' }
     ])
 

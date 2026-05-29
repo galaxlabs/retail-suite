@@ -99,6 +99,13 @@
               >
                 {{ copied ? '✓' : 'Copy URL' }}
               </button>
+              <button
+                @click="regenerateSession"
+                class="text-xs px-2 py-0.5 rounded-md transition-colors font-medium"
+                style="background: var(--card-border); color: var(--text-main);"
+              >
+                New Session
+              </button>
             </div>
           </div>
 
@@ -157,6 +164,7 @@ const {
   pairingConfirmed,
   startListening,
   stopListening,
+  refreshSession,
   getScannerUrl
 } = useMobileScanSession()
 // ── Stores ────────────────────────────────────────────────────────────────────
@@ -240,6 +248,15 @@ const copyUrl = async () => {
     copied.value = true
     setTimeout(() => { copied.value = false }, 2000)
   }
+}
+
+const regenerateSession = async () => {
+  stopListening()
+  refreshSession()
+  pairingConfirmed.value = false
+  lastScanned.value = null
+  await generateQR()
+  startListening()
 }
 
 // ── Handle barcode from eventBus ──────────────────────────────────────────────

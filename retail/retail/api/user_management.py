@@ -4,7 +4,7 @@ import frappe
 from frappe import _
 from functools import wraps
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_all_users():
     """Get all system users"""
     try:
@@ -36,7 +36,7 @@ def get_all_users():
         return {"status": "error", "message": str(e)}
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def create_user(data):
     """Create new user with roles"""
     try:
@@ -82,7 +82,7 @@ def create_user(data):
         return {"status": "error", "message": str(e)}
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def update_user(name, data):
     """Update existing user"""
     try:
@@ -116,7 +116,7 @@ def update_user(name, data):
         return {"status": "error", "message": str(e)}
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def delete_user(name):
     """Disable user (soft delete)"""
     try:
@@ -149,7 +149,7 @@ def require_roles(*roles):
     return decorator
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 @require_roles("System Manager")
 def get_available_roles():
     """Get all available roles"""
@@ -173,7 +173,7 @@ def get_available_roles():
 
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_current_user_info():
     """Get current logged in user full info"""
     try:

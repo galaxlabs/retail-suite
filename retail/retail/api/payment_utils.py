@@ -23,21 +23,13 @@ def get_shift_payments_entries(pos_opening_shift):
     )
 
 def submit_printed_invoices(pos_opening_shift):
-    invoices_list = frappe.get_all(
-        "Sales Invoice",
-        filters={
-            "posa_pos_opening_shift": pos_opening_shift,
-            "docstatus": 0,
-            "posa_is_printed": 1,
-        },
-    )
-    for invoice in invoices_list:
-        invoice_doc = frappe.get_doc("Sales Invoice", invoice.name)
-        invoice_doc.submit()
+    # Intentionally disabled for POS flow:
+    # auto-submitting invoices during read/summary causes stock validation errors
+    # and blocks non-technical cashier workflows.
+    return
 
 @frappe.whitelist()
 def get_shift_pos_invoices(pos_opening_shift):
-    submit_printed_invoices(pos_opening_shift)
     data = frappe.db.sql(
         """
 	select
@@ -45,7 +37,7 @@ def get_shift_pos_invoices(pos_opening_shift):
 	from
 		`tabSales Invoice`
 	where
-		docstatus = 1 and posa_pos_opening_shift = %s
+		docstatus < 2 and posa_pos_opening_shift = %s
 	""",
         (pos_opening_shift),
         as_dict=1,

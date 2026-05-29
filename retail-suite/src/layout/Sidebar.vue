@@ -175,9 +175,9 @@
 
         <!-- GitHub Link -->
         <a
-          href="https://github.com/AhmedAbokhatwa/retail-suite"
+          href="https://github.com/galaxlabs/retail-suite"
           target="_blank"
-          rel="AhmedAbokhatwa"
+          rel="noopener noreferrer"
           class="mt-auto flex items-center justify-center h-10 w-10 focus:outline-none transition-colors duration-200"
           :style="{
             color: lightenColor(primaryColor, 30),

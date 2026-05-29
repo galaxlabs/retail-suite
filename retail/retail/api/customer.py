@@ -59,7 +59,7 @@ def validate_referral_code(doc):
 
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_customers_financial_data(pos_profile):
     """
     Return all customers as a list of objects containing customer info, contacts, addresses, debt and total purchases.
@@ -102,7 +102,7 @@ def get_customers_financial_data(pos_profile):
     return result
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_customer_profile(customer_name):
     """جلب جميع بيانات العميل الكاملة"""
 
@@ -433,7 +433,7 @@ def register_customer(phone, full_name, password):
 
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def update_customer_profile(full_name=None, email=None):
     """
     Update customer profile information
@@ -519,7 +519,7 @@ def log_customer_activity(phone, activity_type, details=None):
         pass  # Don't fail if logging fails
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def check_order_spam(customer):
     """
     Check if customer is spamming orders
@@ -558,7 +558,7 @@ def check_order_spam(customer):
     }
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def block_customer(customer, reason=None):
     """
     Block a customer (Admin only)
@@ -588,7 +588,7 @@ def block_customer(customer, reason=None):
     frappe.throw(_("العميل غير موجود"))
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def unblock_customer(customer):
     """
     Unblock a customer (Admin only)
@@ -803,7 +803,7 @@ def get_party_profile(doctype, name):
         frappe.log_error(title="Error getting party profile", message=frappe.get_traceback())
         frappe.throw(str(e))
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_customer_info():
     """
     Get current logged-in customer information

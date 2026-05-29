@@ -555,7 +555,7 @@ import { TrendingUp, Calendar, BarChart3, DollarSign } from 'lucide-vue-next'
         </head>
         <body>
           <div class="header">
-            <h2>TAILWIND POS</h2>
+            <h2>${settingsStore.settings?.store?.name || "Store"}</h2>
             <p>Invoice / Receipt</p>
           </div>
 

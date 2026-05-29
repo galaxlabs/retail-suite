@@ -39,7 +39,7 @@ def pos_cache(fn, pos_profile: dict):
     ttl = int(ttl) * 30 if ttl else 1800
     return redis_cache(ttl=ttl)(fn)
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_opening_dialog_data():
     data = {}
     data["companies"] = frappe.get_list(
@@ -81,7 +81,7 @@ def get_opening_dialog_data():
 
     return data
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def create_opening_voucher(pos_profile, company, balance_details):
     balance_details = json.loads(balance_details)
 
@@ -104,7 +104,7 @@ def create_opening_voucher(pos_profile, company, balance_details):
     update_opening_shift_data(data, new_pos_opening.pos_profile)
     return data
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def check_opening_shift(user):
     open_vouchers = frappe.db.get_all(
         "POS Opening Shift",
@@ -139,7 +139,7 @@ def update_opening_shift_data(data, pos_profile):
     data["stock_settings"] = {}
     data["stock_settings"].update({"allow_negative_stock": allow_negative_stock})
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_items(
     pos_profile, price_list=None, item_group="", search_value="", customer=None, warehouse=None
 ):
@@ -465,7 +465,7 @@ def get_product_bundle(item_code):
         return frappe.get_doc("Product Bundle", product_bundles[0][0])
     return None
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_single_item(item_code):
     """
     Retrieve a single item from the Item doctype.
@@ -572,7 +572,7 @@ def get_root_of(doctype):
     )
     return result[0][0] if result else None
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_items_groups():
     print("get_items_groups called....................................")
     return frappe.db.sql(
@@ -643,7 +643,7 @@ def get_supplier_group_condition(pos_profile):
 
     return cond % tuple(supplier_groups)
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_supplier_names(pos_profile):
     _pos_profile = frappe.parse_json(pos_profile)
 
@@ -666,7 +666,7 @@ def _get_supplier_names(pos_profile):
 
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_customer_names(pos_profile):
     _pos_profile = json.loads(pos_profile)
     return pos_cache(_get_customer_names, _pos_profile)(pos_profile)
@@ -687,7 +687,7 @@ def _get_customer_names(pos_profile):
 
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_sales_person_names():
     sales_persons = frappe.db.sql(
         """
@@ -731,7 +731,7 @@ def add_taxes_from_tax_template(item, parent_doc):
                     tax_row.update({"category": "Total", "add_deduct_tax": "Add"})
                 tax_row.db_insert()
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def update_invoice(data):
     data = json.loads(data)
     if data.get("name"):
@@ -800,7 +800,7 @@ def update_invoice(data):
 
     return invoice_doc
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def add_items_to_kitchen_screen(items):
     for item in items:
         print(f"\n\n item :{item}")
@@ -814,7 +814,7 @@ def add_items_to_kitchen_screen(items):
         kitchen_doc.custom_screen_no = item.custom_screen_number
         kitchen_doc.insert()
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def submit_quick_entry(screens_no):
     try:
         screens_no = json.loads(screens_no)
@@ -834,7 +834,7 @@ def submit_quick_entry(screens_no):
         frappe.log_error(f"Error in submit_quick_entry: {e}")
         raise
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def print_with_ip(receipt_data, order_type, customer_type, order_name):
     sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     printer_ip = "192.168.1.100"
@@ -886,7 +886,7 @@ def print_with_ip(receipt_data, order_type, customer_type, order_name):
         finally:
             sock.close()
     return type(html_pdf)
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_all_pos_screens():
     screens = frappe.get_all("POS Screens", fields=["name", "screen_number"])
     return screens
@@ -1052,7 +1052,7 @@ def submit_invoice_doc(invoice_doc, data, is_payment_entry, cash_account):
         "docstatus": invoice_doc.docstatus,
     }
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def save_invoice(invoice, data):
     data = frappe.parse_json(data)
     invoice = frappe.parse_json(invoice)
@@ -1079,7 +1079,7 @@ def save_invoice(invoice, data):
     return {"name": invoice_doc.name, "status": invoice_doc.docstatus}
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def submit_invoice(invoice, data):
 
     data = frappe.parse_json(data)
@@ -1361,7 +1361,7 @@ def submit_in_background_job(kwargs):
         invoice_doc, data, is_payment_entry, total_cash, cash_account, payments
     )
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def search_orders(company, currency, order_name=None):
     filters = {
         "billing_status": ["in", ["Not Billed", "Partly Billed"]],
@@ -1384,7 +1384,7 @@ def search_orders(company, currency, order_name=None):
     print('/n --------> data',data)
     return data
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_available_credit(customer, company):
     total_credit = []
 
@@ -1435,7 +1435,7 @@ def get_available_credit(customer, company):
 
     return total_credit
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_draft_invoices(pos_opening_shift):
     invoices_list = frappe.get_list(
         "Sales Invoice",
@@ -1454,14 +1454,14 @@ def get_draft_invoices(pos_opening_shift):
         data.append(frappe.get_cached_doc("Sales Invoice", invoice["name"]))
     return data
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def delete_invoice(invoice):
     if frappe.get_value("Sales Invoice", invoice, "posa_is_printed"):
         frappe.throw(_("This invoice {0} cannot be deleted").format(invoice))
     frappe.delete_doc("Sales Invoice", invoice, force=1)
     return _("Invoice {0} Deleted").format(invoice)
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_items_details(pos_profile, items_data):
     _pos_profile = json.loads(pos_profile)
 
@@ -1539,7 +1539,7 @@ def _get_items_details(pos_profile, items_data):
     return result
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_item_detail(item, doc=None, warehouse=None, price_list=None):
     item = json.loads(item)
     today = nowdate()
@@ -1595,7 +1595,7 @@ def get_stock_availability(item_code, warehouse):
     )
     return actual_qty
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_today_invoices():
     current_date = nowdate()
     invoices = frappe.get_list(
@@ -1605,7 +1605,7 @@ def get_today_invoices():
     )
     invoice_names = [invoice.name for invoice in invoices]
     return invoice_names
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def create_customer(
     customer_name,
     company,
@@ -1749,7 +1749,7 @@ def create_customer(
 
         return customer_doc
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_items_from_barcode(selling_price_list, currency, barcode):
     search_item = frappe.get_all(
         "Item Barcode",
@@ -1817,7 +1817,7 @@ def get_items_from_barcode(selling_price_list, currency, barcode):
         )
         return item
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def set_customer_info(customer, fieldname, value=""):
     if fieldname == "loyalty_program":
         frappe.db.set_value("Customer", customer, "loyalty_program", value)
@@ -1855,7 +1855,7 @@ def set_customer_info(customer, fieldname, value=""):
             "Customer", customer, "customer_primary_contact", contact_doc.name
         )
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def search_invoices_for_return(invoice_name, company):
     invoices_list = frappe.get_list(
         "Sales Invoice",
@@ -1882,7 +1882,7 @@ def search_invoices_for_return(invoice_name, company):
         data.append(frappe.get_doc("Sales Invoice", invoice["name"]))
     return data
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def search_invoices_for_current_shift(pos_shift):
     invoices_list = frappe.get_list(
         "Sales Invoice",
@@ -1925,7 +1925,7 @@ def get_app_branch(app):
     except Exception:
         return ""
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_offers(profile):
     pos_profile = frappe.get_doc("POS Profile", profile)
     company = pos_profile.company
@@ -1956,7 +1956,7 @@ def get_offers(profile):
     )
     return data
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_customer_addresses(customer):
     return frappe.db.sql(
         """
@@ -1982,7 +1982,7 @@ def get_customer_addresses(customer):
         as_dict=1,
     )
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def make_address(args):
     args = json.loads(args)
     address = frappe.get_doc(
@@ -2063,7 +2063,7 @@ def get_item_optional_attributes(item_code):
 
     return frappe.cache().hget("optional_attributes", item_code)
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_item_attributes(item_code):
     attributes = frappe.db.get_all(
         "Item Variant Attribute",
@@ -2087,7 +2087,7 @@ def get_item_attributes(item_code):
 
     return attributes
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def create_payment_request(doc):
     doc = json.loads(doc)
     for pay in doc.get("payments"):
@@ -2280,12 +2280,12 @@ def get_amount(ref_doc, payment_account=None):
             _("Payment Entry is already created or payment account is not matched")
         )
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_pos_coupon(coupon, customer, company):
     res = check_coupon_code(coupon, customer, company)
     return res
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_active_gift_coupons(customer, company):
     coupons = []
     coupons_data = frappe.get_all(
@@ -2302,7 +2302,7 @@ def get_active_gift_coupons(customer, company):
         coupons = [i.coupon_code for i in coupons_data]
     return coupons
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_customer_info(customer):
     customer = frappe.get_doc("Customer", customer)
 
@@ -2345,7 +2345,7 @@ def get_customer_info(customer):
 def get_company_domain(company):
     return frappe.get_cached_value("Company", cstr(company), "domain")
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_applicable_delivery_charges(
     company, pos_profile, customer, shipping_address_name=None
 ):
@@ -2387,7 +2387,7 @@ def auto_create_items():
         item.insert(ignore_permissions=True)
         frappe.db.commit()
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def search_serial_or_batch_or_barcode_number(search_value, search_serial_no):
     # search barcode no
     barcode_data = frappe.db.get_value(
@@ -2420,7 +2420,7 @@ def get_seearch_items_conditions(item_code, serial_no, batch_no, barcode):
         item_code=frappe.db.escape("%" + item_code + "%")
     )
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_item_groups_2(pos_profile):
     pos_item_groups = frappe.get_all("POS Item Group", filters={"parent": pos_profile}, fields=["item_group"])
     response = []
@@ -2430,7 +2430,7 @@ def get_item_groups_2(pos_profile):
     print('\n\n\nget_item_groups_2 ===>',response)
     return response
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_sales_invoice_child_table(sales_invoice, sales_invoice_item):
     parent_doc = frappe.get_doc("Sales Invoice", sales_invoice)
     child_doc = frappe.get_doc(

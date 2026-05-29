@@ -5,13 +5,13 @@ from frappe.utils import today, formatdate, flt, datetime
 import calendar
 from retail.retail.api.payment_utils import get_shift_payments_entries, get_shift_unallocated_payments, get_shift_invoice_payments, get_shift_pos_invoices
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def process_auto_attendance_api(shift_name):
     doc = frappe.get_doc('Shift Type', shift_name)
     doc.process_auto_attendance()
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_shift_statistics():
     today = datetime.date.today()
 
@@ -107,7 +107,7 @@ def get_week_range_in_month(date=None):
 
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_shifts(name=None,status=None):
     """
     Get POS Opening Shifts with optional status filter.
@@ -198,7 +198,7 @@ def get_shifts(name=None,status=None):
         }
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_shift_pos_transactions(shift_id):
     pos_opening_shift = frappe.get_doc("POS Opening Shift", shift_id).as_dict()
     transactions = []
@@ -254,7 +254,7 @@ def get_shift_pos_transactions(shift_id):
 
     return transactions
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def calculate_total_cash_collected(transactions):
     total_in = sum(t["amount"] for t in transactions if t["type"] == "in")
     total_out = sum(t["amount"] for t in transactions if t["type"] == "out")
@@ -289,7 +289,7 @@ def get_all_shift_payment_entries(shift_id):
     """, {"invoices": tuple(invoice_names)}, as_dict=1)
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_shift_details(shift_id):
 
     pos_opening_shift = frappe.get_doc("POS Opening Shift", shift_id).as_dict()
@@ -492,7 +492,7 @@ def get_shift_details(shift_id):
         "has_issues":             len(reconciliation_issues) > 0,  # ← جديد
     }
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def cancel_and_delete_shift_assignment(name):
     doc = frappe.get_doc("Shift Assignment", name)
 

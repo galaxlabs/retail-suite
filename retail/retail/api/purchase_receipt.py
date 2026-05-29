@@ -5,7 +5,7 @@ from frappe import _
 from frappe.utils import nowtime, nowdate, today
 import json
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_purchase_receipts():
     try:
         receipts = frappe.get_all(
@@ -46,7 +46,7 @@ def get_purchase_receipts():
         return {"status": "error", "message": str(e)}
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_purchase_receipt(name):
     """Get single purchase receipt by name"""
     try:
@@ -89,7 +89,7 @@ def get_purchase_receipt(name):
         frappe.log_error(frappe.get_traceback(), "get_purchase_receipt")
         return {"status": "error", "message": str(e)}
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def create_purchase_receipt(data):
     try:
         import json
@@ -137,7 +137,7 @@ def create_purchase_receipt(data):
         return {"status": "error", "message": str(e)}
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def submit_purchase_receipt(name):
     """Submit a draft purchase receipt"""
     try:
@@ -157,7 +157,7 @@ def submit_purchase_receipt(name):
         return {"status": "error", "message": str(e)}
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def cancel_purchase_receipt(name):
     """Cancel a submitted purchase receipt"""
     try:
@@ -175,7 +175,7 @@ def cancel_purchase_receipt(name):
         frappe.log_error(frappe.get_traceback(), "cancel_purchase_receipt")
         return {"status": "error", "message": str(e)}
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def update_purchase_receipt(name, data):
     """Update existing purchase receipt"""
     try:
@@ -236,7 +236,7 @@ def update_purchase_receipt(name, data):
         frappe.db.rollback()
         return {"status": "error", "message": str(e)}
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def delete_purchase_receipt(name):
     """Delete purchase receipt"""
     try:
@@ -253,7 +253,7 @@ def delete_purchase_receipt(name):
         frappe.db.rollback()
         return {"status": "error", "message": str(e)}
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_suppliers():
     """Get all suppliers"""
     try:
@@ -268,7 +268,7 @@ def get_suppliers():
         frappe.log_error(frappe.get_traceback(), "get_suppliers")
         return {"status": "error", "message": str(e)}
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def create_purchase_invoice_from_receipt(
     receipt_name,
     posting_date=None,
@@ -387,7 +387,7 @@ def create_purchase_invoice_from_receipt(
         frappe.db.rollback()
         return {"status": "error", "message": str(e)}
 
-# @frappe.whitelist()
+# @frappe.whitelist(allow_guest=True)
 # def create_purchase_invoice_from_receipt(receipt_name):
 #     """Create Purchase Invoice from Purchase Receipt"""
 #     try:
@@ -442,7 +442,7 @@ def create_purchase_invoice_from_receipt(
 #         return {"status": "error", "message": str(e)}
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_purchase_invoice_for_receipt(receipt_name):
     """Check if invoice already exists for this receipt"""
     try:

@@ -1,7 +1,7 @@
 import frappe
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_all_bills_invoices(**kwargs):
     filters ={}
     if kwargs.get("status"):

@@ -24,7 +24,7 @@ def get_departments(company=None):
 
 # API create department
 #  Also increase No. Departments in company
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def create_department():
     data = frappe.request.get_json()
     department_name = data.get("department_name")
@@ -101,7 +101,7 @@ def create_department():
         raise inner_error
 
 # API Delete Department
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def delete_department(department_name):
     """Update Company counts when  Department is deleted
          Delelte All Employee For this Department
@@ -285,7 +285,7 @@ def get_employees(company=None, department=None):
         frappe.response["data"] = []
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def search_employees(query=''):
 	"""
 	البحث عن الموظفين حسب:
@@ -647,7 +647,7 @@ def get_arabic_month(month_num):
     }
     return months.get(month_num, "")
 # API Delete Employee
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def delete_employee(employee_name):
     """
     Delete an employee and update employee counts in Company and Department doctypes.
@@ -716,7 +716,7 @@ def get_designations():
 
 
 # API Create Designation
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def create_designation(designation_name):
     try:
         if not designation_name:
@@ -755,7 +755,7 @@ def create_designation(designation_name):
         raise inner_error
 
 # Api Delete Designation
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def delete_designation(designation_name):
     designation_exists = frappe.db.exists("Designation", {"designation_name": designation_name})
     if not designation_exists:
@@ -807,7 +807,7 @@ def create_user(**kwargs):
 
 
 #API create company
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def create_company():
     try:
         data = frappe.request.get_json()
@@ -854,7 +854,7 @@ def create_company():
         return {"error": str(e), "success": False}
 
 #API delete company
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def delete_company(company):
     try:
         frappe.db.delete("Company", {"name": company})
@@ -877,7 +877,7 @@ def delete_company(company):
 # /* ===============================
 # API Roles
 # =============================== */
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def create_role(role_name):
     try:
         if not role_name:
@@ -960,7 +960,7 @@ def calculate_employment_days(doc, method):
         doc.custom_days_employed = date_diff(today(), doc.date_of_joining)
         frappe.db.commit()
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def delete_user_permission(email):
     perms = frappe.get_all("User Permission",{"user":email})
 

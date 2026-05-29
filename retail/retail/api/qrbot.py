@@ -72,7 +72,7 @@ def receive_barcode():
         frappe.log_error(frappe.get_traceback(), "receive_barcode")
         return {"status": "error", "message": str(e)}
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def process_barcode(barcode):
     """
     معالجة الباركود وتخزينه في Doctype
@@ -129,7 +129,7 @@ def process_barcode(barcode):
         }
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_scanned_barcodes(limit=50):
     """
     الحصول على قائمة الباركودات المسحوبة

@@ -1319,7 +1319,7 @@ watch(customer_name, async (newCustomer, oldCustomer) => {
     return
   }
 
-  // جلب الفواتير والمدفوعات غير المخصصة تلقائيًا
+  // جلب الفواتير والادا شدہات غير المخصصة تلقائيًا
   await get_outstanding_invoices()
   await getUnallocatedPayments()
 }, { immediate: false })

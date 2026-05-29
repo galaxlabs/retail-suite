@@ -23,7 +23,7 @@ def validate_dates(from_date, to_date):
 	if to_date < from_date:
 		frappe.throw(_("To Date cannot be less than From Date"))
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_income_statement_report(filters=None):
     """
     Get Income Statement Report with proper data handling
@@ -169,7 +169,7 @@ def get_income_statement_report(filters=None):
         frappe.throw(f"Error generating report: {str(e)}")
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_income_statement_by_period(company=None, from_date=None, to_date=None):
     """
     Get Income Statement for a specific date range
@@ -184,7 +184,7 @@ def get_income_statement_by_period(company=None, from_date=None, to_date=None):
     return get_income_statement_report(filters)
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_income_statement_yearly(company=None):
     """
     Get Income Statement for the current fiscal year
@@ -197,7 +197,7 @@ def get_income_statement_yearly(company=None):
     return get_income_statement_report(filters)
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_income_statement_monthly(company=None):
     """
     Get Income Statement with monthly breakdown
@@ -210,7 +210,7 @@ def get_income_statement_monthly(company=None):
     return get_income_statement_report(filters)
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def test_income_statement():
     """Test function"""
     return get_income_statement_yearly()
@@ -218,7 +218,7 @@ def test_income_statement():
 # ===================================================================
 # CashFlow Report
 # ===================================================================
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_cash_flow_report(filters):
     print("\nFilter",filters)
     """
@@ -374,7 +374,7 @@ def get_cash_flow_report(filters):
 # ===================================================================
 # beginningcash balance Report
 # ===================================================================
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_beginning_cash_balance(filters=None):
     """
     جلب رصيد النقدية والبنوك في بداية الفترة
@@ -512,7 +512,7 @@ def get_beginning_cash_balance(filters=None):
     }
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def create_opening_entry(company, opening_date=None):
     """
     إنشاء Opening Entry تلقائيًا
@@ -619,7 +619,7 @@ from erpnext.accounts.report.consolidated_financial_statement.consolidated_finan
     get_balance_sheet_data,
 )
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_balance_sheet_report(filters=None):
     """
     Return Balance Sheet data formatted for Vue UI with hierarchical account structure
@@ -883,7 +883,7 @@ from erpnext.accounts.report.consolidated_financial_statement.consolidated_finan
     get_balance_sheet_data,
 )
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_balance_sheet_report_data(filters=None):
     """
     Return Balance Sheet data formatted for Vue UI
@@ -1062,7 +1062,7 @@ def get_balance_sheet_report_data(filters=None):
 # -----------------------------------------------------------------
 # -----------------------------------------------------------------
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_balance_sheet_snapshot(company=None, as_on_date=None):
     """
     Get a quick balance sheet snapshot for a specific company and date
@@ -1135,7 +1135,7 @@ def get_balance_sheet_snapshot(company=None, as_on_date=None):
     }
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_balance_sheet_snapshot(company=None, as_on_date=None):
     """
     Get a quick balance sheet snapshot for a specific company and date
@@ -1203,7 +1203,7 @@ def get_balance_sheet_snapshot(company=None, as_on_date=None):
 # =====================================================================
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_accounts_receivable_data():
     """
     Fetch Accounts Receivable data from ERPNext
@@ -1380,7 +1380,7 @@ def normalize_status_summary(summary):
 
     return fixed
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def export_ar_report():
     """
     Export Accounts Receivable report to CSV
@@ -1424,7 +1424,7 @@ def export_ar_report():
 #  Accounts Payable
 # ===========================================================
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_accounts_payable_data(filters=None):
     """
     Fetch Accounts Payable data from ERPNext
@@ -1536,7 +1536,7 @@ def get_accounts_payable_data(filters=None):
 # EXPORT ACCOUNTS PAYABLE REPORT
 # ============================================
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def export_ap_report():
     """
     Export Accounts Payable report to CSV

@@ -1,6 +1,16 @@
 /* ./src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Carlito:wght@400;700&family=Noto+Naskh+Arabic:wght@400;600;700&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap');
 @tailwind base;
 @tailwind components;
+
+:root {
+  --font-ui-ur: 'Noto Nastaliq Urdu', 'Noto Naskh Arabic', 'Carlito', 'Calibri', 'Segoe UI', Tahoma, Arial, sans-serif;
+}
+
+html, body, #app {
+  font-family: var(--font-ui-ur);
+}
+
 @tailwind utilities;
 
 /* ─────────────────────────────────────────────────────────────── */

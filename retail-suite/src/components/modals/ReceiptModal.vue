@@ -36,7 +36,7 @@
           <!-- Receipt Header -->
           <div class="text-center mb-4">
             <img
-              src="@/assets/img/receipt-logo.png"
+              :src="props.storeLogo || defaultLogo"
               alt="Tailwind POS"
               class="mb-3 w-8 h-8 inline-block"
               @error="handleLogoError"
@@ -214,6 +214,7 @@ import PrintIcon from '@/components/icons/PrintIcon.svg'
 import CheckIcon from '@/components/icons/CheckIcon.svg'
 import CloseIcon from '@/components/icons/CloseIcon.svg'
 import invoiceTemplate from './invoiceTemplate.vue';
+import defaultLogo from '@/assets/img/receipt-logo.png';
 const props = defineProps({
     receiptData: {
       type: Object,
@@ -221,15 +222,19 @@ const props = defineProps({
     },
     storeName: {
       type: String,
-      default: 'TAILWIND POS'
+      default: ''
     },
     storeAddress: {
       type: String,
-      default: 'CABANG KONOHA SELATAN'
+      default: ''
     },
     autoShow: {
       type: Boolean,
       default: true
+    },
+    storeLogo: {
+      type: String,
+      default: ""
     },
      isFastMode: {
       type: Boolean,
@@ -336,7 +341,7 @@ const invoiceTemplateRef = ref(null)
         if (isProcessing.value) return
 
         if (!props.receiptData?.isSaved) {
-          alert('Please save the invoice first before printing.')
+          alert('پرنٹ سے پہلے براہِ کرم انوائس محفوظ کریں۔')
           return
         }
 
@@ -344,15 +349,13 @@ const invoiceTemplateRef = ref(null)
           isProcessing.value = true
           await nextTick()
 
-          try {
-            await printReceipt(props.receiptData, { force: true })
-          } catch (qzError) {
-            console.warn('QZ print failed, falling back to browser print:', qzError)
+          const printResult = await printReceipt(props.receiptData, { force: false })
+          if (printResult?.skipped) {
             await invoiceTemplateRef.value?.print()
           }
         } catch (error) {
           console.error('Print failed:', error)
-          alert('Print failed. Please try again.')
+          alert('پرنٹ ناکام ہوگیا۔ براہِ کرم دوبارہ کوشش کریں۔')
         } finally {
           setTimeout(() => {
             isProcessing.value = false

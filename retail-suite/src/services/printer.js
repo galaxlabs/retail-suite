@@ -70,6 +70,7 @@ const resolvePrinterProfile = () => {
   const host = printer.host || "";
   const port = Number(printer.port ?? 9100) || 9100;
   const autoPrint = printer.autoPrint ?? printer.autoprint ?? true;
+  const useQzTray = printer.useQzTray ?? printer.qzEnabled ?? false;
 
   return {
     raw: printer,
@@ -80,6 +81,7 @@ const resolvePrinterProfile = () => {
     terminalName,
     host,
     port,
+    useQzTray,
     autoPrint,
   };
 };
@@ -165,7 +167,7 @@ const buildReceiptHtml = (receiptData, profile) => {
       <body>
         <div class="receipt">
           <div class="center">
-            <div style="font-size: 16px; font-weight: 700; text-transform: uppercase;">${receiptData?.storeName || "Tailwind POS"}</div>
+            <div style="font-size: 16px; font-weight: 700; text-transform: uppercase;">${receiptData?.storeName || "Store"}</div>
             <div class="muted" style="margin-top: 4px;">${receiptData?.storeAddress || ""}</div>
             <div class="muted">${profile.terminalName || "POS Terminal"}</div>
           </div>
@@ -220,7 +222,10 @@ export const printReceipt = async (receiptData, options = {}) => {
 
   const profile = resolvePrinterProfile();
   if (!options.force && profile.autoPrint === false) {
-    return { skipped: true, reason: "auto_print_disabled" };
+    return { skipped: true, reason: 'auto_print_disabled' };
+  }
+  if (!profile.useQzTray) {
+    return { skipped: true, reason: 'qz_disabled' };
   }
 
   setupQzSecurity();
@@ -260,8 +265,8 @@ export const printReceipt = async (receiptData, options = {}) => {
 };
 
 export const buildSampleReceipt = () => ({
-  storeName: "Tailwind POS",
-  storeAddress: "Cabang Konoha Selatan",
+  storeName: "Store",
+  storeAddress: "",
   invoiceNo: `TEST-${Date.now().toString().slice(-6)}`,
   timestamp: new Date().toISOString(),
   items: [

@@ -67,7 +67,7 @@ const appBase = window.location.pathname.startsWith('/retail_suite/') ? '/retail
 const routes = [
   { path: '/', redirect: '/login' },
   { path: '/login', name: 'Login', component: Login, meta: { requiresAuth: false, layout: 'none' } },
-  { path: '/pos', name: 'POS', component: POS, meta: { requiresAuth: false, layout: 'none' } },
+  { path: '/pos', name: 'POS', component: POS, meta: { requiresAuth: true, layout: 'none' } },
   { path: '/settings', name: 'Settings', component: Setting, meta: { requiresAuth: true } },
   { path: '/archive', name: 'Archive', component: Archive, meta: { requiresAuth: true } },
   { path: '/payment', name: 'Payment', component: Pay, meta: { requiresAuth: true } },

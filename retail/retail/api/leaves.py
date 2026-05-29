@@ -101,7 +101,7 @@ class LeaveRequest(Document):
 			frappe.throw('Cannot submit a rejected leave request')
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def create_leave_request(employee, employee_name, leave_type, company, from_date, to_date,
 						 number_of_days, reason, leave_approver, leave_approver_name, status='Pending'):
 	"""Create a new leave request"""
@@ -135,7 +135,7 @@ def create_leave_request(employee, employee_name, leave_type, company, from_date
 		}
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def update_leave_request(name, employee, employee_name, leave_type, company, from_date, to_date,
 						 number_of_days, reason, leave_approver, leave_approver_name, status):
 	"""Update an existing leave request"""
@@ -169,7 +169,7 @@ def update_leave_request(name, employee, employee_name, leave_type, company, fro
 		}
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_leave_requests(employee=None, status=None, leave_type=None, company=None, from_date=None, to_date=None, leave_approver=None):
 	"""Get all leave requests with optional filters"""
 	try:
@@ -216,7 +216,7 @@ def get_leave_requests(employee=None, status=None, leave_type=None, company=None
 		}
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def delete_leave_request(name):
 	"""Delete a leave request"""
 	try:
@@ -235,7 +235,7 @@ def delete_leave_request(name):
 		}
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def approve_leave_request(name):
 	"""Approve a leave request"""
 	try:
@@ -256,7 +256,7 @@ def approve_leave_request(name):
 		}
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def reject_leave_request(name):
 	"""Reject a leave request"""
 	try:
@@ -277,7 +277,7 @@ def reject_leave_request(name):
 		}
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def cancel_leave_request(name):
 	"""Cancel a leave request"""
 	try:
@@ -298,7 +298,7 @@ def cancel_leave_request(name):
 		}
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_leave_balance(employee):
 	"""Get leave balance for an employee"""
 	try:
@@ -346,7 +346,7 @@ def get_leave_balance(employee):
 		}
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_leave_statistics(employee=None, company=None, start_date=None, end_date=None):
 	"""Get leave statistics"""
 	try:

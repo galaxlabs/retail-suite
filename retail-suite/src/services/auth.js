@@ -3,6 +3,56 @@ import { frappeRequest } from 'frappe-ui'
 import router from '../router'
 import { resolveBackendUrl } from '@/config/runtime'
 
+function extractServerMessage(payload, fallback = 'Login failed') {
+  if (!payload || typeof payload !== 'object') return fallback
+
+  const direct =
+    payload.message?.message ||
+    payload.message ||
+    payload.exception ||
+    payload.exc_type
+
+  if (typeof direct === 'string' && direct.trim()) {
+    return direct
+  }
+
+  const encoded = payload._server_messages
+  if (typeof encoded === 'string' && encoded.trim()) {
+    try {
+      const parsed = JSON.parse(encoded)
+      if (Array.isArray(parsed) && parsed.length) {
+        const first = JSON.parse(parsed[0] || '{}')
+        if (first?.message) {
+          return String(first.message).replace(/<[^>]*>/g, '').trim() || fallback
+        }
+      }
+    } catch (err) {
+      return fallback
+    }
+  }
+
+  return fallback
+}
+
+function normalizeAuthError(err, fallback = 'Login failed') {
+  const message = err?.message || ''
+  if (!message) return fallback
+
+  if (
+    message.includes('Failed to fetch') ||
+    message.includes('NetworkError') ||
+    message.includes('Load failed')
+  ) {
+    return 'Cannot reach backend. Check VITE_API_BASE_URL and CORS settings.'
+  }
+
+  if (message.includes('AuthenticationError') || message.includes('Invalid login')) {
+    return 'Invalid username or password.'
+  }
+
+  return message
+}
+
 function sessionUser() {
   const cookies = new URLSearchParams(document.cookie.split('; ').join('&'))
   const user = cookies.get('user_id')
@@ -30,7 +80,7 @@ export const session = reactive({
         const data = await response.json().catch(() => ({}))
         const message = data.message || {}
         if (!response.ok || data.exc || data.exception || !message.success) {
-          throw new Error(message.message || data.message || data.exception || 'Login failed')
+          throw new Error(extractServerMessage(data, 'Login failed'))
         }
 
         const userData = message.data || {}
@@ -43,8 +93,7 @@ export const session = reactive({
         router.push({ name: 'POS' })
         return data
       } catch (err) {
-        console.error('Login error:', err)
-        throw err
+        throw new Error(normalizeAuthError(err))
       } finally {
         session.login.loading = false
       }
@@ -83,7 +132,6 @@ export async function checkSession() {
     const data = await request({
       url: '/api/method/retail.retail.api.auth.get_logged_user',
     })
-    console.log('👤 Logged in user:', data)
     const user = data
     if (!user || user === 'Guest') {
       session.user = null

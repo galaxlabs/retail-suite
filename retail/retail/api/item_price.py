@@ -11,7 +11,7 @@ from frappe import _
 #  PRICE LISTS
 # ──────────────────────────────────────────────────────
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_all_price_lists():
     """Return all enabled Price List documents."""
     return frappe.get_all(
@@ -22,7 +22,7 @@ def get_all_price_lists():
     )
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_pos_price_list():
     """
     Return the default POS price list.
@@ -66,7 +66,7 @@ def get_pos_price_list():
 #  ITEM PRICES
 # ──────────────────────────────────────────────────────
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_item_prices(price_list=None, item_code=None, currency=None):
     """Return Item Price records with optional filters."""
     filters = {}
@@ -98,7 +98,7 @@ def get_item_prices(price_list=None, item_code=None, currency=None):
     )
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_item_price(item_code, price_list):
     """Return a single Item Price for an item in a given price list."""
     filters = {}
@@ -119,7 +119,7 @@ def get_item_price(item_code, price_list):
         price_list.append(price)
     return price_list or []
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def create_item_price(
     item_code,
     price_list,
@@ -165,7 +165,7 @@ def create_item_price(
     return {"name": doc.name, "message": "Item Price created successfully"}
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def update_item_price(
     name,
     price_list_rate=None,
@@ -198,7 +198,7 @@ def update_item_price(
     return {"name": doc.name, "message": "Item Price updated successfully"}
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def delete_item_price(name):
     """Delete an Item Price document."""
     if not name:
